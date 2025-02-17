@@ -6,3 +6,7 @@ tensorflow
 numpy
 opencv-python
 keras
+datasets
+torch
+pillow
+torchvision
