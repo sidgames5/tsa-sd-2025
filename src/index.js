@@ -21,6 +21,9 @@ root.render(
                 <Route path="diagnosis" element={<DiagnosisLayout />}>
                     <Route index element={<DiagnosisPage />} />
                 </Route>
+                {/*Route path="support" element={<SupportLayout />}>
+                    <Route index element={<SupportPage />} />
+                </Route>*/}
             </Route>
         </Routes>
     </BrowserRouter>
