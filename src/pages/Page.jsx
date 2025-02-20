@@ -1,9 +1,9 @@
 import * as motion from "motion/react-client";
-import { Variants } from "motion/react";
 import React from "react";
 
 function HoverPopupCard({ children, title, color }) {
-    return <div className={`flex flex-col bg-${color} w-96 h-[28rem] p-4 rounded-3xl relative items-center`}>
+    console.log(`bg-${color}`);
+    return <div className={`flex flex-col bg-slate-600 w-96 h-[28rem] p-4 rounded-3xl relative items-center`}>
         <motion.div className="flex flex-col items-center bg-white w-72 h-[17rem] p-4 rounded-3xl absolute bottom-4"
             initial={{ translateY: 0, rotate: -1 }}
             whileHover={{ translateY: -125, rotate: -4 }}
@@ -11,8 +11,8 @@ function HoverPopupCard({ children, title, color }) {
             <span className="text-8xl">{title}</span>
             <div className="text-xl mt-8 text-center">{children}</div>
         </motion.div>
-        <div className={`absolute bg-${color} bottom-0 w-96 h-[7rem] rounded-3xl pointer-events-none`}>
-            <div className={`absolute bg-gradient-to-t from-${color} to-transparent h-[4rem] w-96 bottom-full`}>&nbsp;</div>
+        <div className={`absolute bg-slate-600 bottom-0 w-96 h-[7rem] rounded-3xl pointer-events-none`}>
+            <div className={`absolute bg-gradient-to-t from-slate-600 to-transparent h-[4rem] w-96 bottom-full`}>&nbsp;</div>
         </div>
     </div>;
 }
