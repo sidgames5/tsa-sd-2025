@@ -15,7 +15,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Constants
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 20
+EPOCHS = 30
 CLASS_NAMES = ["Healthy", "Powdery", "Rust"]
 
 # Load dataset from Hugging Face
@@ -26,6 +26,9 @@ transform = transforms.Compose(
     [
         transforms.ToPILImage(),
         transforms.Resize(IMG_SIZE),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(10),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ]
@@ -69,7 +72,35 @@ train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
 
-# Define CNN model
+# Bootstrapping: Oversample "Healthy" class
+def bootstrap_data(dataset, target_class="Healthy", multiplier=3):
+
+    # Bootstraps (duplicates) images from the specified class to balance dataset.
+
+    new_data = []
+    for i in range(len(dataset)):
+        image, label = dataset[i]
+        if CLASS_NAMES[label] == target_class:
+            new_data.extend([(image, label)] * multiplier)  # Duplicate the data
+        else:
+            new_data.append((image, label))  # Keep other classes the same
+
+    return new_data
+
+
+# Apply bootstrapping to "Healthy" class only- doing it for testing only, will add to other
+# classes later on
+bootstrapped_train_data = bootstrap_data(
+    train_data, target_class="Healthy", multiplier=4
+)
+train_dataset = PlantDiseaseDataset(bootstrapped_train_data, transform=transform)
+val_dataset = PlantDiseaseDataset(val_data, transform=transform)
+
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
+
+
+# Define CNN model with Dropout Regularization
 class PlantDiseaseModel(nn.Module):
     def __init__(self, num_classes=len(CLASS_NAMES)):
         super(PlantDiseaseModel, self).__init__()
@@ -77,6 +108,7 @@ class PlantDiseaseModel(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
         self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
+        self.dropout = nn.Dropout(0.5)  # Helps prevent overfitting
         self.fc1 = nn.Linear(128 * 28 * 28, 128)
         self.fc2 = nn.Linear(128, num_classes)
 
@@ -85,7 +117,7 @@ class PlantDiseaseModel(nn.Module):
         x = self.pool(nn.ReLU()(self.conv2(x)))
         x = self.pool(nn.ReLU()(self.conv3(x)))
         x = x.view(x.size(0), -1)
-        x = nn.ReLU()(self.fc1(x))
+        x = self.dropout(nn.ReLU()(self.fc1(x)))  # Dropout applied here
         x = self.fc2(x)
         return x
 
@@ -94,6 +126,20 @@ class PlantDiseaseModel(nn.Module):
 model = PlantDiseaseModel().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+
+# Training loop with Mixup augmentation
+def mixup_data(x, y, alpha=0.2):
+    """Applies Mixup data augmentation"""
+    if alpha > 0:
+        lam = np.random.beta(alpha, alpha)
+    else:
+        lam = 1
+    batch_size = x.size()[0]
+    index = torch.randperm(batch_size).to(device)
+    mixed_x = lam * x + (1 - lam) * x[index, :]
+    y_a, y_b = y, y[index]
+    return mixed_x, y_a, y_b, lam
 
 
 # Training loop

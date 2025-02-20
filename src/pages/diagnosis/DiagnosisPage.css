@@ -1,0 +1,63 @@
+/* General Container */
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    text-align: center;
+    font-family: "Arial", sans-serif;
+}
+
+/* Header Styling */
+.header {
+    font-size: 32px;
+    color: #2c7a7b;
+    text-decoration: underline;
+    margin-bottom: 15px;
+}
+
+/* Subtext */
+.subtext {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Disease List (Scroll Section) */
+.disease-list {
+    display: flex;
+    list-style: none;
+    height: 220px;
+    overflow-x: scroll;
+    padding: 20px 0;
+    flex: 0 0 600px;
+    margin: 0 auto;
+    gap: 20px;
+    scroll-snap-type: x mandatory;
+}
+
+/* Scrollbar Customization */
+.disease-list::-webkit-scrollbar {
+    height: 5px;
+    background: #eee;
+}
+
+.disease-list::-webkit-scrollbar-thumb {
+    background: #2c7a7b;
+    border-radius: 10px;
+}
+
+/* Disease Items */
+.disease-item {
+    flex: 0 0 200px;
+    background: #000000ea;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    scroll-snap-align: center;
+    /* transition: transform 0.2s ease-in-out; */
+}
+
+/* .disease-item:hover {
+    transform: scale(1.1);
+    background: #2c7a7b;
+} */
