@@ -15,7 +15,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Constants
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 30
+EPOCHS = 40
 CLASS_NAMES = ["Healthy", "Powdery", "Rust"]
 
 # Load dataset from Hugging Face
