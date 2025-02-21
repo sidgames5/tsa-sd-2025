@@ -8,6 +8,8 @@ import UploadLayout from './pages/upload/Layout';
 import UploadPage from './pages/upload/Page';
 import DiagnosisLayout from './pages/diagnosis/Layout';
 import DiagnosisPage from './pages/diagnosis/Page';
+import FeaturesLayout from './pages/features/Layout';
+import FeaturesPage from './pages/features/Page';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -20,6 +22,9 @@ root.render(
                 </Route>
                 <Route path="diagnosis" element={<DiagnosisLayout />}>
                     <Route index element={<DiagnosisPage />} />
+                </Route>
+                <Route path="features" element={<FeaturesLayout />}>
+                    <Route index element={<FeaturesPage />} />
                 </Route>
                 {/*Route path="support" element={<SupportLayout />}>
                     <Route index element={<SupportPage />} />

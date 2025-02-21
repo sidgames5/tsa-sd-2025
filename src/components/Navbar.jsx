@@ -35,8 +35,8 @@ export default function Navbar() {
                                 </Link>
                             </NavbarButton>
                             <NavbarButton>
-                                <Link to="/contact" className="nav-button">
-                                    Contact & Support
+                                <Link to="/features" className="nav-button">
+                                    Features
                                 </Link>
                             </NavbarButton>
                         </ul>

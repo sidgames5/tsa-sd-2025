@@ -47,7 +47,7 @@ class PlantDiseaseDataset(Dataset):
     def __getitem__(self, idx):
         example = self.dataset[idx]
         image = np.array(example["image"])
-        label = CLASS_NAMES.index(example["text"])
+        label = CLASS_NAMES.index(example["label"])
 
         # Preprocess image
         if self.transform:
@@ -80,7 +80,7 @@ def bootstrap_data(dataset, target_class="Healthy", multiplier=3):
     new_data = []
     for i in range(len(dataset)):
         image, label = dataset[i]
-        if CLASS_NAMES[label] == target_class:
+        if label == CLASS_NAMES.index(target_class):
             new_data.extend([(image, label)] * multiplier)  # Duplicate the data
         else:
             new_data.append((image, label))  # Keep other classes the same
