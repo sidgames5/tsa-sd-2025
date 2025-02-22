@@ -1,3 +1,3 @@
-export default function CustomSlider({ children }) {
+/*export default function CustomSlider({ children }) {
     return <div></div>;
-}
+}*/

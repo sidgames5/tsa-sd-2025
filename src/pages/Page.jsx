@@ -1,7 +1,7 @@
 import * as motion from "motion/react-client";
 import React from "react";
-import "../styles/styles.css";
 import "../components/CustomSlider"
+import ImageSlider from "../components/Slider.jsx";
 
 const images = [
     {
@@ -28,13 +28,14 @@ const images = [
 
 export default function App() {
     return (
-        <div className="App">
+        <div className="App flex flex-col justify-center items-center">
             {/* <CustomSlider>
                 {images.map((image, index) => {
                     return <img key={index} src={image.imgURL} alt={image.imgAlt} />;
                 })}
             </CustomSlider> */}
-            <div className="info">
+            <ImageSlider />
+            <div className="info flex flex-col justify-center items-center">
                 <h1>ReactJS Slider</h1>
                 <h2>Features</h2>
                 <ul>
