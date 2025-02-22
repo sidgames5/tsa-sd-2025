@@ -10,12 +10,12 @@ export default function DiagnosisPage() {
     const maskImage = useScrollOverflowMask(scrollXProgress);
 
     const diseases = [
-        { name: "Powdery Leaves", solution: "Remove affected leaves, improve air circulation, and apply a fungicide." },
-        { name: "Yellowing Leaves", solution: "Check for overwatering, ensure proper drainage, and provide adequate sunlight." },
-        { name: "Wilting Plant", solution: "Water if the soil is dry; otherwise, check for root rot." },
-        { name: "Spots on Leaves", solution: "Could indicate fungal infection; remove infected leaves and avoid overhead watering." },
-        { name: "Pests on Leaves", solution: "Spray with neem oil or insecticidal soap to control pests." },
-        { name: "Drooping Leaves", solution: "Check for underwatering or excessive heat exposure; adjust watering schedule." },
+        { name: "Powdery Leaves:", solution: "Remove affected leaves, improve air circulation, and apply a fungicide." },
+        { name: "Yellowing Leaves:", solution: "Check for overwatering, ensure proper drainage, and provide adequate sunlight." },
+        { name: "Wilting Plant:", solution: "Water if the soil is dry; otherwise, check for root rot." },
+        { name: "Spots on Leaves:", solution: "Could indicate fungal infection; remove infected leaves and avoid overhead watering." },
+        { name: "Pests on Leaves:", solution: "Spray with neem oil or insecticidal soap to control pests." },
+        { name: "Drooping Leaves:", solution: "Check for underwatering or excessive heat exposure; adjust watering schedule." },
     ];
 
     return (

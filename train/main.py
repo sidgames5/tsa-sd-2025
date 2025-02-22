@@ -5,9 +5,7 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from datasets import load_dataset
 import numpy as np
-import cv2
 import os
-from torch.utils.data import random_split
 
 # Device configuration
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -15,7 +13,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Constants
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 40
+EPOCHS = 8
 CLASS_NAMES = ["Healthy", "Powdery", "Rust"]
 
 # Load dataset from Hugging Face
@@ -46,27 +44,40 @@ class PlantDiseaseDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-        print(
-            f"Index {idx} - Image Type: {type(image)}, Label: {label}"
-        )  # Debugging print because apparently
-        # the image has 0 dimensions like bruh what
-        example = self.dataset[idx]  # Should be (image, label)
-        if isinstance(example, tuple):
-            image, label = example
-        else:
-            image = example["image"]
-            label = CLASS_NAMES.index(example["label"])
+        example = self.dataset[idx]  # Get item from dataset
 
-        image = np.array(image) if not isinstance(image, np.ndarray) else image
+        # Ensure correct unpacking
+        if isinstance(example, dict):
+            image = example.get("image")
+            label_text = example.get("text")
+        else:
+            raise ValueError(f"Unexpected data format at index {idx}: {example}")
+
+        # Debugging: Print label info
+        print(f"Index {idx} - Label found: {label_text}")
+
+        # Skip invalid labels
+        if label_text not in CLASS_NAMES:
+            print(f"Warning: Unexpected label '{label_text}' at index {idx}. Skipping.")
+            return None
+
+        label = CLASS_NAMES.index(label_text)  # Convert label text to index
+
+        # Convert PIL image to NumPy array if necessary
+        if not isinstance(image, np.ndarray):
+            image = np.array(image)
+
+        if image is None or image.size == 0:
+            print(f"Warning: Empty image at index {idx}. Skipping.")
+            return None  # Skip empty images
 
         if self.transform:
-            image = self.transform(image)
+            image = self.transform(image)  # Apply transformations
 
         return image, label
 
 
 # Prepare training and validation datasets
-
 from torch.utils.data import random_split
 
 # Split the train dataset into 80% train and 20% validation
@@ -75,35 +86,40 @@ val_size = len(ds["train"]) - train_size
 
 train_data, val_data = random_split(ds["train"], [train_size, val_size])
 
-train_dataset = PlantDiseaseDataset(train_data, transform=transform)
-val_dataset = PlantDiseaseDataset(val_data, transform=transform)
+# Remove None values from dataset
+filtered_train_data = [sample for sample in train_data if sample is not None]
+filtered_val_data = [sample for sample in val_data if sample is not None]
+
+# Create Dataset and DataLoader
+train_dataset = PlantDiseaseDataset(filtered_train_data, transform=transform)
+val_dataset = PlantDiseaseDataset(filtered_val_data, transform=transform)
+
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
 
 # Bootstrapping: Oversample "Healthy" class
 def bootstrap_data(dataset, target_class="Healthy", multiplier=3):
-
-    # Bootstraps (duplicates) images from the specified class to balance dataset.
-
+    # Oversample images from the specified class to balance dataset.
     new_data = []
-    for i in range(len(dataset)):
-        image, label = dataset[i]
+    for sample in dataset:
+        if sample is None:
+            continue
+        image, label = sample
         if label == CLASS_NAMES.index(target_class):
             new_data.extend([(image, label)] * multiplier)  # Duplicate the data
         else:
             new_data.append((image, label))  # Keep other classes the same
-
     return new_data
 
 
-# Apply bootstrapping to "Healthy" class only- doing it for testing only, will add to other
-# classes later on
+# Apply bootstrapping to "Healthy" class only (for testing)
 bootstrapped_train_data = bootstrap_data(
-    train_data, target_class="Healthy", multiplier=4
+    filtered_train_data, target_class="Healthy", multiplier=4
 )
+
 train_dataset = PlantDiseaseDataset(bootstrapped_train_data, transform=transform)
-val_dataset = PlantDiseaseDataset(val_data, transform=transform)
+val_dataset = PlantDiseaseDataset(filtered_val_data, transform=transform)
 
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
@@ -135,20 +151,6 @@ class PlantDiseaseModel(nn.Module):
 model = PlantDiseaseModel().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-
-
-# Training loop with Mixup augmentation
-def mixup_data(x, y, alpha=0.2):
-    """Applies Mixup data augmentation"""
-    if alpha > 0:
-        lam = np.random.beta(alpha, alpha)
-    else:
-        lam = 1
-    batch_size = x.size()[0]
-    index = torch.randperm(batch_size).to(device)
-    mixed_x = lam * x + (1 - lam) * x[index, :]
-    y_a, y_b = y, y[index]
-    return mixed_x, y_a, y_b, lam
 
 
 # Training loop
