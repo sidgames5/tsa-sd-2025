@@ -20,6 +20,7 @@ CLASS_NAMES = ["Healthy", "Powdery", "Rust"]
 
 # Load dataset from Hugging Face
 ds = load_dataset("NouRed/plant-disease-recognition")
+print(ds["train"][0])  # Debugging
 
 # Define image transformations
 transform = transforms.Compose(
@@ -45,11 +46,19 @@ class PlantDiseaseDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-        example = self.dataset[idx]
-        image = np.array(example["image"])
-        label = CLASS_NAMES.index(example["label"])
+        print(
+            f"Index {idx} - Image Type: {type(image)}, Label: {label}"
+        )  # Debugging print because apparently
+        # the image has 0 dimensions like bruh what
+        example = self.dataset[idx]  # Should be (image, label)
+        if isinstance(example, tuple):
+            image, label = example
+        else:
+            image = example["image"]
+            label = CLASS_NAMES.index(example["label"])
 
-        # Preprocess image
+        image = np.array(image) if not isinstance(image, np.ndarray) else image
+
         if self.transform:
             image = self.transform(image)
 
