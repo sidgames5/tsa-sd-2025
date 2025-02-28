@@ -23,13 +23,16 @@ print(ds["train"][0])  # Debugging
 # Define image transformations
 transform = transforms.Compose(
     [
-        transforms.ToPILImage(),
-        transforms.Resize(IMG_SIZE),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(10),
-        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        transforms.Resize(IMG_SIZE),  # Resize to 224x224
+        transforms.RandomHorizontalFlip(),  # Data augmentation
+        transforms.RandomRotation(10),  # Data augmentation
+        transforms.ColorJitter(
+            brightness=0.2, contrast=0.2, saturation=0.2
+        ),  # Data augmentation
+        transforms.ToTensor(),  # Convert PIL image to tensor
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+        ),  # Normalize
     ]
 )
 
@@ -39,40 +42,50 @@ class PlantDiseaseDataset(Dataset):
     def __init__(self, dataset, transform=None):
         self.dataset = dataset
         self.transform = transform
+        self.valid_indices = [
+            i for i, sample in enumerate(dataset) if self._is_valid(sample)
+        ]
+        print(f"Number of valid samples: {len(self.valid_indices)}")  # Debugging
+
+    def _is_valid(self, sample):
+        if isinstance(sample, dict):
+            image = sample.get("image")
+            label_text = sample.get("text")
+            if image is None:
+                print(f"Invalid sample: Image is None")
+                return False
+            if label_text is None:
+                print(f"Invalid sample: Label is None")
+                return False
+            # Strip whitespace and check case-insensitive
+            if label_text.strip().capitalize() not in [
+                c.capitalize() for c in CLASS_NAMES
+            ]:
+                print(f"Invalid sample: Label '{label_text}' not in CLASS_NAMES")
+                return False
+            return True
+        print(f"Invalid sample: Not a dictionary")
+        return False
 
     def __len__(self):
-        return len(self.dataset)
+        return len(self.valid_indices)
 
     def __getitem__(self, idx):
-        example = self.dataset[idx]  # Get item from dataset
+        actual_idx = self.valid_indices[idx]
+        example = self.dataset[actual_idx]
 
-        # Ensure correct unpacking
-        if isinstance(example, dict):
-            image = example.get("image")
-            label_text = example.get("text")
-        else:
-            raise ValueError(f"Unexpected data format at index {idx}: {example}")
+        image = example["image"]  # PIL image
+        label_text = example["text"]  # Label text
 
-        # Debugging: Print label info
-        print(f"Index {idx} - Label found: {label_text}")
+        # Debugging: Print image and label info
+        print(f"Index {idx} - Image shape: {image.size}, Label: {label_text}")
 
-        # Skip invalid labels
-        if label_text not in CLASS_NAMES:
-            print(f"Warning: Unexpected label '{label_text}' at index {idx}. Skipping.")
-            return None
+        # Convert label text to index
+        label = CLASS_NAMES.index(label_text.strip().capitalize())
 
-        label = CLASS_NAMES.index(label_text)  # Convert label text to index
-
-        # Convert PIL image to NumPy array if necessary
-        if not isinstance(image, np.ndarray):
-            image = np.array(image)
-
-        if image is None or image.size == 0:
-            print(f"Warning: Empty image at index {idx}. Skipping.")
-            return None  # Skip empty images
-
+        # Apply transformations
         if self.transform:
-            image = self.transform(image)  # Apply transformations
+            image = self.transform(image)
 
         return image, label
 
@@ -86,13 +99,9 @@ val_size = len(ds["train"]) - train_size
 
 train_data, val_data = random_split(ds["train"], [train_size, val_size])
 
-# Remove None values from dataset
-filtered_train_data = [sample for sample in train_data if sample is not None]
-filtered_val_data = [sample for sample in val_data if sample is not None]
-
 # Create Dataset and DataLoader
-train_dataset = PlantDiseaseDataset(filtered_train_data, transform=transform)
-val_dataset = PlantDiseaseDataset(filtered_val_data, transform=transform)
+train_dataset = PlantDiseaseDataset(train_data, transform=transform)
+val_dataset = PlantDiseaseDataset(val_data, transform=transform)
 
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
@@ -102,7 +111,8 @@ val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
 def bootstrap_data(dataset, target_class="Healthy", multiplier=3):
     # Oversample images from the specified class to balance dataset.
     new_data = []
-    for sample in dataset:
+    for idx in range(len(dataset)):  # Use indices to access dataset items
+        sample = dataset[idx]  # Get sample using __getitem__
         if sample is None:
             continue
         image, label = sample
@@ -115,11 +125,11 @@ def bootstrap_data(dataset, target_class="Healthy", multiplier=3):
 
 # Apply bootstrapping to "Healthy" class only (for testing)
 bootstrapped_train_data = bootstrap_data(
-    filtered_train_data, target_class="Healthy", multiplier=4
+    train_dataset, target_class="Healthy", multiplier=4
 )
 
 train_dataset = PlantDiseaseDataset(bootstrapped_train_data, transform=transform)
-val_dataset = PlantDiseaseDataset(filtered_val_data, transform=transform)
+val_dataset = PlantDiseaseDataset(val_data, transform=transform)
 
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
