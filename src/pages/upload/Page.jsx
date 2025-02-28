@@ -93,6 +93,7 @@ export default function UploadPage() {
                         return "text-orange-400";
                 }
             })()}`}>Result: {result}</p>}
+
         </motion.div>
         // <div className="p-4">
         //     <h1 className="text-xl font-bold mb-2">Upload & Analyze Plant Image</h1>

@@ -51,19 +51,25 @@ class PlantDiseaseDataset(Dataset):
         if isinstance(sample, dict):
             image = sample.get("image")
             label_text = sample.get("text")
+
+            # Check if image is valid
             if image is None:
                 print(f"Invalid sample: Image is None")
                 return False
+
+            # Check if label_text is valid
             if label_text is None:
                 print(f"Invalid sample: Label is None")
                 return False
+
             # Strip whitespace and check case-insensitive
-            if label_text.strip().capitalize() not in [
-                c.capitalize() for c in CLASS_NAMES
-            ]:
+            label_text = label_text.strip().capitalize()
+            if label_text not in [c.capitalize() for c in CLASS_NAMES]:
                 print(f"Invalid sample: Label '{label_text}' not in CLASS_NAMES")
                 return False
+
             return True
+
         print(f"Invalid sample: Not a dictionary")
         return False
 
