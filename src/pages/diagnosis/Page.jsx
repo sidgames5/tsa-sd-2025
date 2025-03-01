@@ -21,14 +21,14 @@ export default function DiagnosisPage() {
     return (
         <div className="container">
             <h1 className="header">Plant Diagnosis Guide</h1>
-            <p className="subtext">Scroll through the plant diseases below to see possible fixes.</p>
+            <p className="subtext">Match the symptoms with treatments for your plants.</p>
 
             <motion.ul ref={ref} style={{ maskImage }} className="disease-list overflow-visible">
                 {diseases.map((disease, index) => (
                     <motion.li
                         key={index}
                         className="disease-item overflow-visible"
-                        whileHover={{ scale: 1.1 }}
+                        whileHover={{ scale: 1.15 }}
                         transition={{ type: "spring", stiffness: 50 }}
                     >
                         <h3>{disease.name}</h3>
