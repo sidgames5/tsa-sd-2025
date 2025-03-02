@@ -61,8 +61,9 @@ export default function UploadPage() {
     };
 
     return (
+
         <motion.div
-            className="p-6 bg-white shadow-lg rounded-xl w-full max-w-md mx-auto flex flex-col justify-center items-center border border-green-300"
+            className="p-6 bg-white shadow-lg rounded-2xl w-3/5 h-2/5 w-full mx-auto flex flex-col justify-center items-center border border-green-300"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}>
@@ -78,7 +79,7 @@ export default function UploadPage() {
             <input type="file" accept="image/*" onChange={handleImageChange} className="w-full border border-green-400 p-3 rounded-lg bg-white shadow-sm mb-4 cursor-pointer" />
 
             {preview && (
-                <motion.img src={preview} alt="Preview" className="w-40 mt-2 rounded-lg shadow-md mx-auto" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.3 }} whileHover={{ scale: 1.05 }} />
+                <motion.img src={preview} alt="Preview" className="w-80 mt-8 rounded-lg shadow-md mx-auto" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.3 }} whileHover={{ scale: 1.05 }} />
             )}
 
             <motion.div className="flex justify-center mt-4" whileHover={{ scale: 1.05 }}>
@@ -93,8 +94,14 @@ export default function UploadPage() {
                         return "text-orange-400";
                 }
             })()}`}>Result: {result}</p>}
-
+            <div className="w-full text-center mt-12">
+                <p className="text-lg text-gray-700">
+                🌿 Need help identifying plant diseases? Upload an image and let AI analyze it instantly! 
+                If you need expert advice, visit our <Link to="/diagnosis" className="text-blue-500 hover:underline">Diagnosis Page</Link>.
+                </p>
+            </div>
         </motion.div>
+
         // <div className="p-4">
         //     <h1 className="text-xl font-bold mb-2">Upload & Analyze Plant Image</h1>
 

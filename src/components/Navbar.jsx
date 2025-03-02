@@ -15,7 +15,6 @@ export default function Navbar() {
                         <NavbarButton>
                             <a href="/" className="">Home</a>
                         </NavbarButton>
-                        {/* Add plant icon */}
                         <i className="fa fa-leaf text-green-500 ml-2 fa-2x"></i>
                     </div>
                     <div className="flex flex-row gap-2">
