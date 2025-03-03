@@ -10,29 +10,36 @@ export default function DiagnosisPage() {
     const maskImage = useScrollOverflowMask(scrollXProgress);
 
     const diseases = [
-        { name: "Powdery Leaves:", solution: "Remove affected leaves, improve air circulation, and apply a fungicide." },
-        { name: "Yellowing Leaves:", solution: "Check for overwatering, ensure proper drainage, and provide adequate sunlight." },
-        { name: "Wilting Plant:", solution: "Water if the soil is dry; otherwise, check for root rot." },
-        { name: "Spots on Leaves:", solution: "Could indicate fungal infection; remove infected leaves and avoid overhead watering." },
+        { name: "Powdery Leaves:", solution: "Remove affected leaves\nImprove air circulation\nApply a fungicide." },
+        { name: "Yellowing Leaves:", solution: "Check for overwatering\nEnsure proper drainage\nProvide adequate sunlight." },
+        { name: "Wilting Plant:", solution: "Water if the soil is dry\nCheck for root rot." },
+        { name: "Spots on Leaves:", solution: "Could indicate fungal infection\nRemove infected leaves\nAvoid overhead watering." },
         { name: "Pests on Leaves:", solution: "Spray with neem oil or insecticidal soap to control pests." },
-        { name: "Drooping Leaves:", solution: "Check for underwatering or excessive heat exposure; adjust watering schedule." },
+        { name: "Drooping Leaves:", solution: "Check for underwatering or excessive heat exposure\nAdjust watering schedule." },
     ];
 
     return (
         <div className="container">
             <h1 className="header">Plant Diagnosis Guide</h1>
-            <p className="subtext">Scroll through the plant diseases below to see possible fixes.</p>
+            <p className="subtext">Match the symptoms with treatments for your plants.</p>
 
             <motion.ul ref={ref} style={{ maskImage }} className="disease-list overflow-visible">
                 {diseases.map((disease, index) => (
                     <motion.li
                         key={index}
                         className="disease-item overflow-visible"
-                        whileHover={{ scale: 1.1 }}
+                        whileHover={{ scale: 1.15 }}
                         transition={{ type: "spring", stiffness: 50 }}
                     >
                         <h3>{disease.name}</h3>
-                        <p>{disease.solution}</p>
+                        <p>
+                            {disease.solution.split('\n').map((line, idx) => (
+                                <span key={idx}>
+                                    {line}
+                                    <br />
+                                </span>
+                            ))}
+                        </p>
                     </motion.li>
                 ))}
             </motion.ul>
