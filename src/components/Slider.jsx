@@ -33,36 +33,46 @@ export default function ImageSlider() {
     }, [currentIndex]);
 
     return (
-        <div className="relative flex flex-col w-screen h-[55vh] bg-gray-800 items-center justify-center">
-            <div className="flex items-center gap-6">
-                {/* Left Arrow */}
-                <motion.div
-                    className="cursor-pointer text-white text-4xl p-4 hover:scale-110 transition"
-                    onClick={imageLeft}
-                >
-                    <FontAwesomeIcon icon={faArrowLeft} />
-                </motion.div>
+        <div className="relative flex w-screen h-[100vh]">
+            {/* Left Section */}
+            <div className="w-1/2 h-full bg-black relative bg-lime-600 shadow-lg shadow-lime-600/50">
+                <h1 className="text-white font-mono text-5xl text-left ml-12 mt-72 animate-bounce duration-2000">AI Plant Detection at Your Hands</h1>
+            </div>
+            
+            {/* Right Section */}
+            <div className="relative flex flex-col w-screen h-[100vh] bg-gray-800 items-center justify-center bg-gray-800 shadow-lg shadow-gray-500/50">
+                <div className="flex items-center gap-6">
+                    {/* Left Arrow */}
+                    <motion.div
+                        className="cursor-pointer text-white text-4xl p-4 hover:scale-110 transition"
+                        onClick={imageLeft}
+                    >
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </motion.div>
 
-                {/* Image with Animation */}
-                <motion.img
-                    key={currentIndex} // Forces re-render on change
-                    src={`/assets/${images[currentIndex]}`}
-                    alt={`Slide ${currentIndex}`}
-                    className="rounded-xl max-h-[50vh] max-w-[90%] object-contain shadow-lg"
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.5 }}
-                />
+                    {/* Image with Animation */}
+                    <motion.img
+                        key={currentIndex} // Forces re-render on change
+                        src={`/assets/${images[currentIndex]}`}
+                        alt={`Slide ${currentIndex}`}
+                        className="rounded-xl max-h-[50vh] max-w-[90%] object-contain shadow-lg"
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.5 }}
+                    />
 
-                {/* Right Arrow */}
-                <motion.div
-                    className="cursor-pointer text-white text-4xl p-4 hover:scale-110 transition"
-                    onClick={imageRight}
-                >
-                    <FontAwesomeIcon icon={faArrowRight} />
-                </motion.div>
+                    {/* Right Arrow */}
+                    <motion.div
+                        className="cursor-pointer text-white text-4xl p-4 hover:scale-110 transition"
+                        onClick={imageRight}
+                    >
+                        <FontAwesomeIcon icon={faArrowRight} />
+                    </motion.div>
+                </div>
             </div>
         </div>
+
+        
     );
 }
