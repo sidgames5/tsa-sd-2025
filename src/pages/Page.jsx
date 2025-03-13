@@ -35,21 +35,29 @@ export default function App() {
                 })}
             </CustomSlider> */}
             <ImageSlider />
-            <div className="info flex flex-col justify-center items-center">
-                <h1>ReactJS Slider</h1>
-                <h2>Features</h2>
-                <ul>
-                    <li>
-                        <p>Autoplay</p>
-                    </li>
-                    <li>
-                        <p>Next and Previous Buttons</p>
-                    </li>
-                    <li>
-                        <p>Select a desired slide</p>
-                    </li>
-                </ul>
+            <div className="info flex flex-col justify-center items-center leading-relaxes h-[100vh]">
+                <table className="table-auto text-left w-[80vw] mt-20">
+                    <tbody>
+                        {/* About Us Secton */}
+                        <tr>
+                            <td className="font-bold text-4xl p-4 bg-sky-50 rounded-tl-xl border-l-4">About Us</td>
+                            <td className="text-2xl w-[50vw] p-4 bg-gray-100 rounded-tr-xl border-r-4">
+                                We are three high schoolers with a shared passion for coding, technology, and innovation. As young developers, we've spent countless hours learning and building projects that push our boundaries and expand our knowledge. We believe that coding is not just about writing lines of code, but about creating something meaningful that can make a real difference.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="font-bold text-4xl p-4 bg-sky-50 rounded-bl-xl border-l-4">Why We Did This</td>
+                            <td className="text-2xl w-[50vw] p-4 bg-gray-100 ounded-br-xl border-r-4">
+                                We created this project because we wanted to blend our love for technology with a cause that can make a meaningful impact. As high schoolers, we often feel that there’s a lack of real-world tech solutions made by people our age. We wanted to show that with determination and the right tools, we can create something valuable.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <div className="bg-gray-800 h-[10vh] w-[100vw] flex justify-center items-center text-white">
+            </div>
+
         </div>
     );
 }
+
