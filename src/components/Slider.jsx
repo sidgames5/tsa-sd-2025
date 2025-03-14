@@ -35,12 +35,12 @@ export default function ImageSlider() {
     return (
         <div className="relative flex w-screen h-[100vh]">
             {/* Left Section */}
-            <div className="w-1/2 h-full bg-black relative bg-lime-600 shadow-lg shadow-lime-600/50">
+            <div className="w-1/2 h-full bg-black relative bg-gradient-to-r to-sky-800 from-lime-500 shadow-lg shadow-lime-600/50">
                 <h1 className="text-white font-mono text-5xl text-left ml-12 mt-72 animate-bounce duration-2000">AI Plant Detection at Your Hands</h1>
             </div>
             
             {/* Right Section */}
-            <div className="relative flex flex-col w-screen h-[100vh] bg-gray-800 items-center justify-center bg-gray-800 shadow-lg shadow-gray-500/50">
+            <div className="relative flex flex-col w-screen h-[100vh] bg-gray-900 items-center justify-center bg-gradient-to-r to-sky-950 from-gray-800 shadow-lg shadow-gray-500/50">
                 <div className="flex items-center gap-6">
                     {/* Left Arrow */}
                     <motion.div
