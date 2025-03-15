@@ -37,7 +37,7 @@
 
 /* Scrollbar Customization */
 .disease-list::-webkit-scrollbar {
-    height: 5px;
+    height: 10px;
     background: #eee;
 }
 
@@ -53,17 +53,17 @@
 
 /* Disease Items */
 .disease-item {
-    flex: 0 0 225px;
+    width: 200px;
     background: #000000ea;
     color: white;
     padding: 15px;
     border-radius: 10px;
-    text-align: center;
+    text-align: left;
     scroll-snap-align: center;
     /* transition: transform 0.2s ease-in-out; */
 }
 
-/* .disease-item:hover {
+.disease-item:hover {
     transform: scale(1.1);
-    background: #2c7a7b;
-} */
+    background: #2a3c3c;
+}

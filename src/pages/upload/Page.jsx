@@ -61,70 +61,78 @@ export default function UploadPage() {
     };
 
     return (
-
         <motion.div
             className="p-6 bg-white shadow-lg rounded-2xl w-3/5 h-2/5 w-full mx-auto flex flex-col justify-center items-center border border-green-300"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}>
+            transition={{ duration: 0.5 }}
+        >
             <motion.h1
                 className="text-2xl font-bold mb-4 text-green-800"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}>
-
+                transition={{ delay: 0.2 }}
+            >
                 <h1>Upload & Analyze Plant Image</h1>
             </motion.h1>
 
-            <input type="file" accept="image/*" onChange={handleImageChange} className="w-full border border-green-400 p-3 rounded-lg bg-white shadow-sm mb-4 cursor-pointer" />
+            <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full border border-green-400 p-3 rounded-lg bg-white shadow-sm mb-4 cursor-pointer"
+            />
 
             {preview && (
-                <motion.img src={preview} alt="Preview" className="w-80 mt-8 rounded-lg shadow-md mx-auto" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.3 }} whileHover={{ scale: 1.05 }} />
+                <motion.img
+                    src={preview}
+                    alt="Preview"
+                    className="w-80 mt-8 rounded-lg shadow-md mx-auto"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    whileHover={{ scale: 1.05 }}
+                />
             )}
 
-            <motion.div className="flex justify-center mt-4" whileHover={{ scale: 1.05 }}>
-                <Button onClick={handleUpload} className={`bg-blue-500 text-white px-5 py-2 mt- transition hover:bg-blue-700 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}>Upload</Button>
+            <motion.div
+                className="flex justify-center mt-4"
+                whileHover={{ scale: 1.05 }}
+            >
+                <Button
+                    onClick={handleUpload}
+                    className={`bg-blue-500 text-white px-5 py-2 mt- transition hover:bg-blue-700 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                >
+                    Upload
+                </Button>
             </motion.div>
 
-            {result && <p className={`mt-2 font-semibold ${(function () {
-                switch (result) {
-                    case "Detected: Healthy":
-                        return "text-green-600";
-                    default:
-                        return "text-orange-400";
-                }
-            })()}`}>Result: {result}</p>}
+            {result && (
+                <p
+                    className={`mt-2 font-semibold ${result.includes("Healthy")
+                            ? "text-green-600"
+                            : "text-orange-400"
+                        }`}
+                >
+                    Result: {result}
+                </p>
+            )}
+
             <div className="w-full text-center mt-12">
                 <p className="text-lg text-gray-700">
-                🌿 Need help identifying plant diseases? Upload an image and let AI analyze it instantly! 
-                If you need expert advice, visit our <Link to="/diagnosis" className="text-blue-500 hover:underline">Diagnosis Page</Link>.
+                    🌿 Need help identifying plant diseases? Upload an image and
+                    let AI analyze it instantly! If you need expert advice, visit
+                    our{" "}
+                    <Link
+                        to="/diagnosis"
+                        className="text-blue-500 hover:underline"
+                    >
+                        Diagnosis Page
+                    </Link>
+                    .
                 </p>
             </div>
         </motion.div>
-
-        // <div className="p-4">
-        //     <h1 className="text-xl font-bold mb-2">Upload & Analyze Plant Image</h1>
-
-        //     {/* File Upload */}
-        //     /*<input type="file" accept="image/*" onChange={handleImageChange} className="upload-btn" />
-
-        //     {/* Image Preview */}
-        //     /*preview && <img src={preview} alt="Preview" className="w-40 mt-2 rounded-md shadow-md" />}
-
-        //     {/* Upload & Analyze Button */}
-        //     /*<Button
-        //         onClick={handleUpload}
-        //         className={`bg-blue-500 text-white px-4 py-2 mt-2 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-        //         disabled={loading}
-        //     >
-        //         {loading ? "Analyzing..." : "Upload & Analyze"}
-        //     </Button>
-
-        //     {/* Timer Display */}
-        //     /*loading && <p className="text-orange-500 mt-2">Time Elapsed: {timer} sec</p>}
-
-        //     {/* AI Result */}
-        //     /*{result && <p className="mt-2 text-green-600 font-semibold">Result: {result}</p>}
-        // </div>
     );
 }

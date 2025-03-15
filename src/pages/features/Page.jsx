@@ -32,7 +32,7 @@ export default function FeaturesPage() {
         <div className="flex flex-col items-center justify-center py-10 gap-10">
             <h1 className="text-3xl font-bold">Features</h1>
 
-            <div className="grid grid-cols-3 gap-16">
+            <div className="grid grid-cols-3 gap-5">
                 {cardItems.map((item) => <HoverPopupCard title={item.emoji} color={item.color}>{item.text}</HoverPopupCard>)}
             </div>
         </div>

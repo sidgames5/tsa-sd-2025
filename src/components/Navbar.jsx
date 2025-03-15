@@ -3,7 +3,8 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import "./Navbar.css";
 import NavbarButton from "./NavbarButton";
-import 'font-awesome/css/font-awesome.min.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLeaf } from "@fortawesome/free-solid-svg-icons";
 
 
 export default function Navbar() {
@@ -13,9 +14,11 @@ export default function Navbar() {
                 <nav className="flex flex-row justify-between items-center bg-gray-900 text-white p-4">
                     <div className="navbar-left flex items-center">
                         <NavbarButton>
-                            <a href="/" className="">Home</a>
+                            <div className="flex flex-row gap-1 items-center">
+                                <a href="/" className="">Home</a>
+                                <FontAwesomeIcon icon={faLeaf} />
+                            </div>
                         </NavbarButton>
-                        <i className="fa fa-leaf text-green-500 ml-2 fa-2x"></i>
                     </div>
                     <div className="flex flex-row gap-2">
                         <NavbarButton>
@@ -29,8 +32,8 @@ export default function Navbar() {
                             </Link>
                         </NavbarButton>
                         <NavbarButton>
-                            <Link to="/consultation" className="nav-button">
-                                Expert Consultation
+                            <Link to="/results" className="nav-button">
+                                AI Results
                             </Link>
                         </NavbarButton>
                         <NavbarButton>

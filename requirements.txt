@@ -2,7 +2,6 @@ flask
 werkzeug
 pylint
 pylint-venv
-tensorflow
 numpy
 opencv-python
 keras
@@ -10,3 +9,8 @@ datasets
 torch
 pillow
 torchvision
+kagglehub
+Image
+transforms
+secure_filename
+matplotlib

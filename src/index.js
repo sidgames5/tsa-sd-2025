@@ -10,6 +10,8 @@ import DiagnosisLayout from './pages/diagnosis/Layout';
 import DiagnosisPage from './pages/diagnosis/Page';
 import FeaturesLayout from './pages/features/Layout';
 import FeaturesPage from './pages/features/Page';
+import ResultsLayout from './pages/results/Layout';
+import ResultsPage from './pages/results/Page';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -29,6 +31,9 @@ root.render(
                 {/*Route path="support" element={<SupportLayout />}>
                     <Route index element={<SupportPage />} />
                 </Route>*/}
+                <Route path="results" element={<ResultsLayout />}>
+                    <Route index element={<ResultsPage />} />
+                </Route>
             </Route>
         </Routes>
     </BrowserRouter>

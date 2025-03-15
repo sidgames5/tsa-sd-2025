@@ -37,7 +37,9 @@ export default function App() {
             <ImageSlider />
             <div className="info flex flex-col justify-center items-center leading-relaxes h-[100vh]">
                 <div className="w-max">
-                    <h1 className="text-green-600 text-5xl font-bold animate-pulse drop-shadow-lg">Our Mission</h1>
+                    {/*Add Typewriter Animation*/}
+                    <motion.h1 className="text-green-600 text-5xl font-bold drop-shadow-lg"
+                        initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ type: "spring", damping: 10 }}>Our Mission</motion.h1>
                 </div>
                 <table className="table-auto text-left w-[80vw] mt-20">
                     <tbody>
@@ -60,6 +62,6 @@ export default function App() {
             <div className="bg-gray-800 h-[10vh] w-[100vw] flex justify-center items-center text-white">
             </div>
 
-        </div>
+        </div >
     );
 }
