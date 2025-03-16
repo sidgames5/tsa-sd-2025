@@ -3,7 +3,7 @@ werkzeug
 pylint
 pylint-venv
 numpy
-opencv-python-headle
+opencv-python-headless
 keras
 datasets
 torch
