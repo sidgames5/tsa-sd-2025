@@ -3,22 +3,52 @@
 import { animate, motion, useMotionValue, useMotionValueEvent, useScroll } from "framer-motion";
 import { useRef, useState } from "react";
 import "./DiagnosisPage.css";
-import PowderyModal from "./PowderyModal";
-import YellowingModal from "./Yellowing";
 
 export default function DiagnosisPage() {
     const ref = useRef(null);
     const { scrollXProgress } = useScroll({ container: ref });
     const maskImage = useScrollOverflowMask(scrollXProgress);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDisease, setSelectedDisease] = useState(null);
 
     const diseases = [
-        { name: "Powdery Leaves:", solution: " - Remove affected leaves\n - Improve air circulation\n - Apply a fungicide" },
-        { name: "Yellowing Leaves:", solution: " - Check for overwatering\n - Ensure proper drainage\n - Provide adequate sunlight" },
-        { name: "Wilting Plant:", solution: " - Water if the soil is dry\n - Check for root rot" },
-        { name: "Spots on Leaves:", solution: " - Could indicate fungal infection\n - Remove infected leaves\n - Avoid overhead watering" },
-        { name: "Pests on Leaves:", solution: " - Spray with neem oil or insecticidal soap to control pests" },
-        { name: "Drooping Leaves:", solution: " - Check for underwatering or excessive heat exposure\n - Adjust watering schedule" },
+        {
+            name: "Powdery Leaves",
+            solution: " - Remove affected leaves\n - Improve air circulation\n - Apply a fungicide",
+            description: "Powdery mildew appears as a white or grayish powdery coating on leaves, leading to yellowing and eventual death.",
+            fix: "- Use fungicides containing chlorothalonil\n- Remove affected leaves"
+        },
+        {
+            name: "Yellowing Leaves",
+            solution: " - Check for overwatering\n - Ensure proper drainage\n - Provide adequate sunlight",
+            description: "Yellowing leaves may be a sign of overwatering, nutrient deficiency, or poor drainage.",
+            fix: "- Check for overwatering\n- Ensure proper soil drainage\n- Provide adequate sunlight"
+        },
+        {
+            name: "Wilting Plant",
+            solution: " - Water if the soil is dry\n - Check for root rot",
+            description: "Wilting plants may indicate dehydration or root rot due to excessive watering.",
+            fix: "- Water plants if soil is dry\n- Inspect for root rot\n- Improve soil aeration"
+        },
+        {
+            name: "Spots on Leaves",
+            solution: " - Could indicate fungal infection\n - Remove infected leaves\n - Avoid overhead watering",
+            description: "Leaf spots can be caused by fungal or bacterial infections, leading to plant stress.",
+            fix: "- Remove infected leaves\n- Apply fungicide if needed\n- Avoid overhead watering"
+        },
+        {
+            name: "Pests on Leaves",
+            solution: " - Spray with neem oil or insecticidal soap to control pests",
+            description: "Common plant pests include aphids, spider mites, and whiteflies, which damage leaves by sucking sap.",
+            fix: "- Spray neem oil or insecticidal soap\n- Introduce beneficial insects like ladybugs"
+        },
+        {
+            name: "Drooping Leaves",
+            solution: " - Check for underwatering or excessive heat exposure\n - Adjust watering schedule",
+            description: "Drooping leaves are often a sign of underwatering, excessive heat, or root damage.",
+            fix: "- Water the plant properly\n- Ensure protection from extreme heat\n- Check for root damage"
+        }
     ];
 
     return (
@@ -28,9 +58,11 @@ export default function DiagnosisPage() {
 
             <motion.ul ref={ref} style={{ maskImage }} className="disease-list overflow-visible">
                 {diseases.map((disease, index) => (
-                    <div onClick={() => { setIsModalOpen(true) }}>
+                    <div key={index} onClick={() => {
+                        setSelectedDisease(disease);
+                        setIsModalOpen(true);
+                    }}>
                         <motion.li
-                            key={index}
                             className="disease-item overflow-visible cursor-pointer"
                             whileHover={{ scale: 1.15 }}
                             transition={{ type: "spring", stiffness: 50 }}
@@ -48,35 +80,38 @@ export default function DiagnosisPage() {
                     </div>
                 ))}
             </motion.ul>
-            <div id="details-modal" className={`fixed ${isModalOpen ? "block" : "hidden"} max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr to-blue-200 from-green-200 shadow-lg rounded-lg p-6 z-50`}>
-                <PowderyModal onClose={() => { setIsModalOpen(false) }}>
-                    <h1 className="text-nowrap text-3xl">Powdery Plants Overview</h1>
-                    <p className=" text-lg text-left font-serif">
-                        Powdery leaves on crops, often appearing as a <span className="text-white">white</span> or <span className="text-gray-400">grayish</span> powdery coating, are a sign of powdery mildew. A fungal disease that affects a wide range of plants, including vegetables, fruits, and ornamentals.
+
+            {isModalOpen && selectedDisease && (
+                <div id="details-modal" className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr to-blue-200 from-green-200 shadow-lg rounded-lg p-6 z-50">
+                    <h1 className="text-nowrap text-3xl">{selectedDisease.name} Overview</h1>
+                    <p className="text-lg text-left">
+                        {selectedDisease.description}
                     </p>
 
                     <table className="mt-5">
                         <tbody>
                             <tr>
-                                <td className="font-bold text-1xl p-4 bg-lime-100 rounded-tl-xl">How to Identify</td>
-                                <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-tr-xl">
-                                    If there is a mass of powdery white fungus on you're crop's leaves, it has powdery mildew. This will cause the leaves to distort, yellow, and eventually die along with the plant.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="font-bold text-1xl p-4 bg-lime-100 rounded-bl-xl">How to Fix</td>
-                                <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-br-xl text-left">
-                                    - Use fungicides containing active ingredients like chlorothalonil
-                                    <br />
-                                    - Remove affected leaves
+                                <td className="font-bold text-1xl p-4 bg-lime-100 rounded-tl-xl">How to Fix</td>
+                                <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-tr-xl text-left">
+                                    {selectedDisease.fix.split('\n').map((line, idx) => (
+                                        <span key={idx}>
+                                            {line}
+                                            <br />
+                                        </span>
+                                    ))}
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </PowderyModal>
-                YellowingModal
 
-            </div>
+                    <button
+                        onClick={() => setIsModalOpen(false)}
+                        className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                        Close
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

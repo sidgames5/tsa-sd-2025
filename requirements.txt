@@ -12,5 +12,7 @@ torchvision
 kagglehub
 Image
 transforms
-secure_filename
+# secure_filename
 matplotlib
+fastapi
+uvicorn

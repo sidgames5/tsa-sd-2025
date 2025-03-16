@@ -59,9 +59,6 @@ export default function App() {
                     </tbody>
                 </table>
             </div>
-            <div className="bg-gray-800 h-[10vh] w-[100vw] flex justify-center items-center text-white">
-            </div>
-
         </div >
     );
 }

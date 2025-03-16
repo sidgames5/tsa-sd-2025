@@ -6,6 +6,7 @@ import os
 from torchvision import datasets, transforms
 from backend.model import PlantDiseaseModel
 import kagglehub
+import matplotlib.pylot as plt
 
 # Device configuration
 device = torch.device("cuda")
@@ -53,16 +54,21 @@ model = PlantDiseaseModel(num_classes=len(CLASS_NAMES)).to(device)
 criterion = CrossEntropyLoss()
 optimizer = Adam(model.parameters(), lr=0.001)
 
+train_accuracies = []
+val_accuracies = []
+
 
 # Training
 def train_model():
     model.train()
     for epoch in range(EPOCHS):
         running_loss = 0.0
+        correct = 0  # Initialize correct predictions counter
+        total = 0  # Initialize total samples counter
+
         for i, (images, labels) in enumerate(train_loader):
             images, labels = images.to(device), labels.to(device)
 
-            # Print batch labels only for the first batch of the first epoch
             if epoch == 0 and i == 0:
                 unique_labels = labels.unique().tolist()
                 print(f"Batch Labels (first batch only): {unique_labels}")
@@ -77,11 +83,35 @@ def train_model():
             optimizer.step()
             running_loss += loss.item()
 
-            # Limit batch processing for debugging (remove in production)
-            if i > 10:
-                break
+            # Compute Accuracy
+            _, predicted = torch.max(outputs, 1)
+            correct += (predicted == labels).sum().item()
+            total += labels.size(0)
 
-        print(f"Epoch {epoch+1}/{EPOCHS}, Loss: {running_loss / len(train_loader):.4f}")
+        train_accuracy = correct / total  # Calculate accuracy
+        train_accuracies.append(train_accuracy)
+
+        print(
+            f"Epoch {epoch+1}/{EPOCHS}, Loss: {running_loss / len(train_loader):.4f}, Accuracy: {train_accuracy:.4f}"
+        )
+
+    # Generate and save the accuracy graph
+    plt.figure(figsize=(8, 5))
+    plt.plot(
+        range(1, EPOCHS + 1),
+        train_accuracies,
+        marker="o",
+        linestyle="-",
+        label="Training Accuracy",
+        color="blue",
+    )
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy")
+    plt.title("Training Accuracy Over Epochs")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig("backend/static/accuracy_chart.png")  # Save the graph
+    print("Saved accuracy chart at backend/static/accuracy_chart.png")
 
 
 train_model()
