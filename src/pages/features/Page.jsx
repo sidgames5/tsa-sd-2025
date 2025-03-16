@@ -7,7 +7,7 @@ function HoverPopupCard({ children, title, color }) {
         <motion.div className="flex flex-col items-center bg-white w-72 h-[17rem] p-4 rounded-3xl absolute bottom-4"
             initial={{ translateY: 0, rotate: -1 }}
             whileHover={{ translateY: -125, rotate: -4 }}
-            transition={{ type: "spring", stiffness: 100 }}>
+            transition={{ type: "spring", stiffness: 90, damping: 15 }}>
             <span className="text-8xl">{title}</span>
             <div className="text-xl mt-8 text-center">{children}</div>
         </motion.div>
@@ -30,7 +30,7 @@ export default function FeaturesPage() {
 
     return <main>
         <div className="flex flex-col items-center justify-center mt-[8vh] py-10 gap-10">
-            <h1 className="text-5xl font-bold text-white">Features</h1>
+            <h1 className="text-5xl font-bold text-gray-200">Features</h1>
 
             <div className="grid grid-cols-3 gap-5">
                 {cardItems.map((item) => <HoverPopupCard title={item.emoji} color={item.color}>{item.text}</HoverPopupCard>)}
