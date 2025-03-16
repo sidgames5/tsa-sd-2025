@@ -26,13 +26,14 @@ export default function FeaturesPage() {
         { emoji: "⚙️", text: "Customize settings", color: "slate-600" },
         { emoji: "📂", text: "Manage files effortlessly", color: "slate-600" },
         { emoji: "📊", text: "View detailed analytics and support", color: "slate-600" },
+        { emoji: "🧭", text: "Easy to navigate", color: "slate-600" }
     ];
 
     return <main>
         <div className="flex flex-col items-center justify-center mt-[8vh] py-10 gap-10">
             <h1 className="text-5xl font-bold text-gray-200">Features</h1>
 
-            <div className="grid grid-cols-3 gap-5">
+            <div className="grid grid-cols-4 gap-8">
                 {cardItems.map((item) => <HoverPopupCard title={item.emoji} color={item.color}>{item.text}</HoverPopupCard>)}
             </div>
         </div>
