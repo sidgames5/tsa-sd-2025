@@ -29,7 +29,7 @@ export default function FeaturesPage() {
     ];
 
     return <main>
-        <div className="flex flex-col items-center justify-center mt-[10vh] py-10 gap-10">
+        <div className="flex flex-col items-center justify-center mt-[8vh] py-10 gap-10">
             <h1 className="text-5xl font-bold text-white">Features</h1>
 
             <div className="grid grid-cols-3 gap-5">
