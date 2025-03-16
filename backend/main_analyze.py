@@ -1,4 +1,6 @@
 import torch
+import matplotlib as plt
+
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss
@@ -7,15 +9,13 @@ from torchvision import datasets, transforms
 from backend.model import PlantDiseaseModel
 import kagglehub
 
-# import matplotlib.pylot as plt
-
 # Device configuration
 device = torch.device("cuda")
 
 # Constants
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 10
+EPOCHS = 3
 
 # Download dataset
 dataset_path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset")
@@ -97,9 +97,9 @@ def train_model():
         )
 
     # Generate and save the accuracy graph
-    """
-    #plt.figure(figsize=(8, 5))
-    #plt.plot(
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(
         range(1, EPOCHS + 1),
         train_accuracies,
         marker="o",
@@ -114,7 +114,6 @@ def train_model():
     plt.grid(True)
     plt.savefig("backend/static/accuracy_chart.png")  # Save the graph
     print("Saved accuracy chart at backend/static/accuracy_chart.png")
-"""
 
 
 train_model()

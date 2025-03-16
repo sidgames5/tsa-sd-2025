@@ -3,7 +3,7 @@ werkzeug
 pylint
 pylint-venv
 numpy
-opencv-python
+opencv-python-headle
 keras
 datasets
 torch
@@ -13,6 +13,7 @@ kagglehub
 Image
 transforms
 # secure_filename
-matplotlib
+matplotlib==3.3.4
 fastapi
 uvicorn
+cv2

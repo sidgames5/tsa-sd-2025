@@ -88,17 +88,17 @@ export default function DiagnosisPage() {
             </motion.ul>
 
             {isModalOpen && selectedDisease && (
-                <div id="details-modal" className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr to-blue-200 from-green-200 shadow-lg rounded-lg p-6 z-50">
+                <motion.div id="details-modal" className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr to-blue-950 from-green-950 shadow-lg rounded-lg p-6 z-50">
                     <h1 className="text-nowrap text-3xl">{selectedDisease.name} Overview</h1>
-                    <p className="text-lg text-left">
+                    <p className="text-lg text-left text-white">
                         {selectedDisease.description}
                     </p>
 
                     <table className="mt-5">
                         <tbody>
                             <tr>
-                                <td className="font-bold text-1xl p-4 bg-lime-100 rounded-tl-xl">How to Identify</td>
-                                <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-tr-xl text-left">
+                                <td className="font-bold text-1xl p-4 bg-lime-100 rounded-tl-xl text-black">How to Identify</td>
+                                <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-tr-xl text-left text-black">
                                     {selectedDisease.appearance.split('\n').map((line, idx) => (
                                         <span key={idx}>
                                             {line}
@@ -108,8 +108,8 @@ export default function DiagnosisPage() {
                                 </td>
                             </tr>
                             <tr>
-                                <td className="font-bold text-1xl p-4 bg-lime-100 rounded-bl-xl">How to Fix</td>
-                                <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-br-xl text-left">
+                                <td className="font-bold text-1xl p-4 bg-lime-100 rounded-bl-xl text-black">How to Fix</td>
+                                <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-br-xl text-left text-black">
                                     {selectedDisease.fix.split('\n').map((line, idx) => (
                                         <span key={idx}>
                                             {line}
@@ -127,7 +127,7 @@ export default function DiagnosisPage() {
                     >
                         Close
                     </button>
-                </div>
+                </motion.div>
             )}
         </div>
     );

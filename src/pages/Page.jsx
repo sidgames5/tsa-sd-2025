@@ -1,7 +1,9 @@
 import * as motion from "motion/react-client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../components/CustomSlider"
 import ImageSlider from "../components/Slider.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 const images = [
     {
@@ -27,6 +29,21 @@ const images = [
 ];
 
 export default function App() {
+    const [showScrollIcon, setShowScrollIcon] = useState(true);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > window.innerHeight) {
+                setShowScrollIcon(false);
+            } else {
+                setShowScrollIcon(true);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     return (
         <div className="App flex flex-col justify-center items-center">
             {/* <CustomSlider>
@@ -35,7 +52,16 @@ export default function App() {
                 })}
             </CustomSlider> */}
             <ImageSlider />
-            <div className="info flex flex-col justify-center items-center leading-relaxes h-[100vh]">
+            {showScrollIcon && <motion.div className="text-white fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
+                initial={{ translateY: -100 }}
+                animate={{ translateY: 0 }}
+                transition={{ duration: 2, type: "spring", stiffness: 100, damping: 10 }}
+                onClick={() => {
+                    window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+                }}>
+                <FontAwesomeIcon className="animate-bounce" icon={faArrowDown} fontSize={36} />
+            </motion.div>}
+            <motion.div className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full" initial={{ backgroundColor: "#082f49" }} whileInView={{ backgroundColor: "#ffffff" }} transition={{ delay: 0.25, type: "spring", stiffness: 100 }}>
                 <div className="w-max">
                     {/*Add Typewriter Animation*/}
                     <motion.h1 className="text-green-600 text-5xl font-bold drop-shadow-lg"
@@ -58,7 +84,7 @@ export default function App() {
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </motion.div>
         </div >
     );
 }

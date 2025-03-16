@@ -1,3 +1,5 @@
+import cv2
+
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import os
@@ -6,6 +8,7 @@ from torchvision import transforms
 from PIL import Image
 from backend.model import PlantDiseaseModel
 from backend.main_analyze import train_dataset
+import numpy as np
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
@@ -36,12 +39,18 @@ transform = transforms.Compose(
 
 
 def analyze_image(image_path):
-    # Analyze an image using the trained model and return the predicted class.
     print(f"🔍 Analyzing image: {image_path}")
 
     try:
-        image = Image.open(image_path).convert("RGB")
-        print(f"Image opened successfully.")
+        # Try loading the image with OpenCV first
+        image = cv2.imread(image_path)
+
+        if image is None:
+            raise ValueError(f"OpenCV failed to load image: {image_path}")
+
+        # Convert OpenCV image to PIL Image
+        image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        print(f"Image loaded successfully with OpenCV.")
 
         image = transform(image).unsqueeze(0)
         print(f"Image transformed.")
@@ -56,10 +65,10 @@ def analyze_image(image_path):
             return CLASS_NAMES[predicted.item()]
     except Exception as e:
         print(f"Error during image analysis: {e}")
-        raise e  # Re-raise error to see details in Flask logs
+        raise e  # Re-raise error to see details in logs
 
 
-@flask_app.route("/api/upload", methods=["POST"])
+@app.route("/api/upload", methods=["POST"])
 def upload_file():
     """Flask route to handle image uploads and return predictions."""
     if "image" not in request.files:
@@ -70,7 +79,7 @@ def upload_file():
         return jsonify({"error": "Invalid file"}), 400
 
     filename = secure_filename(file.filename)
-    filepath = os.path.join(flask_app.config["UPLOAD_FOLDER"], filename)
+    filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
     file.save(filepath)
 
     print(f"Image saved at: {filepath}")  # Debugging print

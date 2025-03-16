@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import Button from "../../components/Button";
-import "./Page.css";
 import * as motion from "motion/react-client";
 import React from "react";
 
@@ -62,7 +61,7 @@ export default function UploadPage() {
 
     return (
         <motion.div
-            className="p-6 bg-white shadow-lg rounded-2xl w-3/5 h-2/5 w-full mx-auto flex flex-col justify-center items-center border border-green-300"
+            className="p-6 bg-black shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-green-300"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -80,7 +79,7 @@ export default function UploadPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="w-full border border-green-400 p-3 rounded-lg bg-white shadow-sm mb-4 cursor-pointer"
+                className="w-full border border-green-400 p-3 rounded-lg bg-gray-800 shadow-sm mb-4 cursor-pointer"
             />
 
             {preview && (
@@ -111,8 +110,8 @@ export default function UploadPage() {
             {result && (
                 <p
                     className={`mt-2 font-semibold ${result.includes("Healthy")
-                            ? "text-green-600"
-                            : "text-orange-400"
+                        ? "text-green-600"
+                        : "text-orange-400"
                         }`}
                 >
                     Result: {result}

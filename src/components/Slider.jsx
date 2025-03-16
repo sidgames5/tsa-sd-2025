@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion"; // Correct import
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight, faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function ImageSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,21 +33,22 @@ export default function ImageSlider() {
     }, [currentIndex]);
 
     return (
-        <div className="relative flex w-screen h-[100vh]">
-            {/* Left Section */}
-            <div className="w-1/2 h-full bg-black relative 0 bg-gradient-to-r to-sky-950 from-gray-800 shadow-lg shadow-blue-600/50">
-                <h1 className="text-white text-5xl text-left ml-12 mt-72">AI Plant Detection at Your Hands</h1>
+        <div className="relative flex w-full h-[101vh] items-center justify-center align-middle">
+            {/* Left Section original gradient: bg-gradient-to-r to-sky-950 from-green-800*/}
+            <div className="flex flex-col items-center align-middle justify-center text-center w-1/2 h-full bg-gradient-to-l to-sky-950 from-black relative 0 shadow-lg shadow-blue-900/50">
+                <motion.h1 className="text-white text-5xl ml-6 mr-6" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>AI Plant Detection at Your Hands</motion.h1>
+                {/* <motion.h3 className="text-white text-3xl ml-6 mr-6 underline cursor-pointer" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>Our Mission!</motion.h3> */}
             </div>
 
             {/* Right Section */}
-            <div className="relative flex flex-col w-screen h-[100vh] bg-gray-900 items-center justify-center bg-gradient-to-r to-sky-950 from-gray-800 shadow-lg shadow-blue-600/50">
+            <div className="relative flex flex-col w-screen h-[101vh] items-center justify-center bg-gradient-to-r from-black to-slate-950 shadow-lg shadow-gray-900/50">
                 <div className="flex items-center gap-6">
                     {/* Left Arrow */}
                     <motion.div
                         className="cursor-pointer text-white text-4xl p-4 hover:scale-110 transition"
                         onClick={imageLeft}
                     >
-                        <FontAwesomeIcon icon={faArrowLeft} />
+                        <FontAwesomeIcon icon={faCaretLeft} />
                     </motion.div>
 
                     {/* Image with Animation */}
@@ -67,7 +68,7 @@ export default function ImageSlider() {
                         className="cursor-pointer text-white text-4xl p-4 hover:scale-110 transition"
                         onClick={imageRight}
                     >
-                        <FontAwesomeIcon icon={faArrowRight} />
+                        <FontAwesomeIcon icon={faCaretRight} />
                     </motion.div>
                 </div>
             </div>
