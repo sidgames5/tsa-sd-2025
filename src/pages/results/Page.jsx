@@ -5,7 +5,7 @@ export default function ResultsPage() {
     const [chartUrl, setChartUrl] = useState("");
 
     useEffect(() => {
-        axios.get("http://localhost:5000/accuracy-chart", { responseType: "blob" })
+        axios.get("/api/accuracy-chart", { responseType: "blob" })
             .then((response) => {
                 const url = URL.createObjectURL(response.data);
                 setChartUrl(url);
