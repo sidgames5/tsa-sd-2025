@@ -1,3 +1,4 @@
+"""
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 import os
@@ -12,3 +13,4 @@ def get_accuracy_chart():
     if os.path.exists(file_path):
         return FileResponse(file_path)
     return {"error": "Chart not found"}
+"""

@@ -6,7 +6,8 @@ import os
 from torchvision import datasets, transforms
 from backend.model import PlantDiseaseModel
 import kagglehub
-import matplotlib.pylot as plt
+
+# import matplotlib.pylot as plt
 
 # Device configuration
 device = torch.device("cuda")
@@ -22,9 +23,9 @@ dataset_path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset"
 # Verify dataset paths
 train_path = os.path.join(dataset_path, "train")
 valid_path = os.path.join(dataset_path, "valid")
-print("Checking dataset paths:")
-print(f"Train Path Exists: {os.path.exists(train_path)}")
-print(f"Valid Path Exists: {os.path.exists(valid_path)}")
+# print("Checking dataset paths:")
+# print(f"Train Path Exists: {os.path.exists(train_path)}")
+# print(f"Valid Path Exists: {os.path.exists(valid_path)}")
 
 # Image transformations
 transform = transforms.Compose(
@@ -46,8 +47,8 @@ train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
 CLASS_NAMES = list(train_dataset.class_to_idx.keys())
-print(f"Number of Classes: {len(CLASS_NAMES)}")
-print(f"Updated CLASS_NAMES: {CLASS_NAMES}")
+# rint(f"Number of Classes: {len(CLASS_NAMES)}")
+# print(f"Updated CLASS_NAMES: {CLASS_NAMES}")
 
 # Initialize model
 model = PlantDiseaseModel(num_classes=len(CLASS_NAMES)).to(device)
@@ -96,8 +97,9 @@ def train_model():
         )
 
     # Generate and save the accuracy graph
-    plt.figure(figsize=(8, 5))
-    plt.plot(
+    """
+    #plt.figure(figsize=(8, 5))
+    #plt.plot(
         range(1, EPOCHS + 1),
         train_accuracies,
         marker="o",
@@ -112,6 +114,7 @@ def train_model():
     plt.grid(True)
     plt.savefig("backend/static/accuracy_chart.png")  # Save the graph
     print("Saved accuracy chart at backend/static/accuracy_chart.png")
+"""
 
 
 train_model()

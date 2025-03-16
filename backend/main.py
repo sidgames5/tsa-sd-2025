@@ -36,17 +36,32 @@ transform = transforms.Compose(
 
 
 def analyze_image(image_path):
-    image = Image.open(image_path).convert("RGB")
-    image = transform(image).unsqueeze(0)
+    # Analyze an image using the trained model and return the predicted class.
+    print(f"🔍 Analyzing image: {image_path}")
 
-    with torch.no_grad():
-        output = model(image)
-        _, predicted = torch.max(output, 1)
-        return CLASS_NAMES[predicted.item()]
+    try:
+        image = Image.open(image_path).convert("RGB")
+        print(f"Image opened successfully.")
+
+        image = transform(image).unsqueeze(0)
+        print(f"Image transformed.")
+
+        with torch.no_grad():
+            output = model(image)
+            print(f"Model inference complete.")
+
+            _, predicted = torch.max(output, 1)
+            print(f"Predicted class index: {predicted.item()}")
+
+            return CLASS_NAMES[predicted.item()]
+    except Exception as e:
+        print(f"Error during image analysis: {e}")
+        raise e  # Re-raise error to see details in Flask logs
 
 
-@app.route("/api/upload", methods=["POST"])
+@flask_app.route("/api/upload", methods=["POST"])
 def upload_file():
+    """Flask route to handle image uploads and return predictions."""
     if "image" not in request.files:
         return jsonify({"error": "No image uploaded"}), 400
 
@@ -55,11 +70,22 @@ def upload_file():
         return jsonify({"error": "Invalid file"}), 400
 
     filename = secure_filename(file.filename)
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+    filepath = os.path.join(flask_app.config["UPLOAD_FOLDER"], filename)
     file.save(filepath)
 
-    result = analyze_image(filepath)
-    return jsonify({"message": f"Detected: {result}"})
+    print(f"Image saved at: {filepath}")  # Debugging print
+
+    try:
+        result = analyze_image(filepath)
+        return jsonify({"message": f"Detected: {result}"})
+    except Exception as e:
+        print(f"Error analyzing image: {e}")  # Debugging print
+        return jsonify({"error": "Failed to analyze image", "details": str(e)}), 500
+
+
+image_path = "/home/sid/Code/tsa-sd/Screenshot 2025-03-15 at 8.07.23 PM.png"
+result = analyze_image(image_path)
+print(f"Predicted class: {result}")
 
 
 if __name__ == "__main__":
