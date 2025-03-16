@@ -1,6 +1,6 @@
 /* General Container */
 body {
-    background-color: black;
+    background-image: linear-gradient(to right, oklch(0.269 0 0), oklch(0.21 0.034 264.665));
 }
 
 .container {
@@ -53,13 +53,13 @@ body {
 
 .disease-item h3 {
     font-weight: bold;
-    color: green;
+    color: white;
 }
 
 /* Disease Items */
 .disease-item {
     width: 230px;
-    background: #000000ea;
+    background: oklch(0.398 0.07 227.392);
     color: white;
     padding: 15px;
     border-radius: 10px;

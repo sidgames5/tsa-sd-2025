@@ -61,7 +61,7 @@ export default function App() {
                 }}>
                 <FontAwesomeIcon className="animate-bounce" icon={faArrowDown} fontSize={36} />
             </motion.div>}
-            <motion.div className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full" initial={{ backgroundColor: "#082f49" }} whileInView={{ backgroundColor: "#ffffff" }} transition={{ delay: 0.25, type: "spring", stiffness: 100 }}>
+            <motion.div className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full" initial={{ backgroundColor: "#000000" }} whileInView={{ backgroundColor: "#ffffff" }} transition={{ delay: 0.25, type: "spring", stiffness: 100 }}>
                 <div className="w-max">
                     {/*Add Typewriter Animation*/}
                     <motion.h1 className="text-green-600 text-5xl font-bold drop-shadow-lg"
