@@ -1,6 +1,6 @@
 import cv2
-
-from flask import Flask, request, jsonify
+from flask_cors import CORS
+from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 import os
 import torch
@@ -10,7 +10,11 @@ from backend.model import PlantDiseaseModel
 from backend.main_analyze import train_dataset
 import numpy as np
 
+print(dir(cv2))  # This should list 'imread' as one of the available methods
+
 app = Flask(__name__)
+CORS(app)  # Enable CORS for frontend access
+CHART_PATH = "backend/static/accuracy_chart.png"  # Save chart in backend/static
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -42,23 +46,16 @@ def analyze_image(image_path):
     print(f"🔍 Analyzing image: {image_path}")
 
     try:
-        # Try loading the image with OpenCV first
-        image = cv2.imread(image_path)
-
-        if image is None:
-            raise ValueError(f"OpenCV failed to load image: {image_path}")
-
-        # Convert OpenCV image to PIL Image
-        image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-
-        print(f"Image loaded successfully with OpenCV.")
+        # Load image using PIL
+        image = Image.open(image_path).convert("RGB")
+        print("Image loaded successfully with PIL.")
 
         image = transform(image).unsqueeze(0)
-        print(f"Image transformed.")
+        print("Image transformed.")
 
         with torch.no_grad():
             output = model(image)
-            print(f"Model inference complete.")
+            print("Model inference complete.")
 
             _, predicted = torch.max(output, 1)
             print(f"Predicted class index: {predicted.item()}")
@@ -66,7 +63,7 @@ def analyze_image(image_path):
             return CLASS_NAMES[predicted.item()]
     except Exception as e:
         print(f"Error during image analysis: {e}")
-        raise e  # Re-raise error to see details in logs
+        raise e
 
 
 @app.route("/api/upload", methods=["POST"])
@@ -93,9 +90,13 @@ def upload_file():
         return jsonify({"error": "Failed to analyze image", "details": str(e)}), 500
 
 
-image_path = "/home/sid/Code/tsa-sd/Screenshot 2025-03-15 at 8.07.23 PM.png"
-result = analyze_image(image_path)
-print(f"Predicted class: {result}")
+# Route to serve accuracy chart
+@app.route("/accuracy-chart", methods=["GET"])
+def get_accuracy_chart():
+    if os.path.exists(CHART_PATH):
+        return send_file(CHART_PATH, mimetype="image/png")
+    else:
+        return jsonify({"error": "Accuracy chart not found"}), 404
 
 
 if __name__ == "__main__":

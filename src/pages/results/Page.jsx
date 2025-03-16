@@ -1,23 +1,11 @@
 import axios from "axios";
-import * as motion from "motion/react-client";
-import React from "react";
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 
 export default function ResultsPage() {
     const [chartUrl, setChartUrl] = useState("");
 
     useEffect(() => {
-        // fetch("/accuracy-chart")
-        //     .then((response) => {
-        //         if (response.ok) return response.blob();
-        //         throw new Error("Failed to fetch chart");
-        //     })
-        //     .then((blob) => {
-        //         setChartUrl(URL.createObjectURL(blob));
-        //     })
-        //     .catch((error) => console.error(error));
-        axios.get("/accuracy-chart", { responseType: "blob" })
+        axios.get("http://localhost:5000/accuracy-chart", { responseType: "blob" })
             .then((response) => {
                 const url = URL.createObjectURL(response.data);
                 setChartUrl(url);

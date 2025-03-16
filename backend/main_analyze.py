@@ -1,5 +1,5 @@
 import torch
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 from torch.utils.data import DataLoader
 from torch.optim import Adam
@@ -113,6 +113,7 @@ def train_model():
     plt.legend()
     plt.grid(True)
     plt.savefig("backend/static/accuracy_chart.png")  # Save the graph
+
     print("Saved accuracy chart at backend/static/accuracy_chart.png")
 
 
