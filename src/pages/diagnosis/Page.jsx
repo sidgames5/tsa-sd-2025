@@ -88,8 +88,8 @@ export default function DiagnosisPage() {
             </motion.ul>
 
             {isModalOpen && selectedDisease && (
-                <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ type: "spring", damping: 10 }} id="details-modal" className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr to-blue-950 from-green-950 shadow-lg rounded-lg p-6 z-50">
-                    <h1 className="text-nowrap text-3xl">{selectedDisease.name} Overview</h1>
+                <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ type: "spring", damping: 10 }} id="details-modal" className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr from-sky-950 to-slate-950 shadow-lg rounded-lg p-6 z-50 border-4 border-doulbe border-stone-600">
+                    <h1 className="text-nowrap text-3xl font-bold">{selectedDisease.name} Overview</h1>
                     <p className="text-lg text-left text-white">
                         {selectedDisease.description}
                     </p>
