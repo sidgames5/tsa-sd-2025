@@ -50,6 +50,7 @@ def analyze_image(image_path):
 
         # Convert OpenCV image to PIL Image
         image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+
         print(f"Image loaded successfully with OpenCV.")
 
         image = transform(image).unsqueeze(0)
