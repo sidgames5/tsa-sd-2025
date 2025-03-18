@@ -27,7 +27,7 @@ export default function FeaturesPage() {
         { emoji: "📂", text: "Manage files effortlessly", color: "slate-600" },
         { emoji: "📊", text: "View detailed analytics and support", color: "slate-600" },
         { emoji: "🧭", text: "Easy to navigate", color: "slate-600" },
-        { emoji: "👵", text: "User friendly", color: "slat-600"}
+        { emoji: "👵", text: "User friendly", color: "slate-600"}
     ];
 
     return <main>
