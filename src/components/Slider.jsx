@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion"; // Correct import
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight, faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router";
+
 
 export default function ImageSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -35,14 +37,15 @@ export default function ImageSlider() {
     return (
         <div className="relative flex w-full h-[101vh] items-center justify-center align-middle">
             {/* Left Section original gradient: bg-gradient-to-r to-sky-950 from-green-800*/}
-            <div className="flex flex-col items-center align-middle justify-center text-center w-1/2 h-full bg-gradient-to-l to-sky-950 from-black relative 0 shadow-lg shadow-blue-900/50">
-                <motion.h1 className="text-white text-5xl ml-6 mr-6" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>AI Plant Detection at Your Hands</motion.h1>
+            <div className="flex flex-col items-start justify-center text-left w-1/2 h-full bg-gradient-to-l to-sky-950 from-black relative shadow-lg shadow-blue-900/50 p-12">
+                <motion.h1 className="text-white text-6xl font-semibold" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>AI Plant Detection <br /> <span className="text-5xl">at Your Hands</span></motion.h1>
                 {/* <motion.h3 className="text-white text-3xl ml-6 mr-6 underline cursor-pointer" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>Our Mission!</motion.h3> */}
+                <motion.h1 className="text-white text-lg mt-8" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>Insanely easy User Interface. Simply upload an image and watch as AI gives you easy to understand results. Apply these tips and watch as your crop yields begin to increase. <span className="text-green-300 cursor-pointer underline"><Link to="/upload">Upload Plant Image Now!</Link></span></motion.h1>
             </div>
 
             {/* Right Section */}
-            <div className="relative flex flex-col w-screen h-[101vh] items-center justify-center bg-gradient-to-r from-black to-slate-950 shadow-lg shadow-gray-900/50">
-                <div className="flex items-center gap-6">
+            <div className="relative flex flex-col w-1/2 h-[101vh] items-center justify-center bg-gradient-to-r from-black to-slate-950 shadow-lg shadow-gray-900/50">
+                <div className="flex items-center gap-6 w-full justify-center">
                     {/* Left Arrow */}
                     <motion.div
                         className="cursor-pointer text-white text-4xl p-4 hover:scale-110 transition"
@@ -56,7 +59,7 @@ export default function ImageSlider() {
                         key={currentIndex} // Forces re-render on change
                         src={`/assets/${images[currentIndex]}`}
                         alt={`Slide ${currentIndex}`}
-                        className="rounded-xl max-h-[50vh] max-w-[90%] object-contain shadow-lg"
+                        className="rounded-xl max-h-[80vh] max-w-[80%] object-contain shadow-lg"
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
