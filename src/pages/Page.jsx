@@ -4,6 +4,7 @@ import "../components/CustomSlider"
 import ImageSlider from "../components/Slider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { useCookies } from "react-cookie";
 
 const images = [
     {
@@ -30,6 +31,7 @@ const images = [
 
 export default function App() {
     const [showScrollIcon, setShowScrollIcon] = useState(true);
+    const [cookies, setCookies] = useCookies(["darkMode"]);
 
     useEffect(() => {
         const handleScroll = () => {

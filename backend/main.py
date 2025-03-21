@@ -8,12 +8,18 @@ from torchvision import transforms
 from PIL import Image
 from backend.model import PlantDiseaseModel
 from backend.main_analyze import train_dataset
+from backend.main_analyze import train_model
+from backend.main_analyze import save_accuracy_chart
+from backend.main_analyze import train_accuracies
+
 import numpy as np
 
 print(dir(cv2))  # This should list 'imread' as one of the available methods
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow all origins for /api routes and enables CORS for frontend access
+CORS(
+    app, resources={r"/api/*": {"origins": "*"}}
+)  # Allow all origins for /api routes and enables CORS for frontend access
 CHART_PATH = "backend/static/accuracy_chart.png"  # Save chart in backend/static
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -22,7 +28,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Constants
 IMG_SIZE = (224, 224)
 CLASS_NAMES = list(train_dataset.class_to_idx.keys())
-print(f"Updated CLASS_NAMES: {CLASS_NAMES}")
+# print(f"Updated CLASS_NAMES: {CLASS_NAMES}")
 
 
 # Load trained model
@@ -91,12 +97,16 @@ def upload_file():
 
 
 # Route to serve accuracy chart
-@app.route("/accuracy-chart", methods=["GET"])
+@app.route("/api/accuracy-chart", methods=["GET"])
 def get_accuracy_chart():
-    if os.path.exists(CHART_PATH):
-        return send_file(CHART_PATH, mimetype="image/png")
-    else:
-        return jsonify({"error": "Accuracy chart not found"}), 404
+    # Endpoint to trigger model training and return accuracy data.
+    try:
+        accuracies = train_model()  # Train model and get accuracy list
+        return jsonify(
+            {"success": True, "message": "Training complete", "data": accuracies}
+        )
+    except Exception as e:
+        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
 
 
 if __name__ == "__main__":

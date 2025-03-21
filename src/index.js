@@ -12,29 +12,32 @@ import FeaturesLayout from './pages/features/Layout';
 import FeaturesPage from './pages/features/Page';
 import ResultsLayout from './pages/results/Layout';
 import ResultsPage from './pages/results/Page';
+import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<HomeLayout />}>
-                <Route index element={<HomePage />} />
-                <Route path="upload" element={<UploadLayout />}>
-                    <Route index element={<UploadPage />} />
-                </Route>
-                <Route path="diagnosis" element={<DiagnosisLayout />}>
-                    <Route index element={<DiagnosisPage />} />
-                </Route>
-                <Route path="features" element={<FeaturesLayout />}>
-                    <Route index element={<FeaturesPage />} />
-                </Route>
-                {/*Route path="support" element={<SupportLayout />}>
+    <CookiesProvider>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<HomeLayout />}>
+                    <Route index element={<HomePage />} />
+                    <Route path="upload" element={<UploadLayout />}>
+                        <Route index element={<UploadPage />} />
+                    </Route>
+                    <Route path="diagnosis" element={<DiagnosisLayout />}>
+                        <Route index element={<DiagnosisPage />} />
+                    </Route>
+                    <Route path="features" element={<FeaturesLayout />}>
+                        <Route index element={<FeaturesPage />} />
+                    </Route>
+                    {/*Route path="support" element={<SupportLayout />}>
                     <Route index element={<SupportPage />} />
                 </Route>*/}
-                <Route path="results" element={<ResultsLayout />}>
-                    <Route index element={<ResultsPage />} />
+                    <Route path="results" element={<ResultsLayout />}>
+                        <Route index element={<ResultsPage />} />
+                    </Route>
                 </Route>
-            </Route>
-        </Routes>
-    </BrowserRouter>
+            </Routes>
+        </BrowserRouter>
+    </CookiesProvider>
 );

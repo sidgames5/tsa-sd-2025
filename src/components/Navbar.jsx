@@ -4,14 +4,17 @@ import { motion } from "motion/react";
 import "./Navbar.css";
 import NavbarButton from "./NavbarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLeaf } from "@fortawesome/free-solid-svg-icons";
+import { faLeaf, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { useCookies } from "react-cookie";
 
 
 export default function Navbar() {
+    const [cookies, setCookies] = useCookies(["darkMode"]);
+
     return (
         <div className="homepage-container">
             <div className="navbar-container">
-                <nav className="flex flex-row justify-between items-center bg-gray-900 text-white p-4">
+                <nav className={`flex flex-row justify-between items-center ${cookies.darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-black"} p-4`}>
                     <div className="navbar-left flex items-center">
                         <NavbarButton>
                             <div className="flex flex-row gap-1 items-center">
@@ -40,6 +43,17 @@ export default function Navbar() {
                             <Link to="/features" className="nav-button">
                                 Features
                             </Link>
+                        </NavbarButton>
+                        <NavbarButton>
+                            <button onClick={() => {
+                                if (cookies.darkMode) {
+                                    setCookies("darkMode", false);
+                                } else {
+                                    setCookies("darkMode", true);
+                                }
+                            }}>
+                                <FontAwesomeIcon icon={faMoon} />
+                            </button>
                         </NavbarButton>
                     </div>
                 </nav>

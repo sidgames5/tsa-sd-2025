@@ -61,7 +61,7 @@ export default function UploadPage() {
 
     return (
         <motion.div
-            className="p-6 bg-black shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-green-300"
+            className="p-6 bg-gray-900 shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-green-300"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -79,8 +79,13 @@ export default function UploadPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="w-full border border-green-400 p-3 rounded-lg bg-gray-800 shadow-sm mb-4 cursor-pointer"
+                className="w-full border border-green-400 p-3 rounded-lg bg-sky-950 shadow-sm mb-4 cursor-pointer text-white"
             />
+
+            {/* Image Preiew Placeholder */}
+            {!preview && (
+                <div className="w-80 h-52 border-2 border-dashed border-gray-600 rounded-lg flex justify-center items-center mb-4 text-white">Image Here</div>
+            )}
 
             {preview && (
                 <motion.img
@@ -119,7 +124,7 @@ export default function UploadPage() {
             )}
 
             <div className="w-full text-center mt-12">
-                <p className="text-lg text-gray-700">
+                <p className="text-lg text-gray-700 text-white">
                     🌿 Need help identifying plant diseases? Upload an image and
                     let AI analyze it instantly! If you need expert advice, visit
                     our{" "}
