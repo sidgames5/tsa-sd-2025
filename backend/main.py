@@ -1,5 +1,6 @@
 import cv2
 from flask_cors import CORS
+import threading
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 import os
@@ -10,7 +11,11 @@ from backend.model import PlantDiseaseModel
 from backend.main_analyze import train_dataset
 from backend.main_analyze import train_model
 from backend.main_analyze import train_accuracies
+
+training_lock = threading.Lock()
+
 from backend.main_analyze import save_accuracy_chart
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})  # Enable CORS
@@ -82,19 +87,25 @@ def upload_file():
 def train():
     # Trigger training and return accuracy data.
     global train_accuracies  # modify the global variable
-    try:
-        print("🚀 Training started...")
-        train_accuracies = train_model()  # Train model and update global variable
+    if training_lock.locked():
+        return jsonify({"error": "Training is already in progress"}), 409
 
-        if not train_accuracies or not isinstance(train_accuracies, list):
-            raise ValueError("Training did not return valid accuracy data.")
+    with training_lock:
+        try:
+            print("🚀 Training started...")
+            train_accuracies = train_model()
 
-        print(f"Training complete. Accuracy: {train_accuracies}")
+            if not train_accuracies or not isinstance(train_accuracies, list):
+                raise ValueError("Training did not return valid accuracy data.")
 
-        return jsonify({"message": "Training complete", "accuracy": train_accuracies})
-    except Exception as e:
-        print(f"Training Error: {e}")  # Log error in the console
-        return jsonify({"error": "Training failed", "details": str(e)}), 500
+            print(f"Training complete. Accuracy: {train_accuracies}")
+            return jsonify(
+                {"message": "Training complete", "accuracy": train_accuracies}
+            )
+
+        except Exception as e:
+            print(f"Training Error: {e}")
+            return jsonify({"error": "Training failed", "details": str(e)}), 500
 
 
 @app.route("/accuracy/data", methods=["GET"])
@@ -117,4 +128,4 @@ def get_accuracy_chart():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)  # Ensure Flask runs on port 5000
+    app.run(debug=False, port=5000)  # Ensure Flask runs on port 5000

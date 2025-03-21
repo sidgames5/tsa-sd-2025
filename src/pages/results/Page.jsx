@@ -41,11 +41,11 @@ export default function ResultsPage() {
 
             {/* Overall Results & Accuracy Graph */}
             <motion.div className="flex flex-row w-4/5 justify-center gap-16 cursor-pointer">
-                <motion.div className="flex flex-col w-1/2 h-2/3 border-white border-2 rounded-lg p-4 gap-2">
-                    <motion.li className="flex flex-col items-center w-full"
-                        whileHover={{ scale: 1.15 }}
-                        transition={{ type: "spring", stiffness: 50 }}
-                    >
+                <motion.div className="flex flex-col w-1/2 h-2/3 border-white border-2 rounded-lg p-4 gap-2"
+                    whileHover={{ scale: 1.15 }}
+                    transition={{ type: "spring", stiffness: 50 }}
+                >
+                    <motion.li className="flex flex-col items-center w-full">
                         <h1 className="text-2xl text-center text-nowrap font-bold">Training Accuracy</h1>
                         {chartUrl && <img src={chartUrl} alt="Accuracy Chart" className="mt-2 w-full max-w-xs" />}
                     </motion.li>
@@ -58,14 +58,19 @@ export default function ResultsPage() {
                 </motion.div>
 
                 {/* Plant Health Status List */}
-                <div className="flex flex-col gap-4 w-full">
+                <motion.div className="flex flex-col gap-4 w-full"
+                    whileHover={{ scale: 1.02 }}
+                >
                     {plants.map((plant, index) => (
-                        <div key={index} className="flex flex-row w-full justify-between gap-8 text-xl border-white border-2 rounded-lg p-4">
+                        <motion.div key={index} className="flex flex-row w-full justify-between gap-8 text-xl border-white border-2 rounded-lg p-4"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ type: "spring", stiffness: 50 }}
+                        >
                             <span>{plant.name}</span>
                             <span>{plant.status}</span>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </motion.div>
         </div>
     );

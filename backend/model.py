@@ -6,7 +6,7 @@ import os
 
 # Constants
 IMG_SIZE = (224, 224)
-DATASET_PATH = "/home/sid/.cache/kagglehub/datasets/vipoooool/new-plant-diseases-dataset/versions/2/train"  # Update this to the correct dataset path
+DATASET_PATH = "/home/sid/.cache/kagglehub/datasets/vipoooool/new-plant-diseases-dataset/versions/2/train"
 
 # Load dataset
 train_dataset = datasets.ImageFolder(root=DATASET_PATH)
@@ -59,27 +59,27 @@ class PlantDiseaseDataset(Dataset):
         return image, label
 
 
-# CNN Model
+# ✅ **Fixed Model - Removed In-Place Operations**
 class PlantDiseaseModel(nn.Module):
     def __init__(self, num_classes=len(CLASS_NAMES)):
         super(PlantDiseaseModel, self).__init__()
 
         self.feature_extractor = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
+            nn.ReLU(inplace=False),  # ✅ FIXED: Avoid in-place ReLU
             nn.MaxPool2d(2, 2),
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
-            nn.ReLU(),
+            nn.ReLU(inplace=False),  # ✅ FIXED
             nn.MaxPool2d(2, 2),
             nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.ReLU(),
+            nn.ReLU(inplace=False),  # ✅ FIXED
             nn.MaxPool2d(2, 2),
         )
 
         self.dropout = nn.Dropout(0.5)
         self.fc = nn.Sequential(
             nn.Linear(128 * 28 * 28, 128),
-            nn.ReLU(),
+            nn.ReLU(inplace=False),  # ✅ FIXED
             self.dropout,
             nn.Linear(128, num_classes),
         )

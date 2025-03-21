@@ -18,3 +18,4 @@ fastapi
 uvicorn
 cv2
 flask-cors
+threading
