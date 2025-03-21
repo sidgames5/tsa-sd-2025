@@ -44,6 +44,7 @@ model = PlantDiseaseModel(num_classes=len(CLASS_NAMES)).to(device)
 criterion = CrossEntropyLoss()
 optimizer = Adam(model.parameters(), lr=0.001)
 
+# Global list to store accuracy
 train_accuracies = []
 
 
@@ -70,9 +71,9 @@ def save_accuracy_chart(train_accuracies):
 def train_model():
     """Train the model and return accuracy data."""
     global train_accuracies
-    train_accuracies = []  # Reset accuracy list before training
-    model.train()
+    train_accuracies.clear()  # Reset before training
 
+    model.train()
     for epoch in range(EPOCHS):
         correct = 0
         total = 0
@@ -99,6 +100,5 @@ def train_model():
     return train_accuracies
 
 
-# Ensure training only happens when script is run directly
 if __name__ == "__main__":
     train_model()

@@ -79,7 +79,7 @@ export default function UploadPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="w-full border border-green-400 p-3 rounded-lg bg-sky-950 shadow-sm mb-4 cursor-pointer text-white"
+                className="w-full border border-green-400 p-3 rounded-lg bg-gray-950 shadow-sm mb-4 cursor-pointer text-white"
             />
 
             {/* Image Preiew Placeholder */}

@@ -9,18 +9,13 @@ from PIL import Image
 from backend.model import PlantDiseaseModel
 from backend.main_analyze import train_dataset
 from backend.main_analyze import train_model
-from backend.main_analyze import save_accuracy_chart
 from backend.main_analyze import train_accuracies
-
-import numpy as np
-
-print(dir(cv2))  # This should list 'imread' as one of the available methods
+from backend.main_analyze import save_accuracy_chart
 
 app = Flask(__name__)
-CORS(
-    app, resources={r"/api/*": {"origins": "*"}}
-)  # Allow all origins for /api routes and enables CORS for frontend access
-CHART_PATH = "backend/static/accuracy_chart.png"  # Save chart in backend/static
+CORS(app, resources={r"/api/*": {"origins": "*"}})  # Enable CORS
+
+CHART_PATH = "backend/static/accuracy_chart.png"
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -28,8 +23,6 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Constants
 IMG_SIZE = (224, 224)
 CLASS_NAMES = list(train_dataset.class_to_idx.keys())
-# print(f"Updated CLASS_NAMES: {CLASS_NAMES}")
-
 
 # Load trained model
 model = PlantDiseaseModel(num_classes=len(CLASS_NAMES))
@@ -38,7 +31,7 @@ model.load_state_dict(
 )
 model.eval()
 
-# Image transformations
+# Image preprocessing
 transform = transforms.Compose(
     [
         transforms.Resize(IMG_SIZE),
@@ -49,32 +42,24 @@ transform = transforms.Compose(
 
 
 def analyze_image(image_path):
-    print(f"🔍 Analyzing image: {image_path}")
-
+    """Perform inference on uploaded plant image."""
     try:
-        # Load image using PIL
         image = Image.open(image_path).convert("RGB")
-        print("Image loaded successfully with PIL.")
-
         image = transform(image).unsqueeze(0)
-        print("Image transformed.")
 
         with torch.no_grad():
             output = model(image)
-            print("Model inference complete.")
-
             _, predicted = torch.max(output, 1)
-            print(f"Predicted class index: {predicted.item()}")
 
-            return CLASS_NAMES[predicted.item()]
+        return CLASS_NAMES[predicted.item()]
     except Exception as e:
-        print(f"Error during image analysis: {e}")
+        print(f"❌ Error analyzing image: {e}")
         raise e
 
 
 @app.route("/api/upload", methods=["POST"])
 def upload_file():
-    """Flask route to handle image uploads and return predictions."""
+    """Handles image upload and returns prediction."""
     if "image" not in request.files:
         return jsonify({"error": "No image uploaded"}), 400
 
@@ -86,28 +71,40 @@ def upload_file():
     filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
     file.save(filepath)
 
-    print(f"Image saved at: {filepath}")  # Debugging print
-
     try:
         result = analyze_image(filepath)
         return jsonify({"message": f"Detected: {result}"})
     except Exception as e:
-        print(f"Error analyzing image: {e}")  # Debugging print
         return jsonify({"error": "Failed to analyze image", "details": str(e)}), 500
 
 
-# Route to serve accuracy chart
-@app.route("/api/accuracy-chart", methods=["GET"])
-def get_accuracy_chart():
-    # Endpoint to trigger model training and return accuracy data.
+@app.route("/api/train", methods=["POST"])
+def train():
+    """Trigger training and return accuracy data."""
     try:
         accuracies = train_model()  # Train model and get accuracy list
-        return jsonify(
-            {"success": True, "message": "Training complete", "data": accuracies}
-        )
+        return jsonify({"message": "Training complete", "accuracy": accuracies})
     except Exception as e:
-        return jsonify({"error": "Internal Server Error", "message": str(e)}), 500
+        return jsonify({"error": "Training failed", "details": str(e)}), 500
+
+
+def get_accuracy_data():
+    # Return stored training accuracy data.
+    if train_accuracies:
+        return jsonify({"accuracy": train_accuracies})
+    return (
+        jsonify({"error": "No accuracy data available yet. Run /api/train first!"}),
+        404,
+    )
+
+
+@app.route("/accuracy/chart", methods=["GET"])
+def get_accuracy_chart():
+    """Return the saved accuracy chart image."""
+    if os.path.exists(CHART_PATH):
+        return send_file(CHART_PATH, mimetype="image/png")
+    return jsonify({"error": "Accuracy chart not found"}), 404
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5000)  # Ensure Flask runs on port 5000
