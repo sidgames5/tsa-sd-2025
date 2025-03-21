@@ -1,6 +1,26 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
+
+const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+        const response = await axios.post("http://127.0.0.1:5000/api/upload", formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+        console.log("Prediction:", response.data);
+    } catch (error) {
+        console.error("Error uploading image:", error);
+    }
+};
+
+// Inside your JSX:
+<input type="file" onChange={handleFileUpload} />
+
+
 export default function ResultsPage() {
     // TODO: get this data from the backend
     const [plants, setPlants] = useState([
