@@ -13,7 +13,7 @@ import numpy as np
 print(dir(cv2))  # This should list 'imread' as one of the available methods
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend access
+CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow all origins for /api routes and enables CORS for frontend access
 CHART_PATH = "backend/static/accuracy_chart.png"  # Save chart in backend/static
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
