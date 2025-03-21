@@ -78,16 +78,26 @@ def upload_file():
         return jsonify({"error": "Failed to analyze image", "details": str(e)}), 500
 
 
-@app.route("/api/train", methods=["POST"])
+@app.route("/train", methods=["GET"])
 def train():
-    """Trigger training and return accuracy data."""
+    # Trigger training and return accuracy data.
+    global train_accuracies  # modify the global variable
     try:
-        accuracies = train_model()  # Train model and get accuracy list
-        return jsonify({"message": "Training complete", "accuracy": accuracies})
+        print("🚀 Training started...")
+        train_accuracies = train_model()  # Train model and update global variable
+
+        if not train_accuracies or not isinstance(train_accuracies, list):
+            raise ValueError("Training did not return valid accuracy data.")
+
+        print(f"Training complete. Accuracy: {train_accuracies}")
+
+        return jsonify({"message": "Training complete", "accuracy": train_accuracies})
     except Exception as e:
+        print(f"Training Error: {e}")  # Log error in the console
         return jsonify({"error": "Training failed", "details": str(e)}), 500
 
 
+@app.route("/accuracy/data", methods=["GET"])
 def get_accuracy_data():
     # Return stored training accuracy data.
     if train_accuracies:
