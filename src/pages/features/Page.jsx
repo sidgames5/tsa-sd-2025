@@ -7,7 +7,8 @@ function HoverPopupCard({ children, title, color }) {
         <motion.div className="flex flex-col items-center bg-white w-72 h-[17rem] p-4 rounded-3xl absolute bottom-4"
             initial={{ translateY: 0, rotate: -1 }}
             whileHover={{ translateY: -125, rotate: -4 }}
-            transition={{ type: "spring", stiffness: 90, damping: 15 }}>
+            transition={{ type: "spring", stiffness: 90, damping: 15 }}
+        >
             <span className="text-8xl">{title}</span>
             <div className="text-xl mt-8 text-center">{children}</div>
         </motion.div>
@@ -27,7 +28,7 @@ export default function FeaturesPage() {
         { emoji: "📂", text: "Manage files effortlessly", color: "slate-600" },
         { emoji: "📊", text: "View detailed analytics and support", color: "slate-600" },
         { emoji: "🧭", text: "Easy to navigate", color: "slate-600" },
-        { emoji: "👵", text: "User friendly", color: "slate-600"}
+        { emoji: "👵", text: "User friendly", color: "slate-600" }
     ];
 
     return <main>
