@@ -4,34 +4,10 @@ import "../components/CustomSlider"
 import ImageSlider from "../components/Slider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import { useCookies } from "react-cookie";
 
-const images = [
-    {
-        imgURL:
-            "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
-        imgAlt: "img-1"
-    },
-    {
-        imgURL:
-            "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
-        imgAlt: "img-2"
-    },
-    {
-        imgURL:
-            "https://images.pexels.com/photos/1128678/pexels-photo-1128678.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
-        imgAlt: "img-3"
-    },
-    {
-        imgURL:
-            "https://images.pexels.com/photos/54455/cook-food-kitchen-eat-54455.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
-        imgAlt: "img-4"
-    }
-];
 
 export default function App() {
     const [showScrollIcon, setShowScrollIcon] = useState(true);
-    const [cookies, setCookies] = useCookies(["darkMode"]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -54,20 +30,30 @@ export default function App() {
                 })}
             </CustomSlider> */}
             <ImageSlider />
-            {showScrollIcon && <motion.div className="text-white fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
+            {showScrollIcon && <motion.div
+                className="text-white fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
                 initial={{ translateY: -100 }}
                 animate={{ translateY: 0 }}
                 transition={{ duration: 2, type: "spring", stiffness: 100, damping: 10 }}
                 onClick={() => {
                     window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
-                }}>
+                }}
+            >
                 <FontAwesomeIcon className="animate-bounce" icon={faArrowDown} fontSize={36} />
             </motion.div>}
-            <motion.div className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full" initial={{ backgroundColor: "#ffffff" }} whileInView={{ backgroundColor: "#000000" }} transition={{ delay: 0.25, type: "spring", stiffness: 100 }}>
+            <motion.div
+                className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full"
+                initial={{ backgroundColor: "#ffffff" }}
+                whileInView={{ backgroundColor: "#000000" }}
+                transition={{ delay: 0.25, type: "spring", stiffness: 100 }}
+            >
                 <div className="w-max">
                     {/*Add Typewriter Animation*/}
-                    <motion.h1 className="text-green-600 text-5xl font-bold drop-shadow-lg"
-                        initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ type: "spring", damping: 10 }}>Our Mission</motion.h1>
+                    <motion.h1
+                        className="text-green-600 text-5xl font-bold drop-shadow-lg"
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        transition={{ type: "spring", damping: 10 }}>Our Mission</motion.h1>
                 </div>
                 <table className="table-auto text-left w-[80vw] mt-20">
                     <tbody>
@@ -81,7 +67,7 @@ export default function App() {
                         <tr>
                             <td className="font-bold text-4xl p-4 bg-sky-950 text-white rounded-bl-xl">Why We Did This</td>
                             <td className="text-2xl w-[50vw] p-4 bg-gray-900 text-white rounded-br-xl">
-                                We created this project because we wanted to blend our love for technology with a cause that can make a meaningful impact. As high schoolers, we often feel that there’s a lack of real-world tech solutions made by people our age. We wanted to show that with determination and the right tools, we can create something valuable.
+                                We created this project because we wanted to blend our love for technology with a cause that can make a meaningful impact. As high schoolers, we often feel that there's a lack of real-world tech solutions made by people our age. We wanted to show that with determination and the right tools, we can create something valuable.
                             </td>
                         </tr>
                     </tbody>
