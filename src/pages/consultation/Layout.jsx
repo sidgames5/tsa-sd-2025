@@ -1,1 +1,1 @@
-export default function ConsultationLayout
+export default function ConsultationLayout() { }
