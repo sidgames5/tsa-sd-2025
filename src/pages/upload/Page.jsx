@@ -124,7 +124,7 @@ export default function UploadPage() {
             )}
 
             <div className="w-full text-center mt-12">
-                <p className="text-lg text-gray-700 text-white">
+                <p className="text-lg text-white">
                     🌿 Need help identifying plant diseases? Upload an image and
                     let AI analyze it instantly! If you need expert advice, visit
                     our{" "}
