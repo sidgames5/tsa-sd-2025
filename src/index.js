@@ -30,9 +30,6 @@ root.render(
                     <Route path="features" element={<FeaturesLayout />}>
                         <Route index element={<FeaturesPage />} />
                     </Route>
-                    {/*Route path="support" element={<SupportLayout />}>
-                    <Route index element={<SupportPage />} />
-                </Route>*/}
                     <Route path="results" element={<ResultsLayout />}>
                         <Route index element={<ResultsPage />} />
                     </Route>
