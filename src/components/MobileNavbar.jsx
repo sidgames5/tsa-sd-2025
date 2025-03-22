@@ -13,6 +13,8 @@ export default function MobileNavbar({ onClose }) {
                 </Link>
             </NavbarButton>)}
         </div>
-        <div className="mt-8 text-white text-2xl cursor-pointer hover:text-3xl transition-all duration-300"><FontAwesomeIcon icon={faClose} onClick={onClose} /></div>
+        <div className="mt-8 text-white text-2xl cursor-pointer hover:text-3xl transition-all duration-300">
+            <FontAwesomeIcon icon={faClose} onClick={onClose} />
+        </div>
     </div>
 }
