@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
+import { useCookies } from "react-cookie";
 
 export default function ResultsPage() {
     // State for plant health results
@@ -21,6 +22,8 @@ export default function ResultsPage() {
     const [accuracyData, setAccuracyData] = useState([]); // Store accuracy over epochs
     const [chartUrl, setChartUrl] = useState(""); // Store accuracy chart URL
 
+    const [cookies] = useCookies(["darkMode"]);
+
     // Fetch training accuracy from backend
     useEffect(() => {
         const fetchAccuracyData = async () => {
@@ -36,31 +39,26 @@ export default function ResultsPage() {
     }, []);
 
     return (
-        <div className="flex flex-col items-center mt-[12vh] text-white justify-center gap-12">
+        <div className={`flex flex-col items-center mt-[12vh] justify-center gap-12 ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
             <h1 className="text-4xl font-bold mt-12">AI Plant Health Results</h1>
 
             {/* Overall Results & Accuracy Graph */}
-            <motion.div className="flex flex-row w-4/5 justify-center gap-16 cursor-pointer">
-                <motion.div className="flex flex-col w-1/2 h-2/3 border-white border-2 rounded-lg p-4 gap-2"
-                    whileHover={{ scale: 1.15 }}
-                    transition={{ type: "spring", stiffness: 50 }}
-                >
-                    <motion.li className="flex flex-col items-center w-full">
+            <motion className="flex flex-row w-4/5 justify-center gap-16 cursor-pointer">
+                <motion className="flex flex-col w-1/2 h-2/3 border-white border-2 rounded-lg p-4 gap-2">
+                    <li className="flex flex-col items-center w-full">
                         <h1 className="text-2xl text-center text-nowrap font-bold">Training Accuracy</h1>
                         {chartUrl && <img src={chartUrl} alt="Accuracy Chart" className="mt-2 w-full max-w-xs" />}
-                    </motion.li>
+                    </li>
                     <div className="text-xl">
                         <h1>Tips to improve plant health</h1>
                         <ul className="list-disc list-inside text-lg">
                             {tips.map((tip, i) => <li key={i}>{tip}</li>)}
                         </ul>
                     </div>
-                </motion.div>
+                </motion>
 
                 {/* Plant Health Status List */}
-                <motion.div className="flex flex-col gap-4 w-full"
-                    whileHover={{ scale: 1.02 }}
-                >
+                <motion className="flex flex-col gap-4 w-full">
                     {plants.map((plant, index) => (
                         <motion.div key={index} className="flex flex-row w-full justify-between gap-8 text-xl border-white border-2 rounded-lg p-4"
                             whileHover={{ scale: 1.05 }}
@@ -70,8 +68,8 @@ export default function ResultsPage() {
                             <span>{plant.status}</span>
                         </motion.div>
                     ))}
-                </motion.div>
-            </motion.div>
+                </motion>
+            </motion>
         </div>
     );
 }
