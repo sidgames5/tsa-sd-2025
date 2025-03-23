@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import ImageSlider from "../components/Slider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { useCookies } from "react-cookie";
 
 
 export default function App() {
     const [showScrollIcon, setShowScrollIcon] = useState(true);
+    const [cookies] = useCookies(["darkMode"]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -30,7 +32,7 @@ export default function App() {
             </CustomSlider> */}
             <ImageSlider />
             {showScrollIcon && <motion.div
-                className="text-white fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
+                className={`${cookies.darkMode ? "text-white" : "text-black"} fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer`}
                 initial={{ translateY: -100 }}
                 animate={{ translateY: 0 }}
                 transition={{ duration: 2, type: "spring", stiffness: 100, damping: 10 }}
@@ -42,8 +44,8 @@ export default function App() {
             </motion.div>}
             <motion.div
                 className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full"
-                initial={{ backgroundColor: "#ffffff" }}
-                whileInView={{ backgroundColor: "#000000" }}
+                initial={{ backgroundColor: cookies.darkMode ? "#ffffff" : "#000000" }}
+                whileInView={{ backgroundColor: cookies.darkMode ? "#000000" : "#ffffff" }}
                 transition={{ delay: 0.25, type: "spring", stiffness: 100 }}
             >
                 <div className="w-max">
@@ -52,7 +54,10 @@ export default function App() {
                         className="text-green-600 text-5xl font-bold drop-shadow-lg"
                         initial={{ scale: 0 }}
                         whileInView={{ scale: 1 }}
-                        transition={{ type: "spring", damping: 10 }}>Our Mission</motion.h1>
+                        transition={{ type: "spring", damping: 10 }}
+                    >
+                        Our Mission
+                    </motion.h1>
                 </div>
                 <table className="table-auto text-left w-[80vw] mt-20">
                     <tbody>
