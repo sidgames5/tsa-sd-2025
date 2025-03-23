@@ -1,8 +1,3 @@
-/* General Container */
-body {
-    background-image: linear-gradient(to right, oklch(0.269 0 0), oklch(0.21 0.034 264.665));
-}
-
 .container {
     max-width: 60%;
     max-height: 40%;

@@ -3,6 +3,7 @@
 import { animate, motion, useMotionValue, useMotionValueEvent, useScroll } from "framer-motion";
 import { useRef, useState } from "react";
 import "./DiagnosisPage.css";
+import { useCookies } from "react-cookie";
 
 export default function DiagnosisPage() {
     const ref = useRef(null);
@@ -11,6 +12,8 @@ export default function DiagnosisPage() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDisease, setSelectedDisease] = useState(null);
+
+    const [cookies] = useCookies(["darkMode"]);
 
     const diseases = [
         {
@@ -58,7 +61,7 @@ export default function DiagnosisPage() {
     ];
 
     return (
-        <div className="container">
+        <div className={`container ${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
             <h1 className="header">Plant Diagnosis Guide</h1>
             <p className="subtext">Match the symptoms with treatments for your plants.</p>
 
