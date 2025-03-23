@@ -1,6 +1,5 @@
 import * as motion from "motion/react-client";
 import React, { useEffect, useState } from "react";
-import "../components/CustomSlider"
 import ImageSlider from "../components/Slider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";

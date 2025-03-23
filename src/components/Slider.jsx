@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion"; // Correct import
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight, faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router";
 import { useCookies } from "react-cookie";
 
 
 export default function ImageSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [cookies, setCookies] = useCookies(["darkMode"]);
+    const [cookies] = useCookies(["darkMode"]);
 
     const images = [
         "480-360-max.png",

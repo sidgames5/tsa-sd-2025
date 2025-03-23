@@ -1,7 +1,4 @@
 import { Link } from "react-router";
-import { useState } from "react";
-import { motion } from "motion/react";
-import "./Navbar.css";
 import NavbarButton from "./NavbarButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeaf, faMoon } from "@fortawesome/free-solid-svg-icons";
