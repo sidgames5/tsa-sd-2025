@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import Button from "../../components/Button";
 import * as motion from "motion/react-client";
 import React from "react";
+import { useCookies } from "react-cookie";
 
 export default function UploadPage() {
     const [image, setImage] = useState(null);
@@ -11,6 +12,7 @@ export default function UploadPage() {
     const [loading, setLoading] = useState(false);
     const [timer, setTimer] = useState(0);
     const [intervalId, setIntervalId] = useState(null);
+    const [cookies] = useCookies(["darkMode"]);
 
     // Handle Image Selection
     const handleImageChange = (event) => {
@@ -61,7 +63,7 @@ export default function UploadPage() {
 
     return (
         <motion.div
-            className="p-6 bg-gray-900 shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-green-300"
+            className={`p-6 ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-green-300`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -79,12 +81,12 @@ export default function UploadPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="w-full border border-green-400 p-3 rounded-lg bg-gray-950 shadow-sm mb-4 cursor-pointer text-white"
+                className="w-full border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
             />
 
             {/* Image Preiew Placeholder */}
             {!preview && (
-                <div className="w-80 h-52 border-2 border-dashed border-gray-600 rounded-lg flex justify-center items-center mb-4 text-white">Image Here</div>
+                <div className="w-80 h-52 border-2 border-dashed border-gray-600 rounded-lg flex justify-center items-center mb-4">Image Here</div>
             )}
 
             {preview && (
@@ -105,7 +107,7 @@ export default function UploadPage() {
             >
                 <Button
                     onClick={handleUpload}
-                    className={`bg-blue-500 text-white px-5 py-2 mt- transition hover:bg-blue-700 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                    className={`bg-blue-500 px-5 py-2 mt- transition hover:bg-blue-700 ${loading ? "opacity-50 cursor-not-allowed" : ""
                         }`}
                 >
                     Upload
@@ -124,7 +126,7 @@ export default function UploadPage() {
             )}
 
             <div className="w-full text-center mt-12">
-                <p className="text-lg text-white">
+                <p className="text-lg">
                     🌿 Need help identifying plant diseases? Upload an image and
                     let AI analyze it instantly! If you need expert advice, visit
                     our{" "}
