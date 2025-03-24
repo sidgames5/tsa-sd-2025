@@ -73,6 +73,7 @@ export default function DiagnosisPage() {
                 >
                     {diseases.map((disease, index) => (
                         <motion.div key={index}
+                            className="bg-green-600 w-[25vh] p-5 "
                             whileHover={{ scale: 1.15 }}
                             transition={{ type: "spring", stiffness: 50 }} onClick={() => {
                                 setSelectedDisease(disease);

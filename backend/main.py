@@ -91,9 +91,10 @@ def train():
 
 @app.route("/api/accuracy/chart", methods=["GET"])
 def get_accuracy_chart():
-    """Return the saved accuracy chart image."""
+    # Return the saved accuracy chart image.
     if os.path.exists(CHART_PATH):
-        return send_file(CHART_PATH, mimetype="image/png")
+        return jsonify({"accuracy": train_accuracies})
+        # return send_file(CHART_PATH, mimetype="image/png")
     return jsonify({"error": "Accuracy chart not found"}), 404
 
 

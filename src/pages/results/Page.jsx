@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useCookies } from "react-cookie";
+import Chart from "./Chart";
 
 export default function ResultsPage() {
     // State for plant health results
@@ -49,11 +50,12 @@ export default function ResultsPage() {
                         <h1 className="text-2xl text-center text-nowrap font-bold">Training Accuracy</h1>
                         {chartUrl && <img src={chartUrl} alt="Accuracy Chart" className="mt-2 w-full max-w-xs" />}
                     </li>
-                    <div className="text-xl">
-                        <h1>Tips to improve plant health</h1>
+                    <div className="text-xl text-white">
+                        {/* <h1>Tips to improve plant health</h1>
                         <ul className="list-disc list-inside text-lg">
                             {tips.map((tip, i) => <li key={i}>{tip}</li>)}
-                        </ul>
+                        </ul> */}
+                        <Chart />
                     </div>
                 </div>
 

@@ -14,7 +14,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Constants
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 3
+EPOCHS = 10
 
 # Download dataset
 dataset_path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset")

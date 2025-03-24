@@ -52,7 +52,7 @@ export default function App() {
                 <div className="w-max">
                     {/*Add Typewriter Animation*/}
                     <motion.h1
-                        className="text-green-600 text-5xl font-bold drop-shadow-lg"
+                        className={`${cookies.darkMode ? 'text-white' : 'text-green-600'} text-5xl font-bold drop-shadow-lg`}
                         initial={{ scale: 0 }}
                         whileInView={{ scale: 1 }}
                         transition={{ type: "spring", damping: 10 }}
