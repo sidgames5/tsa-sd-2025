@@ -12,7 +12,7 @@ export default function App() {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > window.innerHeight) {
+            if (window.scrollY > (window.innerHeight / 4)) {
                 setShowScrollIcon(false);
             } else {
                 setShowScrollIcon(true);
@@ -32,7 +32,7 @@ export default function App() {
             </CustomSlider> */}
             <ImageSlider />
             {showScrollIcon && <motion.div
-                className={`${cookies.darkMode ? "text-white" : "text-black"} fixed bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer`}
+                className={`${cookies.darkMode ? "text-white hover:text-green-200" : "text-black hover:text-green-600"} fixed bottom-8 flex items-center justify-center transform -translate-x-1/2 cursor-pointer`}
                 initial={{ translateY: -100 }}
                 animate={{ translateY: 0 }}
                 transition={{ duration: 2, type: "spring", stiffness: 100, damping: 10 }}
@@ -40,14 +40,14 @@ export default function App() {
                     window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
                 }}
             >
-                <h1></h1>
+                <h1 className="animate-bounce mr-4 text-2xl">Our Mission</h1>
                 <FontAwesomeIcon className="animate-bounce" icon={faArrowDown} fontSize={36} />
             </motion.div>}
             <motion.div
                 className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full"
                 initial={{ backgroundColor: cookies.darkMode ? "#ffffff" : "#000000" }}
                 whileInView={{ backgroundColor: cookies.darkMode ? "#000000" : "#ffffff" }}
-                transition={{ delay: 0.25, type: "spring", stiffness: 100 }}
+                transition={{ type: "tween", duration: 0.7 }}
             >
                 <div className="w-max">
                     {/*Add Typewriter Animation*/}

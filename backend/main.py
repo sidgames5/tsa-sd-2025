@@ -1,49 +1,38 @@
+import os
 import cv2
-from flask_cors import CORS
+import torch
 import threading
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
-import os
-import torch
-from torchvision import transforms
 from PIL import Image
-from backend.model import PlantDiseaseModel
-from backend.main_analyze import train_dataset
-from backend.main_analyze import train_model
-from backend.main_analyze import train_accuracies
+from torchvision import transforms
+from backend.model import PlantDiseaseModel, get_transforms
+from backend.main_analyze import train_model, train_accuracies, save_accuracy_chart
 
-training_lock = threading.Lock()
-
-from backend.main_analyze import save_accuracy_chart
-
-
+# Flask Setup
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})  # Enable CORS
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-CHART_PATH = "backend/static/accuracy_chart.png"
+# Constants
 UPLOAD_FOLDER = "uploads"
+CHART_PATH = "backend/static/accuracy_chart.png"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-# Constants
-IMG_SIZE = (224, 224)
-CLASS_NAMES = list(train_dataset.class_to_idx.keys())
-
-# Load trained model
-model = PlantDiseaseModel(num_classes=len(CLASS_NAMES))
+# Load Model
+model = PlantDiseaseModel(num_classes=len(train_accuracies))
 model.load_state_dict(
-    torch.load("models/plant_disease_model.pth", map_location=torch.device("cpu"))
+    torch.load("models/plant_disease_model.pth", map_location="cpu"), strict=False
 )
+
 model.eval()
 
-# Image preprocessing
-transform = transforms.Compose(
-    [
-        transforms.Resize(IMG_SIZE),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ]
-)
+# Image Transformations
+transform = get_transforms()
+
+# Lock for Training
+training_lock = threading.Lock()
 
 
 def analyze_image(image_path):
@@ -56,10 +45,10 @@ def analyze_image(image_path):
             output = model(image)
             _, predicted = torch.max(output, 1)
 
-        return CLASS_NAMES[predicted.item()]
+        return train_accuracies[predicted.item()]
     except Exception as e:
-        print(f"❌ Error analyzing image: {e}")
-        raise e
+        print(f"Error analyzing image: {e}")
+        return None
 
 
 @app.route("/api/upload", methods=["POST"])
@@ -72,54 +61,35 @@ def upload_file():
     if file.filename == "":
         return jsonify({"error": "Invalid file"}), 400
 
-    filename = secure_filename(file.filename)
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+    filepath = os.path.join(app.config["UPLOAD_FOLDER"], secure_filename(file.filename))
     file.save(filepath)
 
-    try:
-        result = analyze_image(filepath)
+    result = analyze_image(filepath)
+    if result:
         return jsonify({"message": f"Detected: {result}"})
-    except Exception as e:
-        return jsonify({"error": "Failed to analyze image", "details": str(e)}), 500
+    return jsonify({"error": "Failed to analyze image"}), 500
 
 
-@app.route("/train", methods=["GET"])
+@app.route("/api/train", methods=["GET"])
 def train():
-    # Trigger training and return accuracy data.
-    global train_accuracies  # modify the global variable
+    """Train the model and return accuracy data."""
     if training_lock.locked():
         return jsonify({"error": "Training is already in progress"}), 409
 
     with training_lock:
         try:
-            print("🚀 Training started...")
-            train_accuracies = train_model()
-
-            if not train_accuracies or not isinstance(train_accuracies, list):
-                raise ValueError("Training did not return valid accuracy data.")
-
-            print(f"Training complete. Accuracy: {train_accuracies}")
+            train_accuracies.clear()
+            print("Training started...")
+            train_model()
+            save_accuracy_chart(train_accuracies)
             return jsonify(
                 {"message": "Training complete", "accuracy": train_accuracies}
             )
-
         except Exception as e:
-            print(f"Training Error: {e}")
             return jsonify({"error": "Training failed", "details": str(e)}), 500
 
 
-@app.route("/accuracy/data", methods=["GET"])
-def get_accuracy_data():
-    # Return stored training accuracy data.
-    if train_accuracies:
-        return jsonify({"accuracy": train_accuracies})
-    return (
-        jsonify({"error": "No accuracy data available yet. Run /api/train first!"}),
-        404,
-    )
-
-
-@app.route("/accuracy/chart", methods=["GET"])
+@app.route("/api/accuracy/chart", methods=["GET"])
 def get_accuracy_chart():
     """Return the saved accuracy chart image."""
     if os.path.exists(CHART_PATH):
@@ -128,4 +98,4 @@ def get_accuracy_chart():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)  # Ensure Flask runs on port 5000
+    app.run(debug=True, port=5000)

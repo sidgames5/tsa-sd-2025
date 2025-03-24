@@ -29,6 +29,8 @@ export default function UploadPage() {
             return;
         }
 
+        alert("Image sent to admin: ", image);
+
         setLoading(true);
         setTimer(0); // Reset timer before starting
         setResult("");
@@ -77,12 +79,20 @@ export default function UploadPage() {
                 <h1>Upload & Analyze Plant Image</h1>
             </motion.h1>
 
-            <input
+            <div>
+                <input type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="w-300 border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
+                />
+                {loading && <p>Analyzing Image ... {timer} seconds</p>}
+            </div>
+            {/*<input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
                 className="w-full border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
-            />
+            /> */}
 
             {/* Image Preiew Placeholder */}
             {!preview && (

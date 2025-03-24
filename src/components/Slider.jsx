@@ -75,7 +75,7 @@ export default function ImageSlider() {
                         key={currentIndex} // Forces re-render on change
                         src={`/assets/${images[currentIndex]}`}
                         alt={`Slide ${currentIndex}`}
-                        className="rounded-xl max-h-[80vh] max-w-[80%] object-contain shadow-lg"
+                        className="rounded-xl max-h-[80vh] max-w-[75%] object-contain shadow-lg"
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
