@@ -1,8 +1,13 @@
 "use client";
 
-import { animate, motion, useMotionValue, useMotionValueEvent, useScroll } from "framer-motion";
+import {
+    animate,
+    motion,
+    useMotionValue,
+    useMotionValueEvent,
+    useScroll
+} from "framer-motion";
 import { useRef, useState } from "react";
-import "./DiagnosisPage.css";
 import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
@@ -64,91 +69,92 @@ export default function DiagnosisPage() {
 
     return (
         <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} w-full h-full flex flex-col items-center align-middle justify-center`}>
-            <div className="p-4 border-white w-fit h-fit flex flex-col items-center gap-4">
-                <h1 className="text-5xl font-bold">Plant Diagnosis Guide</h1>
-                <p className="text-xl">Match the symptoms with treatments for your plants.</p>
+            <h1 className="text-5xl font-bold">Plant Diagnosis Guide</h1>
+            <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
 
-                <div
-                    className="flex flex-row overflow-visible gap-4"
-                >
-                    {diseases.map((disease, index) => (
-                        <motion.div key={index}
-                            className="bg-green-600 w-[25vh] p-5 "
-                            whileHover={{ scale: 1.15 }}
-                            transition={{ type: "spring", stiffness: 50 }} onClick={() => {
-                                setSelectedDisease(disease);
-                                setIsModalOpen(true);
-                            }}>
-                            <div
-                                className="disease-item overflow-visible cursor-pointer"
-                            >
-                                <h3 className="font-bold">{disease.name}</h3>
-                                <p>
-                                    {disease.solution.split('\n').map((line, idx) => (
-                                        <span key={idx}>
-                                            {line}
-                                            <br />
-                                        </span>
-                                    ))}
-                                </p>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+            {/* Scroll-linked progress bar */}
+            <svg id="progress" width="80" height="80" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
+                <motion.circle
+                    cx="50"
+                    cy="50"
+                    r="30"
+                    className="indicator"
+                    style={{ pathLength: scrollXProgress }}
+                />
+            </svg>
 
-                {isModalOpen && selectedDisease && (
-                    <motion.div
-                        initial={{ scale: 0 }}
-                        whileInView={{ scale: 1 }}
-                        transition={{ type: "spring", damping: 10 }}
-                        id="details-modal"
-                        className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr from-sky-950 to-slate-950 shadow-lg rounded-lg p-6 z-50 border-4 border-doulbe border-stone-600"
+            {/* Disease Cards with Scroll Effect */}
+            <motion.div
+                ref={ref}
+                style={{ maskImage }}
+                className="overflow-x-auto flex flex-nowrap gap-4 px-4 w-[80vw] max-w-[1200px] h-[30vh]"
+            >
+
+                {diseases.map((disease, index) => (
+                    <motion.div key={index}
+                        className="mt-[5vh] bg-gradient-to-r from-emerald-500 to-emerald-700 w-[20vw] h-[20vh] p-5 rounded-lg cursor-pointer flex-shrink-0"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ type: "spring", stiffness: 50 }}
+                        onClick={() => {
+                            setSelectedDisease(disease);
+                            setIsModalOpen(true);
+                        }}
                     >
-                        <h1 className="text-nowrap text-3xl font-bold">{selectedDisease.name} Overview</h1>
-                        <p className="text-lg text-left text-white">
-                            {selectedDisease.description}
+                        <h3 className="font-bold">{disease.name}</h3>
+                        <p>
+                            {disease.solution.split('\n').map((line, idx) => (
+                                <span key={idx}>{line}<br /></span>
+                            ))}
                         </p>
-
-                        <table className="mt-5">
-                            <tbody>
-                                <tr>
-                                    <td className="font-bold text-1xl p-4 bg-lime-100 rounded-tl-xl text-black">How to Identify</td>
-                                    <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-tr-xl text-left text-black">
-                                        {selectedDisease.appearance.split('\n').map((line, idx) => (
-                                            <span key={idx}>
-                                                {line}
-                                                <br />
-                                            </span>
-                                        ))}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="font-bold text-1xl p-4 bg-lime-100 rounded-bl-xl text-black">How to Fix</td>
-                                    <td className="text-1xl p-4 w-[50vw] bg-gray-100 rounded-br-xl text-left text-black">
-                                        {selectedDisease.fix.split('\n').map((line, idx) => (
-                                            <span key={idx}>
-                                                {line}
-                                                <br />
-                                            </span>
-                                        ))}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <button
-                            onClick={() => setIsModalOpen(false)}
-                            className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-4 -top-4 -translate-x-full -translate-y-full flex flex-row items-center align-middle justify-center w-4 h-4"
-                        >
-                            <motion.span
-                                className=" flex flex-row items-center align-middle justify-center"
-                                initial={{ scale: 1 }}
-                                whileHover={{ scale: 1.2 }}
-                            ><FontAwesomeIcon icon={faClose} /></motion.span>
-                        </button>
                     </motion.div>
-                )}
-            </div>
+                ))}
+            </motion.div>
+
+            {/* Disease Details Modal */}
+            {isModalOpen && selectedDisease && (
+                <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", damping: 10 }}
+                    className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr from-sky-950 to-slate-950 shadow-lg rounded-lg p-6 z-50 border-4 border-double border-stone-600"
+                >
+                    <h1 className="text-3xl font-bold">{selectedDisease.name} Overview</h1>
+                    <p className="text-lg text-left">{selectedDisease.description}</p>
+
+                    <table className="mt-5">
+                        <tbody>
+                            <tr>
+                                <td className="font-bold p-4 bg-lime-100 text-black rounded-tl-xl">How to Identify</td>
+                                <td className="p-4 w-[50vw] bg-gray-100 text-left text-black rounded-tr-xl">
+                                    {selectedDisease.appearance.split('\n').map((line, idx) => (
+                                        <span key={idx}>{line}<br /></span>
+                                    ))}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="font-bold p-4 bg-lime-100 text-black rounded-bl-xl">How to Fix</td>
+                                <td className="p-4 w-[50vw] bg-gray-100 text-left text-black rounded-br-xl">
+                                    {selectedDisease.fix.split('\n').map((line, idx) => (
+                                        <span key={idx}>{line}<br /></span>
+                                    ))}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button
+                        onClick={() => setIsModalOpen(false)}
+                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-4 -top-4 -translate-x-full -translate-y-full"
+                    >
+                        <motion.span whileHover={{ scale: 1.2 }}>
+                            <FontAwesomeIcon icon={faClose} />
+                        </motion.span>
+                    </button>
+                </motion.div>
+            )}
+
+            <StyleSheet />
         </div>
     );
 }
@@ -164,10 +170,52 @@ function useScrollOverflowMask(scrollXProgress) {
             animate(maskImage, `linear-gradient(90deg, #000, #000 0%, #000 80%, transparent)`);
         } else if (value === 1) {
             animate(maskImage, `linear-gradient(90deg, transparent, #000 20%, #000 100%, #000)`);
-        } else if (scrollXProgress.getPrevious() === 0 || scrollXProgress.getPrevious() === 1) {
+        } else {
             animate(maskImage, `linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent)`);
         }
     });
 
     return maskImage;
+}
+
+// Styles
+function StyleSheet() {
+    return (
+        <style>{`
+            #progress {
+                position: absolute;
+                top: -65px;
+                left: -15px;
+                transform: rotate(-90deg);
+            }
+
+            .bg { stroke: var(--layer); }
+
+            #progress circle {
+                stroke-dashoffset: 0;
+                stroke-width: 10%;
+                fill: none;
+            }
+
+            .indicator { stroke: var(--accent); }
+
+            .overflow-x-scroll {
+                display: flex;
+                list-style: none;
+                padding: 20px 0;
+                margin: 0 auto;
+                gap: 20px;
+            }
+
+            ::-webkit-scrollbar {
+                height: 5px;
+                width: 5px;
+                background: #fff3;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--accent);
+            }
+        `}</style>
+    );
 }

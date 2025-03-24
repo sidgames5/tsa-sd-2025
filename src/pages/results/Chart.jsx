@@ -1,6 +1,7 @@
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 // dont touch this, everything will break
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -8,7 +9,20 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 export default function Chart() {
     const [data, setData] = useState([64.74, 82.95, 87.15]);
 
-    //TODO: load the data from the server
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                //TODO: replace this with correct URL
+                const response = await axios.get("/api/accuracy");
+                if (response.data) {
+                    setData(response.data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchData();
+    }, []);
 
     return (
         <Line

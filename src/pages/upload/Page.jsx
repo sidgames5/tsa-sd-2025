@@ -65,13 +65,13 @@ export default function UploadPage() {
 
     return (
         <motion.div
-            className={`p-6 ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-green-300`}
+            className={`p-6 ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-blue-300`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
             <motion.h1
-                className="text-2xl font-bold mb-4 text-green-800"
+                className="text-2xl font-bold mb-4 text-blue-800"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
