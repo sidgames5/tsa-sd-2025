@@ -1,5 +1,6 @@
 import * as motion from "motion/react-client";
 import React from "react";
+import { useCookies } from "react-cookie";
 
 function HoverPopupCard({ children, title, color }) {
     console.log(`bg-${color}`);
@@ -19,6 +20,8 @@ function HoverPopupCard({ children, title, color }) {
 }
 
 export default function FeaturesPage() {
+    const [cookies] = useCookies(["darkMode"]);
+
     const cardItems = [
         { emoji: "📤", text: "Upload photos easily", color: "slate-600" },
         { emoji: "🔍", text: "Analyze images effectively", color: "slate-600" },
@@ -32,8 +35,8 @@ export default function FeaturesPage() {
     ];
 
     return <main>
-        <div className="flex flex-col items-center justify-center mt-[8vh] py-10 gap-10">
-            <h1 className="text-5xl font-bold text-gray-200">Features</h1>
+        <div className={`flex flex-col items-center justify-center mt-[8vh] py-10 gap-10 ${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
+            <h1 className={`text-5xl font-bold ${cookies.darkMode ? "text-gray-100" : "text-gray-900"}`}>Features</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
                 {cardItems.map((item) => <HoverPopupCard title={item.emoji} color={item.color}>{item.text}</HoverPopupCard>)}

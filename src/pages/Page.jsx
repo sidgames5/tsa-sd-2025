@@ -40,6 +40,7 @@ export default function App() {
                     window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
                 }}
             >
+                <h1></h1>
                 <FontAwesomeIcon className="animate-bounce" icon={faArrowDown} fontSize={36} />
             </motion.div>}
             <motion.div
@@ -63,14 +64,26 @@ export default function App() {
                     <tbody>
                         {/* About Us Secton */}
                         <tr>
-                            <td className="font-bold text-4xl p-4 bg-sky-950 text-white rounded-tl-xl">About Us</td>
-                            <td className="text-2xl w-[50vw] p-4 bg-gray-900 text-white rounded-tr-xl">
+                            <td
+                                className={`font-bold text-4xl p-4 rounded-tl-xl ${cookies.darkMode ? 'text-white bg-sky-950' : 'text-black bg-lime-100'}`}
+                            >
+                                About Us
+                            </td>
+                            <td
+                                className={`text-2xl w-[50vw] p-4 rounded-tr-xl ${cookies.darkMode ? 'text-white bg-black' : 'text-black bg-gray-100'}`}
+                            >
                                 We are three high schoolers with a shared passion for coding, technology, and innovation. As young developers, we've spent countless hours learning and building projects that push our boundaries and expand our knowledge. We believe that coding is not just about writing lines of code, but about creating something meaningful that can make a real difference.
                             </td>
                         </tr>
                         <tr>
-                            <td className="font-bold text-4xl p-4 bg-sky-950 text-white rounded-bl-xl">Why We Did This</td>
-                            <td className="text-2xl w-[50vw] p-4 bg-gray-900 text-white rounded-br-xl">
+                            <td
+                                className={`font-bold text-4xl p-4 rounded-bl-xl ${cookies.darkMode ? 'text-white bg-sky-950' : 'text-black bg-lime-100'}`}
+                            >
+                                Why We Did This
+                            </td>
+                            <td
+                                className={`text-2xl w-[50vw] p-4 rounded-br-xl ${cookies.darkMode ? 'text-white bg-black' : 'text-black bg-gray-100'}`}
+                            >
                                 We created this project because we wanted to blend our love for technology with a cause that can make a meaningful impact. As high schoolers, we often feel that there's a lack of real-world tech solutions made by people our age. We wanted to show that with determination and the right tools, we can create something valuable.
                             </td>
                         </tr>
