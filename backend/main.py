@@ -93,9 +93,14 @@ def train():
 def get_accuracy_chart():
     # Return the saved accuracy chart image.
     if os.path.exists(CHART_PATH):
-        return jsonify({"accuracy": train_accuracies})
+        return jsonify({"data": train_accuracies, "status": True})
         # return send_file(CHART_PATH, mimetype="image/png")
-    return jsonify({"error": "Accuracy chart not found"}), 404
+    return (
+        jsonify(
+            {"error": "Internal Server Error", "message": "Accuracy chart not found"}
+        ),
+        500,
+    )
 
 
 if __name__ == "__main__":
