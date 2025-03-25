@@ -64,91 +64,93 @@ export default function UploadPage() {
     };
 
     return (
-        <motion.div
-            className={`p-6 ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} shadow-lg rounded-2xl w-3/5 h-2/5 mx-auto flex flex-col justify-center items-center mt-[15vh] border border-blue-300`}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-        >
-            <motion.h1
-                className="text-2xl font-bold mb-4 text-blue-800"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
+        <div className={`flex flex-col items-center justify-center align-middle w-full h-full ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
+            <motion.div
+                className={`p-6 shadow-lg rounded-2xl w-3/5 h-2/5 flex flex-col justify-center items-center border border-blue-300`}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
             >
-                <h1>Upload & Analyze Plant Image</h1>
-            </motion.h1>
+                <motion.h1
+                    className="text-2xl font-bold mb-4 text-blue-800"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <h1>Upload & Analyze Plant Image</h1>
+                </motion.h1>
 
-            <div>
-                <input type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="w-300 border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
-                />
-                {loading && <p>Analyzing Image ... {timer} seconds</p>}
-            </div>
-            {/*<input
+                <div>
+                    <input type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-300 border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
+                    />
+                    {loading && <p>Analyzing Image ... {timer} seconds</p>}
+                </div>
+                {/*<input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
                 className="w-full border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
             /> */}
 
-            {/* Image Preiew Placeholder */}
-            {!preview && (
-                <div className="w-80 h-52 border-2 border-dashed border-gray-600 rounded-lg flex justify-center items-center mb-4">Image Here</div>
-            )}
+                {/* Image Preiew Placeholder */}
+                {!preview && (
+                    <div className="w-80 h-52 border-2 border-dashed border-gray-600 rounded-lg flex justify-center items-center mb-4">Image Here</div>
+                )}
 
-            {preview && (
-                <motion.img
-                    src={preview}
-                    alt="Preview"
-                    className="w-80 mt-8 rounded-lg shadow-md mx-auto"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.3 }}
+                {preview && (
+                    <motion.img
+                        src={preview}
+                        alt="Preview"
+                        className="w-80 mt-8 rounded-lg shadow-md mx-auto"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        whileHover={{ scale: 1.05 }}
+                    />
+                )}
+
+                <motion.div
+                    className="flex justify-center mt-4"
                     whileHover={{ scale: 1.05 }}
-                />
-            )}
-
-            <motion.div
-                className="flex justify-center mt-4"
-                whileHover={{ scale: 1.05 }}
-            >
-                <Button
-                    onClick={handleUpload}
-                    className={`bg-blue-500 px-5 py-2 mt- transition hover:bg-blue-700 ${loading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
                 >
-                    Upload
-                </Button>
-            </motion.div>
-
-            {result && (
-                <p
-                    className={`mt-2 font-semibold ${result.includes("Healthy")
-                        ? "text-green-600"
-                        : "text-orange-400"
-                        }`}
-                >
-                    Result: {result}
-                </p>
-            )}
-
-            <div className="w-full text-center mt-12">
-                <p className="text-lg">
-                    🌿 Need help identifying plant diseases? Upload an image and
-                    let AI analyze it instantly! If you need expert advice, visit
-                    our{" "}
-                    <Link
-                        to="/diagnosis"
-                        className="text-blue-500 hover:underline"
+                    <Button
+                        onClick={handleUpload}
+                        className={`bg-blue-500 px-5 py-2 mt- transition hover:bg-blue-700 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                     >
-                        Diagnosis Page
-                    </Link>
-                    .
-                </p>
-            </div>
-        </motion.div>
+                        Upload
+                    </Button>
+                </motion.div>
+
+                {result && (
+                    <p
+                        className={`mt-2 font-semibold ${result.includes("Healthy")
+                            ? "text-green-600"
+                            : "text-orange-400"
+                            }`}
+                    >
+                        Result: {result}
+                    </p>
+                )}
+
+                <div className="w-full text-center mt-12">
+                    <p className="text-lg">
+                        🌿 Need help identifying plant diseases? Upload an image and
+                        let AI analyze it instantly! If you need expert advice, visit
+                        our{" "}
+                        <Link
+                            to="/diagnosis"
+                            className="text-blue-500 hover:underline"
+                        >
+                            Diagnosis Page
+                        </Link>
+                        .
+                    </p>
+                </div>
+            </motion.div>
+        </div>
     );
 }

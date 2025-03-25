@@ -21,7 +21,9 @@ export default function HomeLayout() {
                 onClick={() => { setNavbarVisible(true) }}>
                 <FontAwesomeIcon icon={faBars} />
             </div>}
-            <Outlet />
+            <div className="w-screen h-screen fixed top-0 left-0">
+                <Outlet />
+            </div>
         </>
     );
 }
