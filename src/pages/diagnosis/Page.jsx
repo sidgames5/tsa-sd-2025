@@ -117,7 +117,7 @@ export default function DiagnosisPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", damping: 10 }}
-                    className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr from-sky-950 to-slate-950 shadow-lg rounded-lg p-6 z-50 border-4 border-double border-stone-600"
+                    className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr from-gray-500 to-gray-700 shadow-lg rounded-lg p-6 z-50 border-4 border-blue-500"
                 >
                     <h1 className="text-3xl font-bold">{selectedDisease.name} Overview</h1>
                     <p className="text-lg text-left">{selectedDisease.description}</p>
@@ -125,16 +125,16 @@ export default function DiagnosisPage() {
                     <table className="mt-5">
                         <tbody>
                             <tr>
-                                <td className="font-bold p-4 bg-lime-100 text-black rounded-tl-xl">How to Identify</td>
-                                <td className="p-4 w-[50vw] bg-gray-100 text-left text-black rounded-tr-xl">
+                                <td className="font-bold p-4 bg-gray-100 text-black rounded-tl-xl">How to Identify</td>
+                                <td className="p-4 w-[50vw] bg-gray-200 text-left text-black rounded-tr-xl">
                                     {selectedDisease.appearance.split('\n').map((line, idx) => (
                                         <span key={idx}>{line}<br /></span>
                                     ))}
                                 </td>
                             </tr>
                             <tr>
-                                <td className="font-bold p-4 bg-lime-100 text-black rounded-bl-xl">How to Fix</td>
-                                <td className="p-4 w-[50vw] bg-gray-100 text-left text-black rounded-br-xl">
+                                <td className="font-bold p-4 bg-gray-100 text-black rounded-bl-xl">How to Fix</td>
+                                <td className="p-4 w-[50vw] bg-gray-200 text-left text-black rounded-br-xl">
                                     {selectedDisease.fix.split('\n').map((line, idx) => (
                                         <span key={idx}>{line}<br /></span>
                                     ))}
@@ -145,9 +145,9 @@ export default function DiagnosisPage() {
 
                     <button
                         onClick={() => setIsModalOpen(false)}
-                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-4 -top-4 -translate-x-full -translate-y-full"
+                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-4 -top-4 -translate-x-full -translate-y-full w-4 h-4 flex flex-row items-center align-middle justify-center"
                     >
-                        <motion.span whileHover={{ scale: 1.2 }}>
+                        <motion.span whileHover={{ scale: 1.2 }} className="w-full h-full flex flex-row items-center justify-center align-middle">
                             <FontAwesomeIcon icon={faClose} />
                         </motion.span>
                     </button>
