@@ -93,9 +93,9 @@ export default function DiagnosisPage() {
 
                 {diseases.map((disease, index) => (
                     <motion.div key={index}
-                        className="mt-[5vh] bg-gradient-to-r from-emerald-500 to-emerald-700 w-[20vw] h-[20vh] p-5 rounded-lg cursor-pointer flex-shrink-0"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ type: "spring", stiffness: 50 }}
+                        className="mt-[5vh] bg-gradient-to-r from-gray-500 to-gray-700 w-[20vw] h-[20vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-blue-700"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
                             setSelectedDisease(disease);
                             setIsModalOpen(true);
