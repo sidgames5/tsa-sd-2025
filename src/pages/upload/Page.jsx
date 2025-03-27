@@ -66,7 +66,7 @@ export default function UploadPage() {
     return (
         <div className={`flex flex-col items-center justify-center align-middle w-full h-full ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
             <motion.div
-                className={`p-6 shadow-lg rounded-2xl w-3/5 h-2/5 flex flex-col justify-center items-center border border-blue-300`}
+                className={`p-6 shadow-lg rounded-2xl w-3/5 h-2/5 flex flex-col justify-center items-center border border-blue-700`}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -84,21 +84,10 @@ export default function UploadPage() {
                     <input type="file"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className="w-300 border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
+                        className="w-300 border border-blue-700 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
                     />
                     {loading && <p>Analyzing Image ... {timer} seconds</p>}
                 </div>
-                {/*<input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full border border-green-400 p-3 rounded-lg shadow-sm mb-4 cursor-pointer"
-            /> */}
-
-                {/* Image Preiew Placeholder */}
-                {!preview && (
-                    <div className="w-80 h-52 border-2 border-dashed border-gray-600 rounded-lg flex justify-center items-center mb-4">Image Here</div>
-                )}
 
                 {preview && (
                     <motion.img
@@ -112,18 +101,13 @@ export default function UploadPage() {
                     />
                 )}
 
-                <motion.div
-                    className="flex justify-center mt-4"
-                    whileHover={{ scale: 1.05 }}
+                <button
+                    onClick={handleUpload}
+                    className={`bg-blue-700 rounded-lg px-5 py-2 transition-all duration-300 hover:bg-blue-500 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                 >
-                    <Button
-                        onClick={handleUpload}
-                        className={`bg-blue-500 px-5 py-2 mt- transition hover:bg-blue-700 ${loading ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
-                    >
-                        Upload
-                    </Button>
-                </motion.div>
+                    Upload
+                </button>
 
                 {result && (
                     <p
@@ -143,7 +127,7 @@ export default function UploadPage() {
                         our{" "}
                         <Link
                             to="/diagnosis"
-                            className="text-blue-500 hover:underline"
+                            className="text-blue-500 hover:text-blue-700 underline"
                         >
                             Diagnosis Page
                         </Link>
