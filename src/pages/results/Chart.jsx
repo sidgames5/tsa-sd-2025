@@ -1,62 +1,45 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
+// dont touch this, everything will break
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-export default function Chart({ epochs, accuracy }) {
-    const data = {
-        labels: epochs,
-        datasets: [
-            {
-                label: 'Training Accuracy',
-                data: accuracy,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1,
-                fill: false
-            }
-        ]
-    };
+export default function Chart() {
+    const [data, setData] = useState([64.74, 82.95, 87.15]);
 
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Model Training Accuracy',
-            },
-        },
-        scales: {
-            y: {
-                min: 0,
-                max: 1,
-                ticks: {
-                    stepSize: 0.1,
-                    callback: value => `${(value * 100).toFixed(0)}%`
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                //TODO: replace this with correct URL
+                const response = await axios.get("/api/accuracy/chart");
+                if (response.data) {
+                    setData(response.data);
                 }
+            } catch (error) {
+                console.error(error);
             }
         }
-    };
+        fetchData();
+    }, []);
 
-    return <Line data={data} options={options} />;
+    return (
+        <Line
+            datasetIdKey='id'
+            data={{
+                labels: [1, 2, 3],
+                datasets: [
+                    {
+                        id: 1,
+                        label: 'Accuracy',
+                        data: data,
+                        backgroundColor: "#ffffff",
+                        borderColor: "#ffffff",
+                        tension: 0.3
+                    }
+                ],
+            }}
+        />
+    );
 }
