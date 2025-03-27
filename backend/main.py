@@ -89,6 +89,22 @@ def train():
             return jsonify({"error": "Training failed", "details": str(e)}), 500
 
 
+@app.route("/api/accuracy/data", methods=["GET"])
+def get_accuracy_data():
+    # Return the accuracy data for charting
+    try:
+        return jsonify({
+            "accuracy": train_accuracies,
+            "epochs": list(range(1, len(train_accuracies) + 1))
+        })
+    except Exception as e:
+        return jsonify(
+            {"error": "Internal Server Error", "message": "Accuracy chart not found"}
+        ),
+        500,
+        
+
+'''
 @app.route("/api/accuracy/chart", methods=["GET"])
 def get_accuracy_chart():
     # Return the saved accuracy chart image.
@@ -101,7 +117,8 @@ def get_accuracy_chart():
         ),
         500,
     )
-
+'''
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
