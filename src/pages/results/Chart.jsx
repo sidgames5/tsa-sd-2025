@@ -7,7 +7,7 @@ import axios from "axios";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function Chart() {
-    const [data, setData] = useState([64.74, 82.95, 87.15]);
+    const [data, setData] = useState([]);
 
     useEffect(() => {
         async function fetchData() {
@@ -15,7 +15,8 @@ export default function Chart() {
                 //TODO: replace this with correct URL
                 const response = await axios.get("/api/accuracy/chart");
                 if (response.data) {
-                    setData(response.data);
+                    setData(response.data.data);
+                    console.log(data);
                 }
             } catch (error) {
                 console.error(error);
@@ -28,7 +29,7 @@ export default function Chart() {
         <Line
             datasetIdKey='id'
             data={{
-                labels: [1, 2, 3],
+                labels: new Array(data.length).fill(0).map((_, i) => i + 1),
                 datasets: [
                     {
                         id: 1,

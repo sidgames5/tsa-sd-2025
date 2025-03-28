@@ -71,3 +71,24 @@ export default function ResultsPage() {
         </div>
     );
 }
+
+
+// then(res => res.json())
+//   .then(data => {
+//       new Chart(ctx, {
+//           type: 'line',
+//           data: {
+//               labels: data.data.accuracies.map((_,i) => i+1),
+//               datasets: [{
+//                   label: 'Accuracy',
+//                   data: data.data.accuracies,
+//                   yAxisID: 'y'
+//               },{
+//                   label: 'Loss',
+//                   data: data.data.losses,
+//                   yAxisID: 'y1'
+//               }]
+//           }
+//       });
+//   });
+

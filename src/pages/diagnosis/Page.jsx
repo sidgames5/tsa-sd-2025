@@ -69,7 +69,7 @@ export default function DiagnosisPage() {
 
     return (
         <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} w-screen h-screen flex flex-col items-center align-middle justify-center`}>
-            <h1 className="text-5xl font-bold">Plant Diagnosis Guide</h1>
+            <h1 className="text-5xl font-bold text-sky-600 underline">Plant Diagnosis Guide</h1>
             <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
             <p className="text-xl">Click on each box for more information!</p>
 
@@ -82,7 +82,7 @@ export default function DiagnosisPage() {
 
                 {diseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-gray-300 to-gray-500"}`}
+                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
@@ -106,7 +106,7 @@ export default function DiagnosisPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", damping: 10 }}
-                    className={`fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950" : "from-white to-gray-100 border-black"} shadow-lg rounded-lg p-6 z-50 border-4 border-white`}
+                    className={`fixed max-w-[50vw] max-h-[65vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950 border-white" : "from-gray-100 to-gray-50 border-black"} shadow-lg rounded-lg p-6 z-50 border-4`}
                 >
                     <button
                         onClick={() => setIsModalOpen(false)}
@@ -116,12 +116,12 @@ export default function DiagnosisPage() {
                             <FontAwesomeIcon icon={faClose} />
                         </motion.span>
                     </button>
-                    
+
                     <h1 className={`text-3xl font-bold p-3 ${cookies.darkMode ? "text-white" : "text-black"}`}>{selectedDisease.name}</h1>
                     <p className={`text-lg text-left rounded-xl p-2 mt-2 cursor-text ${cookies.darkMode ? "text-white" : "text-black"}`}>
-                            {selectedDisease.description}
+                        {selectedDisease.description}
                     </p>
-                    <table className="mt-5">
+                    <table className="mt-5 mb-5">
                         <tbody>
                             <tr>
                                 <td className="font-bold p-4 bg-gray-100 text-black rounded-tl-xl">How to Identify</td>
@@ -142,7 +142,7 @@ export default function DiagnosisPage() {
                         </tbody>
                     </table>
 
-                    
+
                 </motion.div>
             )}
 
