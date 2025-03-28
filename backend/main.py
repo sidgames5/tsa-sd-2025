@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 from torchvision import transforms
 from backend.model import PlantDiseaseModel, get_transforms
-from backend.main_analyze import train_model, CLASS_NAMES  # Changed import
+from backend.main_analyze import train_model  # Changed import
 
 # Flask Setup
 app = Flask(__name__)

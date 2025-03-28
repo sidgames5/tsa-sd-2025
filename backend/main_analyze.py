@@ -1,146 +1,125 @@
 import os
 import torch
-import matplotlib.pyplot as plt
+import torch.nn as nn
+import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
-from torch.optim import AdamW
-from torch.nn import CrossEntropyLoss
-from torchvision import datasets
-from backend.nmodel import PlantDiseaseModel
-from backend.model import get_transforms
+from torchvision import datasets, transforms
+from tqdm import tqdm
+from backend.model import PlantDiseaseModel
+import kagglehub
 
-# Config
+# Configuration
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+NUM_CLASSES = 38
 BATCH_SIZE = 32
 EPOCHS = 15
 LEARNING_RATE = 0.001
-NUM_CLASSES = 38  # New Plant Diseases Dataset classes
-DATA_PATH = "data/plant_diseases"  # Update with your path
+VAL_SPLIT = 0.2  # 20% of data for validation
 
-# Global tracking
-CLASS_NAMES = []
-train_history = {'loss': [], 'accuracy': []}
-
-def load_datasets():
-    """Load and split datasets with augmentation"""
-    global CLASS_NAMES
-    
-    train_transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.RandomRotation(15),
-        transforms.RandomHorizontalFlip(),
-        transforms.ColorJitter(brightness=0.2, contrast=0.2),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ])
-    
-    full_dataset = datasets.ImageFolder(
-        root=os.path.join(DATA_PATH, "train"),
-        transform=train_transform
-    )
-    
-    CLASS_NAMES = full_dataset.classes
-    train_size = int(0.8 * len(full_dataset))
-    val_size = len(full_dataset) - train_size
-    
-    train_dataset, val_dataset = random_split(
-        full_dataset, [train_size, val_size]
-    )
-    
-    return (
-        DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True),
-        DataLoader(val_dataset, batch_size=BATCH_SIZE)
-    )
+def get_data_loaders():
+    """Returns train_loader and val_loader with proper validation split"""
+    try:
+        # Download dataset
+        dataset_path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset")
+        train_path = os.path.join(dataset_path, "train")
+        
+        # Data transforms
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
+        
+        # Load full dataset
+        full_dataset = datasets.ImageFolder(train_path, transform=transform)
+        
+        # Split into train and validation
+        val_size = int(VAL_SPLIT * len(full_dataset))
+        train_size = len(full_dataset) - val_size
+        train_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
+        
+        # Create data loaders
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=True,
+            num_workers=4
+        )
+        
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=False,
+            num_workers=4
+        )
+        
+        return train_loader, val_loader
+        
+    except Exception as e:
+        print(f"Error creating data loaders: {e}")
+        raise
 
 def train_model():
-    """Complete training workflow"""
-    train_loader, val_loader = load_datasets()
-    
-    model = PlantDiseaseModel(num_classes=len(CLASS_NAMES)).to(DEVICE)
-    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
-    criterion = CrossEntropyLoss()
-    
-    best_accuracy = 0.0
-    
-    for epoch in range(EPOCHS):
-        # Training phase
-        model.train()
-        running_loss = 0.0
-        correct = 0
-        total = 0
+    """Complete training workflow with proper validation"""
+    try:
+        # Get data loaders
+        train_loader, val_loader = get_data_loaders()
         
-        for images, labels in train_loader:
-            images, labels = images.to(DEVICE), labels.to(DEVICE)
+        # Initialize model
+        model = PlantDiseaseModel(num_classes=NUM_CLASSES).to(DEVICE)
+        optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+        criterion = nn.CrossEntropyLoss()
+        
+        # Training loop
+        for epoch in range(EPOCHS):
+            model.train()
+            train_loss = 0.0
+            correct = 0
+            total = 0
             
-            optimizer.zero_grad()
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
+            # Training phase
+            for images, labels in tqdm(train_loader, desc=f"Epoch {epoch+1}/{EPOCHS}"):
+                images, labels = images.to(DEVICE), labels.to(DEVICE)
+                
+                optimizer.zero_grad()
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
+                
+                train_loss += loss.item()
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
             
-            running_loss += loss.item()
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+            # Validation phase
+            model.eval()
+            val_loss = 0.0
+            val_correct = 0
+            val_total = 0
+            
+            with torch.no_grad():
+                for images, labels in val_loader:
+                    images, labels = images.to(DEVICE), labels.to(DEVICE)
+                    outputs = model(images)
+                    loss = criterion(outputs, labels)
+                    
+                    val_loss += loss.item()
+                    _, predicted = torch.max(outputs.data, 1)
+                    val_total += labels.size(0)
+                    val_correct += (predicted == labels).sum().item()
+            
+            # Print epoch statistics
+            print(f"\nEpoch {epoch+1}/{EPOCHS}:")
+            print(f"Train Loss: {train_loss/len(train_loader):.4f} | Acc: {100*correct/total:.2f}%")
+            print(f"Val Loss: {val_loss/len(val_loader):.4f} | Acc: {100*val_correct/val_total:.2f}%")
         
-        train_loss = running_loss / len(train_loader)
-        train_acc = correct / total
+        return model
         
-        # Validation phase
-        val_loss, val_acc = evaluate(model, val_loader, criterion)
-        
-        # Track metrics
-        train_history['loss'].append(val_loss)
-        train_history['accuracy'].append(val_acc)
-        
-        print(f"Epoch {epoch+1}/{EPOCHS} | "
-              f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | "
-              f"Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
-        
-        # Save best model
-        if val_acc > best_accuracy:
-            best_accuracy = val_acc
-            torch.save(model.state_dict(), "models/plant_disease_model.pth")
-            print(f"Saved new best model with accuracy: {best_accuracy:.4f}")
-    
-    save_training_plots()
-    return best_accuracy
+    except Exception as e:
+        print(f"Training failed: {e}")
+        raise
 
-def evaluate(model, dataloader, criterion):
-    """Evaluate model on validation set"""
-    model.eval()
-    running_loss = 0.0
-    correct = 0
-    total = 0
-    
-    with torch.no_grad():
-        for images, labels in dataloader:
-            images, labels = images.to(DEVICE), labels.to(DEVICE)
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            
-            running_loss += loss.item()
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-    
-    return running_loss / len(dataloader), correct / total
-
-def save_training_plots():
-    """Save training metrics visualization"""
-    plt.figure(figsize=(12, 5))
-    
-    plt.subplot(1, 2, 1)
-    plt.plot(train_history['loss'], label='Loss')
-    plt.title('Training Loss')
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    
-    plt.subplot(1, 2, 2)
-    plt.plot(train_history['accuracy'], label='Accuracy', color='green')
-    plt.title('Validation Accuracy')
-    plt.xlabel('Epoch')
-    plt.ylabel('Accuracy')
-    
-    os.makedirs("backend/static", exist_ok=True)
-    plt.savefig("backend/static/training_metrics.png")
-    plt.close()
+if __name__ == "__main__":
+    model = train_model()
+    torch.save(model.state_dict(), "plant_disease_model.pth")

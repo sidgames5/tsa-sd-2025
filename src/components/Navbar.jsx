@@ -11,7 +11,7 @@ export default function Navbar() {
     return (
         <div className="homepage-container">
             <div className="navbar-container">
-                <nav className={`flex flex-row justify-between items-center ${cookies.darkMode ? "bg-gray-900 text-gray-100" : "bg-slate-50 text-black"} p-4`}>
+                <nav className={`flex flex-row justify-between items-center ${cookies.darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-black"} p-4`}>
                     <div className="navbar-left flex items-center">
                         <NavbarButton>
                             <div className="flex flex-row gap-1 items-center">

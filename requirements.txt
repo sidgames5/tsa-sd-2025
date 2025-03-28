@@ -16,6 +16,7 @@ transforms
 
 fastapi
 uvicorn
-
+tdqm
+shutil
 flask-cors
 

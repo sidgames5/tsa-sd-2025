@@ -27,3 +27,5 @@ dataset
 models
 uploads
 archive
+
+*.pth

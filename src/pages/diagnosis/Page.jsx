@@ -24,76 +24,65 @@ export default function DiagnosisPage() {
 
     const diseases = [
         {
-            name: "Powdery Leaves",
-            solution: " - Remove affected leaves\n - Improve air circulation\n - Apply a fungicide",
-            description: "Powdery mildew is a common fungal disease. The fungus manifest as a white, opwdery growth on the surface of leaves and stems, leading to leaf disotrtion and yellowing, which can reduce yields. ",
-            appearance: " - White, powdery, grayish-white talcum-powder like growth on leaves\n - Twisted or distorted leaves",
-            fix: "- Use fungicides containing chlorothalonil\n- Remove affected leaves"
+            name: "Powdery Mildew (White, Powdery Leaves)",
+            solution: " - Gently pluck off any leaves with the white powder.\n - Give your plants more space for better air flow.\n - Apply a fungicide spray following product instructions.\n - Mix 1 teaspoon of baking soda with 1 quart of water and a few drops of dish soap and spray the leaves.",
+            description: "Powdery mildew is a fungal disease that appears as a white, dusty coating on leaves and stems. It thrives in warm, humid conditions, weakening plants and reducing yields if left untreated. It spreads rapidly, impacting surrounding plants.",
+            appearance: " - White or grayish-white powdery growth on leaves and stems.\n - Leaves may appear twisted, curled, or exhibit yellow spots.",
+            fix: " - Use a fungicide (like chlorothalonil) following product label instructions.\n - Remove affected leaves immediately.\n - Ensure adequate sunlight exposure.\n - Water at the base of plants to avoid wetting foliage."
         },
         {
-            name: "Yellowing Leaves/Chlorosis",
-            solution: " - Check for overwatering\n - Ensure proper drainage\n - Provide adequate sunlight",
-            description: "Yellowing leaves may be a sign of overwatering, underwateringnutrient deficiency (nitrogen, iron, or magnesium), pests, temperature or poor drainage.",
-            appearance: " - Leaves turn yellow and slowly turn brown\n - Dead shriveled leaves",
-            fix: "- Check for overwatering\n- Ensure proper soil drainage\n- Provide adequate sunlight"
+            name: "Chlorosis (Yellowing Leaves)",
+            solution: " - Check soil moisture to avoid over or under-watering.\n - Ensure proper soil drainage.\n - Provide adequate sunlight.\n - Apply a fertilizer with iron, nitrogen, and magnesium.",
+            description: "Chlorosis, or yellowing leaves, indicates a deficiency in chlorophyll. This can be caused by improper watering, nutrient deficiencies (nitrogen, iron, magnesium), or environmental stressors, impacting plant health and productivity.",
+            appearance: " - Leaves turn yellow, starting with older leaves, potentially progressing to brown and brittle.\n - Leaves may appear dry and shriveled, with veins remaining green.",
+            fix: " - Adjust watering practices based on soil moisture.\n - Improve soil drainage to prevent waterlogging.\n - Ensure plants receive sufficient sunlight.\n - Use a balanced fertilizer with iron, nitrogen, and magnesium."
         },
         {
-            name: "Wilting Plant",
-            solution: " - Water if the soil is dry\n - Check for root rot",
-            description: "Wilting plants may indicate dehydration, which can be exaggerated by factors such as extreme temperature, wind, and poor soil.\nLikewise, too much",
-            appearance: " - Leaves turn yellow and slowly turn brown\n - Dead shriveled leaves",
-            fix: "- Water plants if soil is dry\n- Inspect for root rot\n- Improve soil aeration"
+            name: "Wilting Plant (Droopy and Sad)",
+            solution: " - Water plants if soil is dry.\n - Inspect roots for signs of root rot.\n - Loosen compacted soil to improve aeration.\n - Move plants to cooler locations during heat stress.",
+            description: "Wilting occurs when plants lose turgidity due to water stress, heat, or root damage. This compromises plant health and can lead to significant yield reductions.",
+            appearance: " - Leaves become floppy and may turn yellow or brown.\n - Plants exhibit a general loss of vigor and may lean or collapse.\n - Soil may be excessively dry or waterlogged.",
+            fix: " - Water plants thoroughly when soil is dry.\n - Address root rot by removing affected roots and improving drainage.\n - Improve soil aeration to support root health.\n - Provide shade or relocate plants during extreme heat."
         },
         {
-            name: "Spots on Leaves",
-            solution: " - Could indicate fungal infection\n - Remove infected leaves\n - Avoid overhead watering",
-            description: "Leaf spots may indicate powdery mildew (See Powdery Leaves section), downy mildew, anthracnose, leaf spots, leaf rust, and late blight.",
-            appearance: "Downy Mildew: Yellowing on top of leaves\nAnthracnose: Characterized by sunken lesions, spots, andholes on leaves and stems\nLeaf Spots: Small, circular spots that are dark brown\nLate Blight: Affects tomatoes and potatoes, dark spots on leaves and brown lesions in stems",
-            fix: "- Remove infected leaves\n- Apply fungicide if needed\n- Avoid overhead watering"
+            name: "Spots on Leaves (Different Colors)",
+            solution: " - Remove and dispose of affected leaves.\n - Water at the base of plants to avoid wetting foliage.\n - Apply a fungicide following product instructions.\n - Consider using copper-based fungicides.",
+            description: "Leaf spots are caused by various fungal or bacterial pathogens, causing localized tissue damage and discoloration. Common examples include downy mildew, anthracnose, and late blight, each with distinct symptoms.",
+            appearance: "Downy Mildew: Yellow spots on upper leaf surfaces.\nAnthracnose: Sunken lesions, spots, and holes on leaves and stems.\nLeaf Spots: Small, circular, dark brown or black spots.\nLate Blight: Dark spots on leaves and brown lesions on stems.",
+            fix: " - Remove infected leaves to prevent spread.\n - Apply fungicides as needed, following product instructions.\n - Avoid overhead watering to minimize leaf moisture.\n - Ensure good air circulation around plants."
         },
         {
-            name: "Pests on Leaves",
-            solution: " - Spray with neem oil or insecticidal soap to control pests",
-            description: "Common plant pests include aphids, spider mites, and whiteflies, which damage leaves by sucking sap.",
-            appearance: " - Leaves turn yellow and slowly turn brown\n - Dead shriveled leaves",
-            fix: "- Spray neem oil or insecticidal soap\n- Introduce beneficial insects like ladybugs"
+            name: "Pest Infestation (Tiny Bugs)",
+            solution: " - Apply neem oil following product instructions.\n - Use insecticidal soap as directed.\n - Introduce beneficial insects like ladybugs.\n - Use a strong water spray to dislodge pests.",
+            description: "Pest infestations, such as aphids, spider mites, and whiteflies, damage plants by extracting sap. This weakens plants, reduces yields, and can transmit diseases.",
+            appearance: " - Leaves may yellow, brown, become sticky, or exhibit small holes.\n - Visible insects or webbing on leaves.",
+            fix: " - Apply neem oil or insecticidal soap according to instructions.\n - Introduce beneficial insects for natural pest control.\n - Regularly inspect plants for pests.\n - Maintain plant hygiene to deter pests."
         },
         {
-            name: "Drooping Leaves",
-            solution: " - Check for underwatering or excessive heat exposure\n - Adjust watering schedule",
-            description: "Drooping leaves are often a sign of underwatering, excessive heat, or root damage.",
-            appearance: " - Leaves turn yellow and slowly turn brown\n - Dead shriveled leaves",
-            fix: "- Water the plant properly\n- Ensure protection from extreme heat\n- Check for root damage"
+            name: "Drooping Leaves (Not Standing Upright)",
+            solution: " - Check soil moisture and temperature.\n - Adjust watering schedule as needed.\n - Increase humidity through misting or humidifiers.\n - Inspect roots for damage.",
+            description: "Drooping leaves indicate water stress, heat exposure, or root damage. This compromises plant health and can significantly reduce yields.",
+            appearance: " - Leaves appear limp and lack rigidity.\n - Leaves may turn yellow or brown.\n - Soil may be excessively dry or waterlogged.",
+            fix: " - Water plants when soil is dry.\n - Provide shade or relocate plants during heat stress.\n - Address root damage by removing affected roots and improving drainage.\n - Increase humidity to reduce transpiration stress."
         }
     ];
 
     return (
-        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} w-full h-full flex flex-col items-center align-middle justify-center`}>
+        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} w-screen h-screen flex flex-col items-center align-middle justify-center`}>
             <h1 className="text-5xl font-bold">Plant Diagnosis Guide</h1>
             <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
+            <p className="text-xl">Click on each box for more information!</p>
 
-            {/* Scroll-linked progress bar */}
-            <svg id="progress" width="80" height="80" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
-                <motion.circle
-                    cx="50"
-                    cy="50"
-                    r="30"
-                    className="indicator"
-                    style={{ pathLength: scrollXProgress }}
-                />
-            </svg>
 
             {/* Disease Cards with Scroll Effect */}
             <motion.div
-                ref={ref}
                 style={{ maskImage }}
-                className="overflow-x-auto flex flex-nowrap gap-4 px-4 w-[80vw] max-w-[1200px] h-[30vh]"
+                className="overflow-x-scroll flex flex-nowrap gap-4 px-4 w-[80vw] max-w-[1200px] h-[47vh]"
             >
 
                 {diseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`mt-[5vh] bg-gradient-to-r w-[20vw] h-[20vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-blue-700 ${cookies.darkMode ? "from-gray-500 to-gray-700" : "from-gray-300 to-gray-500"}`}
+                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-gray-300 to-gray-500"}`}
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
@@ -117,11 +106,21 @@ export default function DiagnosisPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", damping: 10 }}
-                    className="fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-tr from-gray-500 to-gray-700 shadow-lg rounded-lg p-6 z-50 border-4 border-blue-500"
+                    className={`fixed max-w-[50vw] max-h-[60vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950" : "from-white to-gray-100 border-black"} shadow-lg rounded-lg p-6 z-50 border-4 border-white`}
                 >
-                    <h1 className="text-3xl font-bold">{selectedDisease.name} Overview</h1>
-                    <p className="text-lg text-left">{selectedDisease.description}</p>
-
+                    <button
+                        onClick={() => setIsModalOpen(false)}
+                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-5 -translate-x-full -translate-y-full w-4 h-4 flex flex-row items-center align-middle justify-center"
+                    >
+                        <motion.span whileHover={{ scale: 1.2 }} className="w-full h-full flex flex-row items-center justify-center align-middle">
+                            <FontAwesomeIcon icon={faClose} />
+                        </motion.span>
+                    </button>
+                    
+                    <h1 className={`text-3xl font-bold p-3 ${cookies.darkMode ? "text-white" : "text-black"}`}>{selectedDisease.name}</h1>
+                    <p className={`text-lg text-left rounded-xl p-2 mt-2 cursor-text ${cookies.darkMode ? "text-white" : "text-black"}`}>
+                            {selectedDisease.description}
+                    </p>
                     <table className="mt-5">
                         <tbody>
                             <tr>
@@ -143,18 +142,10 @@ export default function DiagnosisPage() {
                         </tbody>
                     </table>
 
-                    <button
-                        onClick={() => setIsModalOpen(false)}
-                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-4 -top-4 -translate-x-full -translate-y-full w-4 h-4 flex flex-row items-center align-middle justify-center"
-                    >
-                        <motion.span whileHover={{ scale: 1.2 }} className="w-full h-full flex flex-row items-center justify-center align-middle">
-                            <FontAwesomeIcon icon={faClose} />
-                        </motion.span>
-                    </button>
+                    
                 </motion.div>
             )}
 
-            <StyleSheet />
         </div>
     );
 }
