@@ -50,11 +50,7 @@ export default function ResultsPage() {
                         <h1 className="text-2xl text-center text-nowrap font-bold">Training Accuracy</h1>
                         {chartUrl && <img src={chartUrl} alt="Accuracy Chart" className="mt-2 w-full max-w-xs" />}
                     </li>
-                    <div className="text-xl text-white">
-                        {/* <h1>Tips to improve plant health</h1>
-                        <ul className="list-disc list-inside text-lg">
-                            {tips.map((tip, i) => <li key={i}>{tip}</li>)}
-                        </ul> */}
+                    <div className="flex justify-center items-center w-full h-full">
                         <Chart />
                     </div>
                 </div>
