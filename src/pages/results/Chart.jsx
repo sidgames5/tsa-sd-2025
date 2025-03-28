@@ -12,7 +12,6 @@ export default function Chart() {
     useEffect(() => {
         async function fetchData() {
             try {
-                //TODO: replace this with correct URL
                 const response = await axios.get("/api/accuracy/chart");
                 if (response.data) {
                     setData(response.data.data);

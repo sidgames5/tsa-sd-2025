@@ -82,7 +82,7 @@ export default function DiagnosisPage() {
 
                 {diseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
+                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-sky-200"}`}
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
