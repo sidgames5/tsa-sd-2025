@@ -1,88 +1,146 @@
 import os
 import torch
-import kagglehub
 import matplotlib.pyplot as plt
-from torch.utils.data import DataLoader
-from torch.optim import Adam
+from torch.utils.data import DataLoader, random_split
+from torch.optim import AdamW
 from torch.nn import CrossEntropyLoss
-from torchvision import datasets, transforms
-from backend.model import PlantDiseaseModel, get_transforms
+from torchvision import datasets
+from backend.nmodel import PlantDiseaseModel
+from backend.model import get_transforms
 
-# Device configuration
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# Constants
-IMG_SIZE = (224, 224)
+# Config
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BATCH_SIZE = 32
-EPOCHS = 10
+EPOCHS = 15
+LEARNING_RATE = 0.001
+NUM_CLASSES = 38  # New Plant Diseases Dataset classes
+DATA_PATH = "data/plant_diseases"  # Update with your path
 
-# Download dataset
-dataset_path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset")
-if not dataset_path:
-    raise FileNotFoundError("Dataset download failed.")
+# Global tracking
+CLASS_NAMES = []
+train_history = {'loss': [], 'accuracy': []}
 
-train_path = os.path.join(dataset_path, "train")
-
-# Load dataset
-train_dataset = datasets.ImageFolder(root=train_path, transform=get_transforms())
-train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-
-CLASS_NAMES = list(train_dataset.class_to_idx.keys())
-train_accuracies = []  # Store accuracy per epoch
-
-# Model Setup
-model = PlantDiseaseModel(num_classes=len(CLASS_NAMES)).to(device)
-criterion = CrossEntropyLoss()
-optimizer = Adam(model.parameters(), lr=0.001)
-
-
-def save_accuracy_chart(accuracies):
-    """Generates and saves the accuracy graph."""
-    plt.figure(figsize=(8, 5))
-    plt.plot(
-        range(1, len(accuracies) + 1),
-        accuracies,
-        marker="o",
-        linestyle="-",
-        label="Training Accuracy",
-        color="blue",
+def load_datasets():
+    """Load and split datasets with augmentation"""
+    global CLASS_NAMES
+    
+    train_transform = transforms.Compose([
+        transforms.Resize((256, 256)),
+        transforms.RandomRotation(15),
+        transforms.RandomHorizontalFlip(),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    
+    full_dataset = datasets.ImageFolder(
+        root=os.path.join(DATA_PATH, "train"),
+        transform=train_transform
     )
-    plt.xlabel("Epoch")
-    plt.ylabel("Accuracy")
-    plt.title("Training Accuracy Over Epochs")
-    plt.legend()
-    plt.grid(True)
-    os.makedirs("backend/static", exist_ok=True)
-    plt.savefig("backend/static/accuracy_chart.png")
-    print("Saved accuracy chart at backend/static/accuracy_chart.png")
-
+    
+    CLASS_NAMES = full_dataset.classes
+    train_size = int(0.8 * len(full_dataset))
+    val_size = len(full_dataset) - train_size
+    
+    train_dataset, val_dataset = random_split(
+        full_dataset, [train_size, val_size]
+    )
+    
+    return (
+        DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True),
+        DataLoader(val_dataset, batch_size=BATCH_SIZE)
+    )
 
 def train_model():
-    """Train the model and return accuracy data."""
-    global train_accuracies
-    train_accuracies.clear()
-
-    model.train()
+    """Complete training workflow"""
+    train_loader, val_loader = load_datasets()
+    
+    model = PlantDiseaseModel(num_classes=len(CLASS_NAMES)).to(DEVICE)
+    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
+    criterion = CrossEntropyLoss()
+    
+    best_accuracy = 0.0
+    
     for epoch in range(EPOCHS):
+        # Training phase
+        model.train()
+        running_loss = 0.0
         correct = 0
         total = 0
+        
         for images, labels in train_loader:
-            images, labels = images.to(device), labels.to(device)
-
+            images, labels = images.to(DEVICE), labels.to(DEVICE)
+            
             optimizer.zero_grad()
             outputs = model(images)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
-
-            _, predicted = torch.max(outputs, 1)
-            correct += (predicted == labels).sum().item()
+            
+            running_loss += loss.item()
+            _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+        
+        train_loss = running_loss / len(train_loader)
+        train_acc = correct / total
+        
+        # Validation phase
+        val_loss, val_acc = evaluate(model, val_loader, criterion)
+        
+        # Track metrics
+        train_history['loss'].append(val_loss)
+        train_history['accuracy'].append(val_acc)
+        
+        print(f"Epoch {epoch+1}/{EPOCHS} | "
+              f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | "
+              f"Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
+        
+        # Save best model
+        if val_acc > best_accuracy:
+            best_accuracy = val_acc
+            torch.save(model.state_dict(), "models/plant_disease_model.pth")
+            print(f"Saved new best model with accuracy: {best_accuracy:.4f}")
+    
+    save_training_plots()
+    return best_accuracy
 
-        train_accuracies.append(correct / total)
-        print(f"Epoch {epoch+1}/{EPOCHS}, Accuracy: {train_accuracies[-1]:.4f}")
+def evaluate(model, dataloader, criterion):
+    """Evaluate model on validation set"""
+    model.eval()
+    running_loss = 0.0
+    correct = 0
+    total = 0
+    
+    with torch.no_grad():
+        for images, labels in dataloader:
+            images, labels = images.to(DEVICE), labels.to(DEVICE)
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            
+            running_loss += loss.item()
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    
+    return running_loss / len(dataloader), correct / total
 
-    save_accuracy_chart(train_accuracies)
-    os.makedirs("models", exist_ok=True)
-    torch.save(model.state_dict(), "models/plant_disease_model.pth")
-    print("Model training complete.")
+def save_training_plots():
+    """Save training metrics visualization"""
+    plt.figure(figsize=(12, 5))
+    
+    plt.subplot(1, 2, 1)
+    plt.plot(train_history['loss'], label='Loss')
+    plt.title('Training Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    
+    plt.subplot(1, 2, 2)
+    plt.plot(train_history['accuracy'], label='Accuracy', color='green')
+    plt.title('Validation Accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    
+    os.makedirs("backend/static", exist_ok=True)
+    plt.savefig("backend/static/training_metrics.png")
+    plt.close()

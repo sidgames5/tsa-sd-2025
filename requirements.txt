@@ -13,9 +13,9 @@ kagglehub
 Image
 transforms
 # secure_filename
-matplotlib==3.3.4
+
 fastapi
 uvicorn
-cv2
+
 flask-cors
-threading
+

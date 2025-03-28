@@ -24,7 +24,7 @@ export default function App() {
     }, []);
 
     return (
-        <div className="App flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center">
             {/* <CustomSlider>
                 {images.map((image, index) => {
                     return <img key={index} src={image.imgURL} alt={image.imgAlt} />;
@@ -44,7 +44,7 @@ export default function App() {
                 <FontAwesomeIcon className="animate-bounce" icon={faArrowDown} fontSize={36} />
             </motion.div>}
             <motion.div
-                className="info flex flex-col justify-center items-center leading-relaxes h-[100vh] w-full"
+                className="flex flex-col justify-center items-center h-[100vh] w-full"
                 initial={{ backgroundColor: cookies.darkMode ? "#ffffff" : "#000000" }}
                 whileInView={{ backgroundColor: cookies.darkMode ? "#000000" : "#ffffff" }}
                 transition={{ type: "tween", duration: 0.7 }}
@@ -60,6 +60,7 @@ export default function App() {
                         Our Mission
                     </motion.h1>
                 </div>
+                
                 <table className="table-auto text-left w-[80vw] mt-20">
                     <tbody>
                         {/* About Us Secton */}

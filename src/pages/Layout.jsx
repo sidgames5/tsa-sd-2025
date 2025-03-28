@@ -8,7 +8,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 export default function HomeLayout() {
     const [navbarVisible, setNavbarVisible] = useState(false);
     return (
-        <>
+        <div className=" h-fit">
             <div className="hidden lg:block fixed top-0 left-0 w-screen h-fit z-50">
                 <Navbar />
             </div>
@@ -21,9 +21,7 @@ export default function HomeLayout() {
                 onClick={() => { setNavbarVisible(true) }}>
                 <FontAwesomeIcon icon={faBars} />
             </div>}
-            <div className="w-screen h-screen fixed top-0 left-0">
-                <Outlet />
-            </div>
-        </>
+            <Outlet />
+        </div>
     );
 }

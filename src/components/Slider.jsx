@@ -46,7 +46,7 @@ export default function ImageSlider() {
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
-                    AI Plant Detection <br /> <span className="text-5xl">at Your Hands</span>
+                    AI Plant Detection<br /> <span className="text-5xl">at Your Hands</span>
                 </motion.h1>
                 {/* <motion.h3 className="text-white text-3xl ml-6 mr-6 underline cursor-pointer" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>Our Mission!</motion.h3> */}
                 <motion.h1

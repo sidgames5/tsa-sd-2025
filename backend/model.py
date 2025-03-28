@@ -48,9 +48,9 @@ class PlantDiseaseDataset(Dataset):
 
 
 class PlantDiseaseModel(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes=38):  # Set default to 38
         super(PlantDiseaseModel, self).__init__()
-
+        
         self.feature_extractor = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, padding=1),
             nn.ReLU(),
@@ -63,14 +63,15 @@ class PlantDiseaseModel(nn.Module):
             nn.MaxPool2d(2, 2),
         )
 
-        # Updated to match saved model
         self.fc = nn.Sequential(
-            nn.Linear(128 * 28 * 28, 128),  # Use 128 instead of 512
+            nn.Linear(128 * 28 * 28, 128),
             nn.ReLU(),
-            nn.Linear(128, num_classes),
+            nn.Linear(128, num_classes),  # This will now match the saved model
         )
 
     def forward(self, x):
         x = self.feature_extractor(x)
         x = x.view(x.size(0), -1)
         return self.fc(x)
+    
+
