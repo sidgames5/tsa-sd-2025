@@ -45,7 +45,7 @@ export default function ResultsPage() {
 
             {/* Overall Results & Accuracy Graph */}
             <div className="flex flex-row w-4/5 justify-center gap-16 cursor-pointer">
-                <div className={`flex flex-col w-1/2 h-fit ${cookies.darkMode ? "border-white" : "border-black"} border-2 rounded-lg p-4 gap-2`}>
+                <div className={`flex flex-col w-fit h-fit ${cookies.darkMode ? "border-white" : "border-black"} border-2 rounded-lg p-8 gap-2`}>
                     <li className="flex flex-col items-center w-full">
                         <h1 className="text-2xl text-center text-nowrap font-bold">Training Accuracy</h1>
                         {chartUrl && <img src={chartUrl} alt="Accuracy Chart" className="mt-2 w-full max-w-xs" />}
