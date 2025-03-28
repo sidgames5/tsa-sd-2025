@@ -69,7 +69,7 @@ export default function DiagnosisPage() {
 
     return (
         <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} w-screen h-screen flex flex-col items-center align-middle justify-center`}>
-            <h1 className="text-5xl font-bold text-sky-600 underline">Plant Diagnosis Guide</h1>
+            <h1 className="text-5xl font-bold text-sky-600">Plant Diagnosis Guide</h1>
             <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
             <p className="text-xl">Click on each box for more information!</p>
 
@@ -82,7 +82,7 @@ export default function DiagnosisPage() {
 
                 {diseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-sky-200"}`}
+                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
