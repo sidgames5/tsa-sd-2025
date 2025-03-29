@@ -16,7 +16,7 @@ export default function Navbar() {
                         <NavbarButton>
                             <div className="flex flex-row gap-1 items-center">
                                 <a href="/" className="">Home</a>
-                                <FontAwesomeIcon icon={faLeaf} />
+                                <FontAwesomeIcon style={{ color: 'green' }} icon={faLeaf} />
                             </div>
                         </NavbarButton>
                     </div>

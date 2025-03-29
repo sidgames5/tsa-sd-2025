@@ -41,7 +41,7 @@ export default function ImageSlider() {
             {/* Left Section original gradient: bg-gradient-to-r to-sky-950 from-green-800*/}
             <div className={`flex flex-col items-start justify-center text-left w-1/2 h-full bg-gradient-to-l relative shadow-lg p-12 ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-sky-100"}`}>
                 <motion.h1
-                    className=" text-6xl font-semibold"
+                    className={`text-6xl font-semibold ${cookies.darkMode ? "text-green-200": "text-emerald-950"}`}
                     initial={{ translateX: -100 }}
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
