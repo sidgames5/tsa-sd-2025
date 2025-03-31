@@ -77,12 +77,12 @@ export default function DiagnosisPage() {
             {/* Disease Cards with Scroll Effect */}
             <motion.div
                 style={{ maskImage }}
-                className="overflow-x-scroll flex flex-nowrap gap-4 px-4 w-[80vw] max-w-[1200px] h-[47vh]"
+                className="overflow-x-scroll overflow-y-hidden flex flex-nowrap gap-4 px-4 w-[80vw] max-w-[1200px] h-[53vh]"
             >
 
                 {diseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`mt-5 bg-gradient-to-r w-[20vw] h-[42vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
+                        className={`mt-7 bg-gradient-to-r w-[25vw] h-[45vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
@@ -106,7 +106,7 @@ export default function DiagnosisPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", damping: 10 }}
-                    className={`fixed max-w-[50vw] max-h-[65vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950 border-white" : "from-gray-100 to-gray-50 border-black"} shadow-lg rounded-lg p-6 z-50 border-4`}
+                    className={`fixed max-w-[55vw] max-h-[70vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950 border-white" : "from-gray-100 to-gray-50 border-black"} shadow-lg rounded-lg p-6 z-50 border-4`}
                 >
                     <button
                         onClick={() => setIsModalOpen(false)}

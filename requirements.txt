@@ -6,9 +6,9 @@ numpy
 opencv-python-headless
 keras
 datasets
-torch
+torch==2.6.0
 pillow
-torchvision
+torchvision==0.21.0
 kagglehub
 Image
 transforms
@@ -17,6 +17,7 @@ transforms
 fastapi
 uvicorn
 tdqm
+tqdm
 #shutil
 flask-cors
 

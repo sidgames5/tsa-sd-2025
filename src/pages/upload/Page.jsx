@@ -79,7 +79,7 @@ export default function UploadPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <h1 className={`text-2xl font-bold mb-4 ${cookies.darkMode ? "text-white" : "text-blue-950"}`}>
+                <h1 className={`text-2xl font-bold mb-4 ${cookies.darkMode ? "text-white" : "text-sky-600"}`}>
                     Upload & Analyze Plant Image
                 </h1>
 
