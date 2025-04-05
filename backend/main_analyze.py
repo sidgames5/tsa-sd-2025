@@ -8,10 +8,8 @@ from torchvision import datasets, transforms
 from tqdm import tqdm
 from backend.model import PlantDiseaseModel
 import kagglehub
-
 from collections import defaultdict
 
-train_metrics = defaultdict(list)
 # Configuration
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 NUM_CLASSES = 38
@@ -51,7 +49,6 @@ def get_data_loaders():
         train_loader = DataLoader(
             train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4
         )
-
         val_loader = DataLoader(
             val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4
         )
@@ -65,15 +62,14 @@ def get_data_loaders():
 
 def train_model():
     """Complete training workflow with proper validation"""
-
     try:
-        # Get data loaders
-        train_loader, val_loader = get_data_loaders()
-
         # Initialize model
         model = PlantDiseaseModel(num_classes=NUM_CLASSES).to(DEVICE)
         optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
         criterion = nn.CrossEntropyLoss()
+
+        # Get data loaders
+        train_loader, val_loader = get_data_loaders()
 
         # Training loop
         for epoch in range(EPOCHS):
@@ -82,7 +78,7 @@ def train_model():
             epoch_correct = 0
             epoch_total = 0
 
-            # Training phase (batch loop)
+            # Training phase
             for images, labels in tqdm(train_loader, desc=f"Epoch {epoch+1}/{EPOCHS}"):
                 images, labels = images.to(DEVICE), labels.to(DEVICE)
 
@@ -92,24 +88,22 @@ def train_model():
                 loss.backward()
                 optimizer.step()
 
-                # Batch metrics
+                # Update metrics
                 epoch_train_loss += loss.item()
                 _, predicted = torch.max(outputs.data, 1)
                 epoch_total += labels.size(0)
                 epoch_correct += (predicted == labels).sum().item()
 
-            # Epoch-end calculations
+            # Calculate epoch metrics
             epoch_train_acc = epoch_correct / epoch_total
-            epoch_train_loss /= len(train_loader)  # Average loss
-
-            # Store metrics
-            train_metrics["accuracies"].append(epoch_train_acc)
-            train_metrics["losses"].append(epoch_train_loss)
+            epoch_train_loss /= len(train_loader)
 
             print(
                 f"Epoch {epoch+1} | Train Acc: {epoch_train_acc:.4f} | Loss: {epoch_train_loss:.4f}"
             )
 
+        # Save model after training completes
+        torch.save(model.state_dict(), "plant_disease_model.pth")
         return model
 
     except Exception as e:
@@ -118,5 +112,5 @@ def train_model():
 
 
 if __name__ == "__main__":
-    model = train_model()
-    torch.save(model.state_dict(), "plant_disease_model.pth")
+    trained_model = train_model()  # Get the trained model
+    # Model is already saved inside train_model(), no need to save again

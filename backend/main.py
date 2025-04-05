@@ -15,7 +15,46 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Constants
-
+CLASS_NAMES = [
+    "Apple___Apple_scab",
+    "Apple___Black_rot",
+    "Apple___Cedar_apple_rust",
+    "Apple___healthy",
+    "Blueberry___healthy",
+    "Cherry_(including_sour)___Powdery_mildew",
+    "Cherry_(including_sour)___healthy",
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+    "Corn_(maize)___Common_rust_",
+    "Corn_(maize)___Northern_Leaf_Blight",
+    "Corn_(maize)___healthy",
+    "Grape___Black_rot",
+    "Grape___Esca_(Black_Measles)",
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)",
+    "Grape___healthy",
+    "Orange___Haunglongbing_(Citrus_greening)",
+    "Peach___Bacterial_spot",
+    "Peach___healthy",
+    "Pepper,_bell___Bacterial_spot",
+    "Pepper,_bell___healthy",
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Potato___healthy",
+    "Raspberry___healthy",
+    "Soybean___healthy",
+    "Squash___Powdery_mildew",
+    "Strawberry___Leaf_scorch",
+    "Strawberry___healthy",
+    "Tomato___Bacterial_spot",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___Septoria_leaf_spot",
+    "Tomato___Spider_mites Two-spotted_spider_mite",
+    "Tomato___Target_Spot",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "Tomato___Tomato_mosaic_virus",
+    "Tomato___healthy",
+]
 NUM_CLASSES = 38  # Should match your dataset
 UPLOAD_FOLDER = "uploads"
 MODEL_PATH = "models/plant_disease_model.pth"
@@ -77,53 +116,20 @@ def analyze_image(image_path):
         return None
 
 
-@app.route("/api/upload", methods=["POST"])
-def upload_file():
-    """Handles image upload and returns prediction."""
-    if "image" not in request.files:
-        return jsonify({"error": "No image uploaded"}), 400
-
-    file = request.files["image"]
-    if file.filename == "":
-        return jsonify({"error": "Invalid file"}), 400
-
-    filename = secure_filename(file.filename)
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-    file.save(filepath)
-
-    try:
-        result = analyze_image(filepath)
-        if result:
-            return jsonify(
-                {
-                    "status": "success",
-                    "prediction": result,
-                    "confidence": "high",  # You can add confidence scoring later
-                }
-            )
-        return jsonify({"error": "Analysis failed"}), 500
-    finally:
-        # Clean up uploaded file
-        if os.path.exists(filepath):
-            os.remove(filepath)
+# main.py
 
 
-@app.route("/train", methods=["POST"])  # Changed to POST
+@app.route("/train", methods=["POST"])
 def train():
-    """Train the model (admin-only endpoint)."""
+    """Train the model and return metrics"""
     if training_lock.locked():
         return jsonify({"error": "Training is already in progress"}), 409
-
-    # Add authentication check here if needed
-    # if not request.headers.get("Authorization") == "YOUR_SECRET_KEY":
-    #     return jsonify({"error": "Unauthorized"}), 401
 
     with training_lock:
         try:
             print("Training started...")
-            train_model()  # This saves the new model automatically
+            metrics = train_model()  # Get metrics from training
 
-            # Reload the updated model
             if not load_model():
                 raise RuntimeError("Failed to reload model after training")
 
@@ -131,7 +137,7 @@ def train():
                 {
                     "status": "success",
                     "message": "Training complete",
-                    "accuracy": "See /api/accuracy/chart for details",
+                    "metrics": metrics,
                 }
             )
         except Exception as e:
@@ -140,26 +146,19 @@ def train():
 
 @app.route("/accuracy/chart", methods=["GET"])
 def get_accuracy_chart():
-    # Return the saved accuracy chart image.
-    if os.path.exists(CHART_PATH):
-        return jsonify(
-            {"status": bool(train_metrics), "data": train_metrics}  # False if empty
+    """Return training metrics"""
+    try:
+        if os.path.exists("training_metrics.pth"):
+            metrics = torch.load("training_metrics.pth")
+            return jsonify({"status": True, "data": metrics})
+        return (
+            jsonify(
+                {"error": "Metrics not available", "message": "Train the model first"}
+            ),
+            404,
         )
-        # return send_file(CHART_PATH, mimetype="image/png")
-    return (
-        jsonify(
-            {"error": "Internal Server Error", "message": "Accuracy chart not found"}
-        ),
-        500,
-    )
-
-
-@app.route("/health", methods=["GET"])
-def health_check():
-    """Simple health check endpoint."""
-    return jsonify(
-        {"status": "ready" if model else "no_model", "model_loaded": model is not None}
-    )
+    except Exception as e:
+        return jsonify({"error": "Server error", "details": str(e)}), 500
 
 
 if __name__ == "__main__":
