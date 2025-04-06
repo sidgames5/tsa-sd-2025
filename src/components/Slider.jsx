@@ -55,7 +55,7 @@ export default function ImageSlider() {
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
-                    Insanely easy User Interface. Simply upload an image and watch as AI gives you easy to understand results. Apply these tips and watch as your crop yields begin to increase. <span className="text-green-300 cursor-pointer underline"><Link to="/upload">Upload Plant Image Now!</Link></span>
+                    Insanely easy UI. Simply upload an image in the upload page and watch as AI gives you easy to understand results. Apply these tips and watch as your crop yields begin to increase. The AI specializes in pepper bells, tomatoes, and potatoes, which are grown in very-high demand around the world. <span className="text-green-300 cursor-pointer underline"><Link to="/upload">Upload Plant Image Now!</Link></span>
                 </motion.h1>
             </div>
 

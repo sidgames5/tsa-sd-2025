@@ -66,7 +66,45 @@ export default function Chart({ onDataLoaded }) {
     ]
   };
 
+  const options = {
+    responsive: true,
+    scales: {
+      y: {
+        type: 'linear',
+        position: 'left',
+        title: {
+          display: true,
+          text: 'Accuracy (%)'
+        },
+      },
+      y1: {
+        type: 'linear',
+        position: 'right',
+        title: {
+          display: true,
+          text: 'Loss'
+        },
+        grid: {
+          drawOnChartArea: false, // Hide grid lines for the second y-axis
+        },
+      }
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: 'Model Accuracy and Loss'
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+      },
+      legend: {
+        position: 'top',
+      }
+    }
+  };
+
   return chartData.accuracies.length > 0 ? (
-    <Line data={data} />
+    <Line data={data} options={options} />
   ) : null;
 }

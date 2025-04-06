@@ -24,47 +24,188 @@ export default function DiagnosisPage() {
 
     const diseases = [
         {
-            name: "Powdery Mildew (White, Powdery Leaves)",
-            solution: " - Gently pluck off any leaves with the white powder.\n - Give your plants more space for better air flow.\n - Apply a fungicide spray following product instructions.\n - Mix 1 teaspoon of baking soda with 1 quart of water and a few drops of dish soap and spray the leaves.",
+            name: "Powdery Mildew",
             description: "Powdery mildew is a fungal disease that appears as a white, dusty coating on leaves and stems. It thrives in warm, humid conditions, weakening plants and reducing yields if left untreated. It spreads rapidly, impacting surrounding plants.",
-            appearance: " - White or grayish-white powdery growth on leaves and stems.\n - Leaves may appear twisted, curled, or exhibit yellow spots.",
-            fix: " - Use a fungicide (like chlorothalonil) following product label instructions.\n - Remove affected leaves immediately.\n - Ensure adequate sunlight exposure.\n - Water at the base of plants to avoid wetting foliage."
+            appearance: " - White or grayish-white powdery growth on leaves and stems\n - Leaves may appear twisted, curled, or exhibit yellow spots.",
+            fix: " - Use a fungicide (like chlorothalonil) following product label instructions\n - Remove affected leaves immediately\n - Ensure adequate sunlight exposure\n - Water at the base of plants to avoid wetting foliage."
         },
         {
             name: "Chlorosis (Yellowing Leaves)",
-            solution: " - Check soil moisture to avoid over or under-watering.\n - Ensure proper soil drainage.\n - Provide adequate sunlight.\n - Apply a fertilizer with iron, nitrogen, and magnesium.",
             description: "Chlorosis, or yellowing leaves, indicates a deficiency in chlorophyll. This can be caused by improper watering, nutrient deficiencies (nitrogen, iron, magnesium), or environmental stressors, impacting plant health and productivity.",
-            appearance: " - Leaves turn yellow, starting with older leaves, potentially progressing to brown and brittle.\n - Leaves may appear dry and shriveled, with veins remaining green.",
-            fix: " - Adjust watering practices based on soil moisture.\n - Improve soil drainage to prevent waterlogging.\n - Ensure plants receive sufficient sunlight.\n - Use a balanced fertilizer with iron, nitrogen, and magnesium."
+            appearance: " - Leaves turn yellow, starting with older leaves, potentially progressing to brown and brittle\n - Leaves may appear dry and shriveled, with veins remaining green.",
+            fix: " - Adjust watering practices based on soil moisture\n - Improve soil drainage to prevent waterlogging\n - Ensure plants receive sufficient sunlight\n - Use a balanced fertilizer with iron, nitrogen, and magnesium."
         },
         {
-            name: "Wilting Plant (Droopy and Sad)",
-            solution: " - Water plants if soil is dry.\n - Inspect roots for signs of root rot.\n - Loosen compacted soil to improve aeration.\n - Move plants to cooler locations during heat stress.",
-            description: "Wilting occurs when plants lose turgidity due to water stress, heat, or root damage. This compromises plant health and can lead to significant yield reductions.",
-            appearance: " - Leaves become floppy and may turn yellow or brown.\n - Plants exhibit a general loss of vigor and may lean or collapse.\n - Soil may be excessively dry or waterlogged.",
-            fix: " - Water plants thoroughly when soil is dry.\n - Address root rot by removing affected roots and improving drainage.\n - Improve soil aeration to support root health.\n - Provide shade or relocate plants during extreme heat."
-        },
-        {
-            name: "Spots on Leaves (Different Colors)",
-            solution: " - Remove and dispose of affected leaves.\n - Water at the base of plants to avoid wetting foliage.\n - Apply a fungicide following product instructions.\n - Consider using copper-based fungicides.",
+            name: "Spots on Leaves",
             description: "Leaf spots are caused by various fungal or bacterial pathogens, causing localized tissue damage and discoloration. Common examples include downy mildew, anthracnose, and late blight, each with distinct symptoms.",
-            appearance: "Downy Mildew: Yellow spots on upper leaf surfaces.\nAnthracnose: Sunken lesions, spots, and holes on leaves and stems.\nLeaf Spots: Small, circular, dark brown or black spots.\nLate Blight: Dark spots on leaves and brown lesions on stems.",
-            fix: " - Remove infected leaves to prevent spread.\n - Apply fungicides as needed, following product instructions.\n - Avoid overhead watering to minimize leaf moisture.\n - Ensure good air circulation around plants."
+            appearance: "Downy Mildew: Yellow spots on upper leaf surfaces\nAnthracnose: Sunken lesions, spots, and holes on leaves and stems\nLeaf Spots: Small, circular, dark brown or black spots\nLate Blight: Dark spots on leaves and brown lesions on stems.",
+            fix: " - Remove infected leaves to prevent spread\n - Apply fungicides as needed, following product instructions\n - Avoid overhead watering to minimize leaf moisture\n - Ensure good air circulation around plants."
         },
         {
-            name: "Pest Infestation (Tiny Bugs)",
-            solution: " - Apply neem oil following product instructions.\n - Use insecticidal soap as directed.\n - Introduce beneficial insects like ladybugs.\n - Use a strong water spray to dislodge pests.",
+            name: "Pest Infestation",
             description: "Pest infestations, such as aphids, spider mites, and whiteflies, damage plants by extracting sap. This weakens plants, reduces yields, and can transmit diseases.",
-            appearance: " - Leaves may yellow, brown, become sticky, or exhibit small holes.\n - Visible insects or webbing on leaves.",
-            fix: " - Apply neem oil or insecticidal soap according to instructions.\n - Introduce beneficial insects for natural pest control.\n - Regularly inspect plants for pests.\n - Maintain plant hygiene to deter pests."
+            appearance: " - Leaves may yellow, brown, become sticky, or exhibit small holes\n - Visible insects or webbing on leaves.",
+            fix: " - Apply neem oil or insecticidal soap according to instructions\n - Introduce beneficial insects for natural pest controls\n - Regularly inspect plants for pests\n - Maintain plant hygiene to deter pests."
         },
         {
-            name: "Drooping Leaves (Not Standing Upright)",
-            solution: " - Check soil moisture and temperature.\n - Adjust watering schedule as needed.\n - Increase humidity through misting or humidifiers.\n - Inspect roots for damage.",
-            description: "Drooping leaves indicate water stress, heat exposure, or root damage. This compromises plant health and can significantly reduce yields.",
-            appearance: " - Leaves appear limp and lack rigidity.\n - Leaves may turn yellow or brown.\n - Soil may be excessively dry or waterlogged.",
-            fix: " - Water plants when soil is dry.\n - Provide shade or relocate plants during heat stress.\n - Address root damage by removing affected roots and improving drainage.\n - Increase humidity to reduce transpiration stress."
+            name: "Scab/Rot",
+            description: "A disease caused by a fungus, leading to dark, scabby lesions on leaves and fruit, causing premature leaf drop, fruit deformation or tree death.",
+            appearance: "Olive-green black, or purple, velvety spots on leaves and fruit which can later turn brown and corky or enlarge.",
+            fix: " - Remove and dispose of fallen leaves in the fall to reduce the fungal inoculum\n - Apply fungicides (i.e. Dalicon) to protect healthy trees/vine from infection.\n - Select apple and crabapple varieties that are resistant to apple scab\n - Prune trees/vines to improve air circulation and reduce humidity"
+        },
+        {
+            name: "Corn - Northern Leaf Blight",
+            description: "Northern corn leaf blight is caused by a fungus, which manifests in tan or grayish lesions on leaves. ",
+            appearance: " - Tan, grayish, oblong lesions on leaf surfaces\n - Spores produced on the underside of the leaf give the appearance of a dusty green fuzz",
+            fix: " - Plant resistant corn hybrids\n - Reducing corn residue can also help to minimize the amount of inoculum"
+        },
+        {
+            name: "Bacterial spots",
+            description: "Bacterial spots are caused by various bacteria, leading to dark, water-soaked lesions on leaves and stems. This can cause leaf drop and reduced plant vigor.",
+            appearance: "Dark brown spots on leaves",
+            fix: " - Remove infected leaves and stems\n - Apply copper-based bactericides as needed\n - Avoid overhead watering to minimize leaf moisture\n - Ensure good air circulation around plants."
+            
+        },
+        {
+            name: "Blight",
+            description: "Blight is a rapid and extensive decay of plant tissues, often caused by fungal or bacterial pathogens. It can affect leaves, stems, and fruits, leading to wilting and death.",
+            appearance: " - Rapid wilting and browning of leaves\n - Black or brown lesions on stems and fruits.",
+            fix: " - Remove infected plant parts immediately\n - Apply fungicides or bactericides as needed\n - Ensure proper watering practices to avoid excess moisture\n - Rotate crops to prevent disease recurrence."
+        },
+        {
+            name: "Root Rot",
+            description: "Root rot is a fungal disease caused by overwatering or poor drainage, leading to root decay and plant wilting. Symptoms include yellowing leaves, stunted growth, and mushy roots.",
+            appearance: " - Yellowing leaves\n - Wilting or drooping\n - Mushy or blackened roots.",
+            fix: " - Improve soil drainage\n - Reduce watering frequency\n - Use fungicides if necessary\n - Remove affected plants to prevent spread."
+        },
+        {
+            name: "Fungal Infections",
+            description: "Fungal infections can cause various symptoms, including leaf spots, wilting, and fruit rot. Common fungal diseases include powdery mildew, downy mildew, and rust.",
+            appearance: " - Leaf spots or blights\n - Powdery or fuzzy growth on leaves\n - Wilting or yellowing leaves.",
+            fix: " - Apply fungicides as needed\n - Remove infected plant parts\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Fungal Leaf Spot",
+            description: "Fungal leaf spots are caused by various fungi, leading to dark, circular spots on leaves. They can cause leaf drop and reduce plant vigor.",
+            appearance: " - Dark, circular spots on leaves\n - Yellow halos around spots.",
+            fix: " - Remove infected leaves\n - Apply fungicides as needed\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Fungal Wilt",
+            description: "Fungal wilt is caused by soil-borne fungi that block water transport in plants, leading to wilting and death. Symptoms include yellowing leaves and stunted growth.",
+            appearance: " - Wilting leaves\n - Yellowing or browning of lower leaves\n - Stunted growth.",
+            fix: " - Rotate crops to prevent recurrence\n - Use resistant varieties if available\n - Improve soil drainage\n - Apply fungicides if necessary."
+        },
+        {
+            name: "Leaf Curl",
+            description: "Leaf curl is a condition where leaves become distorted or curled due to environmental stress, pests, or diseases. It can affect plant growth and yield.",
+            appearance: " - Leaves may curl upwards or downwards\n - Distorted leaf shape.",
+            fix: " - Identify and address the underlying cause (pests, diseases, environmental stress)\n - Ensure proper watering and fertilization practices\n - Prune affected leaves if necessary."
+        },
+        {
+            name: "Leaf Blight",
+            description: "Leaf blight is a condition where leaves develop large, dark lesions, often caused by fungal or bacterial pathogens. It can lead to leaf drop and reduced plant vigor.",
+            appearance: " - Large, dark lesions on leaves\n - Yellowing or browning of leaf edges.",
+            fix: " - Remove infected leaves\n - Apply fungicides or bactericides as needed\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Leaf Spot",
+            description: "Leaf spot is a common plant disease characterized by small, round spots on leaves, caused by various fungi or bacteria. It can lead to leaf drop and reduced plant vigor.",
+            appearance: " - Small, round spots on leaves\n - Yellow halos around spots.",
+            fix: " - Remove infected leaves\n - Apply fungicides or bactericides as needed\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Wilting",
+            description: "Wilting is a condition where plants droop due to lack of water or root damage. It can be caused by overwatering, underwatering, or root rot.",
+            appearance: " - Drooping or wilting leaves and stems\n - Yellowing leaves.",
+            fix: " - Adjust watering practices based on soil moisture\n - Improve soil drainage if necessary\n - Use fungicides if root rot is suspected."
+        },
+        {
+            name: "Leaf Scorch",
+            description: "Leaf scorch is a condition where leaf edges turn brown and crispy due to environmental stress, such as drought or excessive heat. It can affect plant health and appearance.",
+            appearance: " - Brown, crispy leaf edges\n - Yellowing or browning of leaf tips.",
+            fix: " - Ensure proper watering practices\n - Provide shade during extreme heat\n - Avoid fertilizing during drought conditions."
+        },
+        {
+            name: "Root Damage",
+            description: "Root damage can occur due to overwatering, underwatering, or physical injury. It can lead to wilting, yellowing leaves, and stunted growth.",
+            appearance: " - Wilting or drooping leaves\n - Yellowing leaves\n - Stunted growth.",
+            fix: " - Adjust watering practices based on soil moisture\n - Improve soil drainage if necessary\n - Avoid physical damage to roots during planting or transplanting."
+        },
+        {
+            name: "Leaf Drop",
+            description: "Leaf drop is a condition where leaves fall off plants prematurely, often due to environmental stress, pests, or diseases. It can affect plant health and appearance.",
+            appearance: " - Leaves may turn yellow or brown before dropping\n - Premature leaf drop from stems.",
+            fix: " - Identify and address the underlying cause (pests, diseases, environmental stress)\n - Ensure proper watering and fertilization practices\n - Prune affected leaves if necessary."
+        },
+        {
+            name: "Fruit Rot",
+            description: "Fruit rot is a condition where fruits develop soft, mushy spots due to fungal or bacterial infections. It can lead to reduced yields and poor fruit quality.",
+            appearance: " - Soft, mushy spots on fruits\n - Discoloration or mold growth.",
+            fix: " - Remove infected fruits immediately\n - Apply fungicides or bactericides as needed\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Leaf Necrosis",
+            description: "Leaf necrosis is a condition where leaf tissue dies, leading to brown or black spots. It can be caused by environmental stress, pests, or diseases.",
+            appearance: " - Brown or black spots on leaves\n - Yellowing or browning of leaf edges.",
+            fix: " - Identify and address the underlying cause (pests, diseases, environmental stress)\n - Ensure proper watering and fertilization practices\n - Prune affected leaves if necessary."
+        },
+        {
+            name: "Leaf Distortion",
+            description: "Leaf distortion is a condition where leaves become twisted or curled due to environmental stress, pests, or diseases. It can affect plant growth and yield.",
+            appearance: " - Twisted or curled leaves\n - Distorted leaf shape.",
+            fix: " - Identify and address the underlying cause (pests, diseases, environmental stress)\n - Ensure proper watering and fertilization practices\n - Prune affected leaves if necessary."
+        },
+        {
+            name: "Fruit Scab",
+            description: "Fruit scab is a fungal disease that causes dark, scabby lesions on fruits, reducing their quality and marketability. It can affect various fruit crops.",
+            appearance: " - Dark, scabby lesions on fruits\n - Deformed or misshapen fruits.",
+            fix: " - Remove and dispose of infected fruits\n - Apply fungicides as needed\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Fruit Sunburn",
+            description: "Fruit sunburn occurs when fruits are exposed to excessive sunlight, leading to sunscald and discoloration. It can affect fruit quality and marketability.",
+            appearance: " - Sunken, discolored areas on fruits\n - Scorched or sunburned appearance.",
+            fix: " - Provide shade during extreme heat\n - Use reflective mulch to protect fruits\n - Ensure proper watering practices."
+        },
+        {
+            name: "Fruit Blight",
+            description: "Fruit blight is a condition where fruits develop dark, mushy spots due to fungal or bacterial infections. It can lead to reduced yields and poor fruit quality.",
+            appearance: " - Dark, mushy spots on fruits\n - Discoloration or mold growth.",
+            fix: " - Remove infected fruits immediately\n - Apply fungicides or bactericides as needed\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Fruit Drop",
+            description: "Fruit drop is a condition where fruits fall off plants prematurely, often due to environmental stress, pests, or diseases. It can affect plant health and yield.",
+            appearance: " - Fruits may turn yellow or brown before dropping\n - Premature fruit drop from stems.",
+            fix: " - Identify and address the underlying cause (pests, diseases, environmental stress)\n - Ensure proper watering and fertilization practices\n - Prune affected fruits if necessary."
+        },
+        {
+            name: "Leaf Spotting",
+            description: "Leaf spotting is a condition where leaves develop small, dark spots due to fungal or bacterial infections. It can lead to leaf drop and reduced plant vigor.",
+            appearance: " - Small, dark spots on leaves\n - Yellow halos around spots.",
+            fix: " - Remove infected leaves\n - Apply fungicides or bactericides as needed\n - Ensure good air circulation around plants\n - Avoid overhead watering."
+        },
+        {
+            name: "Leaf Browning",
+            description: "Leaf browning is a condition where leaf edges turn brown and crispy due to environmental stress, such as drought or excessive heat. It can affect plant health and appearance.",
+            appearance: " - Brown, crispy leaf edges\n - Yellowing or browning of leaf tips.",
+            fix: " - Ensure proper watering practices\n - Provide shade during extreme heat\n - Avoid fertilizing during drought conditions."
+        },
+        {
+            name: "Leaf Wilting",
+            description: "Leaf wilting is a condition where leaves droop due to lack of water or root damage. It can be caused by overwatering, underwatering, or root rot.",
+            appearance: " - Drooping or wilting leaves and stems\n - Yellowing leaves.",
+            fix: " - Adjust watering practices based on soil moisture\n - Improve soil drainage if necessary\n - Use fungicides if root rot is suspected."
+        },
+        {
+            name: "Leaf Yellowing",
+            description: "Leaf yellowing is a condition where leaves turn yellow due to nutrient deficiencies, environmental stress, or diseases. It can affect plant health and yield.",
+            appearance: " - Yellowing leaves, starting with older leaves\n - Leaves may appear dry and shriveled.",
+            fix: " - Adjust watering practices based on soil moisture\n - Improve soil drainage to prevent waterlogging\n - Ensure plants receive sufficient sunlight\n - Use a balanced fertilizer with iron, nitrogen, and magnesium."
         }
+        
+
     ];
 
     return (
@@ -73,16 +214,18 @@ export default function DiagnosisPage() {
             <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
             <p className="text-xl">Click on each box for more information!</p>
 
+            
+
 
             {/* Disease Cards with Scroll Effect */}
             <motion.div
-                style={{ maskImage }}
-                className="overflow-x-scroll overflow-y-hidden flex flex-nowrap gap-4 px-4 w-[80vw] max-w-[1200px] h-[53vh]"
+                // style={{ maskImage }}
+                className="overflow-y-hidden flex flex-wrap gap-4 items-center justify-center mt-7 px-4 w-[80vw] max-w-[1200px] h-fit mb-8"
             >
 
                 {diseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`mt-7 bg-gradient-to-r w-[25vw] h-[45vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
+                        className={`bg-gradient-to-r max-w-[20vw] h-[15vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
@@ -91,11 +234,6 @@ export default function DiagnosisPage() {
                         }}
                     >
                         <h3 className="font-bold">{disease.name}</h3>
-                        <p>
-                            {disease.solution.split('\n').map((line, idx) => (
-                                <span key={idx}>{line}<br /></span>
-                            ))}
-                        </p>
                     </motion.div>
                 ))}
             </motion.div>
@@ -110,7 +248,7 @@ export default function DiagnosisPage() {
                 >
                     <button
                         onClick={() => setIsModalOpen(false)}
-                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-5 -translate-x-full -translate-y-full w-4 h-4 flex flex-row items-center align-middle justify-center"
+                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-5 -translate-x-full -translate-y-full w-4 h-4 flex flex-wrap items-center align-middle justify-center"
                     >
                         <motion.span whileHover={{ scale: 1.2 }} className="w-full h-full flex flex-row items-center justify-center align-middle">
                             <FontAwesomeIcon icon={faClose} />
@@ -167,46 +305,4 @@ function useScrollOverflowMask(scrollXProgress) {
     });
 
     return maskImage;
-}
-
-// Styles
-function StyleSheet() {
-    return (
-        <style>{`
-            #progress {
-                position: absolute;
-                top: -65px;
-                left: -15px;
-                transform: rotate(-90deg);
-            }
-
-            .bg { stroke: var(--layer); }
-
-            #progress circle {
-                stroke-dashoffset: 0;
-                stroke-width: 10%;
-                fill: none;
-            }
-
-            .indicator { stroke: var(--accent); }
-
-            .overflow-x-scroll {
-                display: flex;
-                list-style: none;
-                padding: 20px 0;
-                margin: 0 auto;
-                gap: 20px;
-            }
-
-            ::-webkit-scrollbar {
-                height: 5px;
-                width: 5px;
-                background: #fff3;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background: var(--accent);
-            }
-        `}</style>
-    );
 }

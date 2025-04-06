@@ -71,7 +71,7 @@ export default function App() {
                                 About Us
                             </td>
                             <td
-                                className={`text-2xl w-[50vw] p-4 rounded-tr-xl ${cookies.darkMode ? 'text-white bg-black' : 'text-black bg-gray-100'}`}
+                                className={`text-2xl w-[50vw] p-4 rounded-tr-xl ${cookies.darkMode ? 'text-white bg-neutral-900' : 'text-black bg-gray-100'}`}
                             >
                                 We are three high schoolers with a shared passion for coding, technology, and innovation. As young developers, we've spent countless hours learning and building projects that push our boundaries and expand our knowledge. We believe that coding is not just about writing lines of code, but about creating something meaningful that can make a real difference.
                             </td>
