@@ -32,11 +32,11 @@ export default function Chart() {
                 datasets: [
                     {
                         id: 1,
-                        label: 'Accuracy',
+                        label: 'Confidence',
                         data: data,
                         backgroundColor: "#ffffff",
                         borderColor: "#ffffff",
-                        tension: 0.3
+                        tension: 0.5
                     }
                 ],
             }}

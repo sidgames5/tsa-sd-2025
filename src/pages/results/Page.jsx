@@ -51,7 +51,8 @@ export default function ResultsPage() {
         
         {!hasData && (
           <div className="text-yellow-500">
-            No training data available. Run training first.
+            {/* No training data available. Run training first. */}
+
           </div>
         )}
       </div>

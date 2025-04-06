@@ -13,7 +13,7 @@ kagglehub
 Image
 transforms
 # secure_filename
-
+dotenv
 fastapi
 uvicorn
 tdqm
