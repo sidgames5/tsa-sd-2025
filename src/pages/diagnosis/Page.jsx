@@ -213,7 +213,7 @@ export default function DiagnosisPage() {
     );
 
     return (
-        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} w-ful min-h-screen flex flex-col items-center align- justify-center`}>
+        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} w-full overflow-y-auto flex flex-col items-center align- justify-center`}>
             <h1 className="text-5xl font-bold text-sky-600">Plant Diagnosis Guide</h1>
             <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
             <p className="text-xl">Click on each box for more information!</p>
@@ -232,18 +232,21 @@ export default function DiagnosisPage() {
             {/* Disease Cards with Scroll Effect */}
             <motion.div
                 // style={{ maskImage }}
-                className="overflow-y-hidden flex flex-wrap gap-4 items-center justify-center mt-7 px-4 w-[80vw] max-w-[1200px] h-fit mb-8"
+                className="overflow-y-scroll flex flex-wrap gap-4 items-center justify-center mt-7 px-4 h-[90vh] w-[80vw] mb-8"
             >
                     
                 {filteredDiseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`bg-gradient-to-r max-w-[20vw] h-[10vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-blue-100 to-gray-500"}`}
-                        whileHover={{ scale: 1.05 }}
+                        className={`bg-gradient-to-r max-w-[20vw] h-[10vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-gray-200 to-orange-300 text-gray-700"}`}
+                        whileHover={{ scale: 1.35 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
                             setSelectedDisease(disease);
                             setIsModalOpen(true);
                         }}
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.45 }}
                     >
                         <h3 className="font-bold">{disease.name}</h3>
                     </motion.div>
@@ -256,7 +259,7 @@ export default function DiagnosisPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", damping: 10 }}
-                    className={`fixed max-w-[55vw] max-h-[70vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950 border-white" : "from-gray-100 to-gray-50 border-black"} shadow-lg rounded-lg p-6 z-50 border-4`}
+                    className={`fixed max-w-[55vw] max-h-[70vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950 border-white" : "from-gray-100 to-gray-200 border-black"} shadow-lg rounded-lg p-6 z-50 border-4`}
                 >
                     <button
                         onClick={() => setIsModalOpen(false)}
@@ -274,16 +277,16 @@ export default function DiagnosisPage() {
                     <table className="mt-5 mb-5">
                         <tbody>
                             <tr>
-                                <td className="font-bold p-4 bg-gray-100 text-black rounded-tl-xl">How to Identify</td>
-                                <td className="p-4 w-[50vw] bg-gray-200 text-left text-black rounded-tr-xl">
+                                <td className="font-bold p-4 bg-amber-50 text-black rounded-tl-xl">How to Identify</td>
+                                <td className="p-4 w-[50vw] bg-white text-left text-black rounded-tr-xl">
                                     {selectedDisease.appearance.split('\n').map((line, idx) => (
                                         <span key={idx}>{line}<br /></span>
                                     ))}
                                 </td>
                             </tr>
                             <tr>
-                                <td className="font-bold p-4 bg-gray-100 text-black rounded-bl-xl">How to Fix</td>
-                                <td className="p-4 w-[50vw] bg-gray-200 text-left text-black rounded-br-xl">
+                                <td className="font-bold p-4 bg-amber-50 text-black rounded-bl-xl">How to Fix</td>
+                                <td className="p-4 w-[50vw] bg-white text-left text-black rounded-br-xl">
                                     {selectedDisease.fix.split('\n').map((line, idx) => (
                                         <span key={idx}>{line}<br /></span>
                                     ))}
