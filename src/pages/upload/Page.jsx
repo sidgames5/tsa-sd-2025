@@ -144,9 +144,9 @@ export default function UploadPage() {
     const isDarkMode = cookies.darkMode === "true";
 
     return (
-        <div className={`flex flex-col items-center justify-center min-h-screen p-4 ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"}`}>
+        <div className={`flex flex-col items-center justify-center min-h-screen p-4 ${isDarkMode ? "bg-gray-900 text-white" : "bg-neutral-50 text-black"}`}>
             <motion.div
-                className={`p-6 shadow-lg rounded-2xl w-full max-w-2xl flex flex-col justify-center items-center border-8 border-double ${isDarkMode ? "border-blue-600 bg-gray-800" : "border-blue-400 bg-white"}`}
+                className={`p-6 max-h-[80vh] mt-10 shadow-lg rounded-2xl w-full max-w-2xl flex flex-col justify-center items-center border-8 border-double ${isDarkMode ? "border-blue-600 bg-gray-800" : "border-blue-400 bg-white"}`}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -171,36 +171,39 @@ export default function UploadPage() {
                         )}
                     </div>
                 )}
-
                 {/* Drag and Drop Area */}
-                <div
-                    ref={dropAreaRef}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    onClick={triggerFileInput}
-                    className={`w-full p-8 border-2 border-dashed rounded-lg mb-6 text-center cursor-pointer transition-colors ${
-                        isDarkMode ? "border-gray-600 hover:border-blue-400" : "border-gray-300 hover:border-blue-500"
-                    }`}
-                >
-                    <input 
-                        type="file" 
-                        ref={fileInputRef}
-                        accept="image/*" 
-                        onChange={handleImageChange} 
-                        className="hidden" 
-                    />
-                    <FontAwesomeIcon 
-                        icon={faUpload} 
-                        className="mx-auto text-4xl mb-3 text-blue-500" 
-                    />
-                    <p className="text-lg">
-                        {image ? image.name : "Drag & drop an image or click to select"}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-2">
-                        Supported formats: JPEG, PNG (max 10MB)
-                    </p>
-                </div>
+
+                {!image && (
+                    <div
+                        ref={dropAreaRef}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={triggerFileInput}
+                        className={`w-full p-8 border-2 border-dashed rounded-lg mb-6 text-center cursor-pointer transition-colors ${
+                            isDarkMode ? "border-gray-600 hover:border-blue-400" : "border-gray-300 hover:border-blue-500"
+                        }`}
+                    >
+                        <input 
+                            type="file" 
+                            ref={fileInputRef}
+                            accept="image/*" 
+                            onChange={handleImageChange} 
+                            className="hidden" 
+                        />
+                        <FontAwesomeIcon 
+                            icon={faUpload} 
+                            className="mx-auto text-4xl mb-3 text-blue-500" 
+                        />
+                        <p className="text-lg">
+                            {image ? image.name : "Drag & drop an image or click to select"}
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2">
+                            Supported formats: JPEG, PNG (max 10MB)
+                        </p>
+                    </div>
+                )}
+
 
                 {/* Preview and Progress */}
                 {preview && (
@@ -214,7 +217,7 @@ export default function UploadPage() {
                             <img
                                 src={preview}
                                 alt="Preview"
-                                className="w-full max-h-64 object-contain rounded-lg shadow-md mx-auto"
+                                className="w-full max-h-64 object-contain rounded-lg shadow-md mx-auto max-h-40"
                                 onError={() => setPreview(null)}
                             />
                             {loading && (
@@ -229,7 +232,6 @@ export default function UploadPage() {
                     </motion.div>
                 )}
 
-                {/* Action Buttons */}
                 <div className="flex gap-4 w-full justify-center">
                     <button
                         onClick={triggerFileInput}
