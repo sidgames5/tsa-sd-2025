@@ -310,14 +310,19 @@ export default function UploadPage() {
                     </p>
                     <p className="text-center mt-2">
                         Need help interpreting results? Visit our{" "}
+                        
+                    </p>
+                    <p className="text-center mt-2">
+                        Don't know what plants our AI uses? To find out, visit our{" "}
                         <Link
-                            to="/diagnosis"
+                            to="/"
                             className={`font-bold ${
                                 isDarkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-800"
                             }`}
                         >
-                            Diagnosis Guide
+                            Home Page
                         </Link>
+
                     </p>
                 </div>
             </motion.div>

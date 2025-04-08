@@ -213,7 +213,7 @@ export default function DiagnosisPage() {
     );
 
     return (
-        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} w-full overflow-y-auto flex flex-col items-center align- justify-center`}>
+        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} w-full flex flex-col items-center justify-center`}>
             <h1 className="text-5xl font-bold text-sky-600">Plant Diagnosis Guide</h1>
             <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
             <p className="text-xl">Click on each box for more information!</p>
