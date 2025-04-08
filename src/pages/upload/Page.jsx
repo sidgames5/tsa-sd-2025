@@ -152,10 +152,10 @@ export default function UploadPage() {
                 transition={{ duration: 0.5 }}
             >
                 <h1 className={`text-3xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-sky-600"}`}>
-                    Plant Disease Detection
+                    Plant Disease Detection 🌱
                 </h1>
 
-                {/* API Status Indicator */}
+                {/* Backend Status */}
                 {apiStatus && (
                     <div className={`text-sm mb-4 p-2 rounded ${
                         apiStatus === "connected" ? "bg-green-100 text-green-800" : 
@@ -171,8 +171,8 @@ export default function UploadPage() {
                         )}
                     </div>
                 )}
-                {/* Drag and Drop Area */}
 
+                {/* Drag + Drop */}
                 {!image && (
                     <div
                         ref={dropAreaRef}
@@ -204,7 +204,6 @@ export default function UploadPage() {
                     </div>
                 )}
 
-
                 {/* Preview and Progress */}
                 {preview && (
                     <motion.div
@@ -217,7 +216,7 @@ export default function UploadPage() {
                             <img
                                 src={preview}
                                 alt="Preview"
-                                className="w-full max-h-64 object-contain rounded-lg shadow-md mx-auto max-h-40"
+                                className="w-full max-h-64 object-contain rounded-lg shadow-md mx-auto h-[160px]"
                                 onError={() => setPreview(null)}
                             />
                             {loading && (
@@ -262,7 +261,7 @@ export default function UploadPage() {
                     </button>
                 </div>
 
-                {/* Results Display */}
+                {/* R */}
                 {result && (
                     <motion.div
                         className={`w-full mt-6 p-4 rounded-lg ${
@@ -313,14 +312,14 @@ export default function UploadPage() {
                         
                     </p>
                     <p className="text-center mt-2">
-                        Don't know what plants our AI uses? To find out, visit our{" "}
+                        Don't know what plants our AI software supports? To find out, visit our{" "}
                         <Link
                             to="/"
                             className={`font-bold ${
                                 isDarkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-800"
                             }`}
                         >
-                            Home Page
+                            Home Page 🌿
                         </Link>
 
                     </p>

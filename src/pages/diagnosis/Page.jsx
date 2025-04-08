@@ -234,10 +234,10 @@ export default function DiagnosisPage() {
                 // style={{ maskImage }}
                 className="overflow-y-scroll flex flex-wrap gap-4 items-center justify-center mt-7 px-4 h-[90vh] w-[80vw] mb-8"
             >
-                    
+                {/* from-gray-200 to-orange-300 */}
                 {filteredDiseases.map((disease, index) => (
                     <motion.div key={index}
-                        className={`bg-gradient-to-r max-w-[20vw] h-[10vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-gray-200 to-orange-300 text-gray-700"}`}
+                        className={`bg-gradient-to-r max-w-[20vw] h-[10vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-sky-700 to-blue-900" : "from-sky-100 to-blue-300 text-gray-700"}`}
                         whileHover={{ scale: 1.35 }}
                         transition={{ type: "spring", stiffness: 100 }}
                         onClick={() => {
