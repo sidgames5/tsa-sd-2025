@@ -10,17 +10,13 @@ import {
 import { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faSearch, faLeaf} from "@fortawesome/free-solid-svg-icons";
 
 export default function DiagnosisPage() {
-    const ref = useRef(null);
-    const { scrollXProgress } = useScroll({ container: ref });
-    const maskImage = useScrollOverflowMask(scrollXProgress);
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDisease, setSelectedDisease] = useState(null);
-
     const [cookies] = useCookies(["darkMode"]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const diseases = [
         {
@@ -206,118 +202,182 @@ export default function DiagnosisPage() {
         }
     ];
 
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const filteredDiseases = diseases.filter(diseases => 
-        diseases.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    return (
-        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} w-full flex flex-col items-center justify-center`}>
-            <h1 className="text-5xl font-bold text-sky-600">Plant Diagnosis Guide</h1>
-            <p className="text-xl mt-4">Match the symptoms with treatments for your plants.</p>
-            <p className="text-xl">Click on each box for more information!</p>
-
-            <div className="p-8">
-                <input type="text"
-                       placeholder='Search Diseases...'
-                       value={searchTerm}
-                       onChange={(e) => setSearchTerm(e.target.value)}
-                       className="w-[75vw] p-2 border rounded text-black"
-                />
-            </div>
-            
     
 
-            {/* Disease Cards with Scroll Effect */}
-            <motion.div
-                // style={{ maskImage }}
-                className="overflow-y-scroll flex flex-wrap gap-4 items-center justify-center mt-7 px-4 h-[90vh] w-[80vw] mb-8"
-            >
-                    
+    const filteredDiseases = diseases.filter(disease => 
+        disease.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        disease.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    
+      return (
+        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} min-h-screen w-full pb-20`}>
+          {/* Plant Disease Guide Header */}
+          <div className="w-full py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <div className="flex justify-center items-center mb-2">
+             
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
+                Plant Disease Guide
+              </h1>
+            </div>
+            <p className="text-lg md:text-xl max-w-3xl mx-auto">
+              Comprehensive guide to identifying and treating common plant diseases
+            </p>
+          </div>
+    
+          {/* Search Bar to search for diseases */}
+          <div className="max-w-2xl mx-auto px-4 mb-12 relative">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search diseases or symptoms..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-4 pl-12 rounded-lg shadow-md text-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              />
+              <FontAwesomeIcon 
+                icon={faSearch} 
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"
+              />
+            </div>
+          </div>
+    
+          {/* Disease Grid- shows diseases and how to fix them with a description*/}
+          <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            {filteredDiseases.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredDiseases.map((disease, index) => (
-                    <motion.div key={index}
-                        className={`bg-gradient-to-r max-w-[20vw] h-[10vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-stone-200 to-sky-300 text-gray-700"}`}
-                        whileHover={{ scale: 1.35 }}
-                        transition={{ type: "spring", stiffness: 100 }}
-                        onClick={() => {
-                            setSelectedDisease(disease);
-                            setIsModalOpen(true);
-                        }}
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.45 }}
-                    >
-                        <h3 className="font-bold">{disease.name}</h3>
-                    </motion.div>
+                  <motion.div
+                    key={index}
+                    className={`rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                      cookies.darkMode 
+                        ? "bg-gray-800 hover:bg-gray-700 border-gray-700" 
+                        : "bg-white hover:bg-gray-50 border-gray-200"
+                    } border`}
+                    whileHover={{ y: -5 }}
+                    onClick={() => {
+                      setSelectedDisease(disease);
+                      setIsModalOpen(true);
+                    }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <div className="p-6">
+                      <h3 className={`text-xl font-bold mb-2 ${
+                        cookies.darkMode ? "text-blue-400" : "text-blue-600"
+                      }`}>
+                        {disease.name}
+                      </h3>
+                      <p className={`${
+                        cookies.darkMode ? "text-gray-300" : "text-gray-600"
+                      }`}>
+                        {disease.description}
+                      </p>
+                      <div className="mt-4">
+                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                          cookies.darkMode 
+                            ? "bg-blue-900 text-blue-100" 
+                            : "bg-blue-100 text-blue-800"
+                        }`}>
+                          Click for details
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
                 ))}
-            </motion.div>
-
-            {/* Disease Details Modal */}
-            {isModalOpen && selectedDisease && (
-                <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", damping: 10 }}
-                    className={`fixed max-w-[55vw] max-h-[70vh] w-fit h-fit top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white bg-gradient-to-r ${cookies.darkMode ? "from-gray-950 to-sky-950 border-white" : "from-gray-100 to-gray-200 border-black"} shadow-lg rounded-lg p-6 z-50 border-4`}
-                >
-                    <button
-                        onClick={() => setIsModalOpen(false)}
-                        className="m-2 bg-gray-500 text-white p-4 rounded-full absolute -left-5 -translate-x-full -translate-y-full w-4 h-4 flex flex-wrap items-center align-middle justify-center"
-                    >
-                        <motion.span whileHover={{ scale: 1.2 }} className="w-full h-full flex flex-row items-center justify-center align-middle">
-                            <FontAwesomeIcon icon={faClose} />
-                        </motion.span>
-                    </button>
-
-                    <h1 className={`text-3xl font-bold p-3 ${cookies.darkMode ? "text-white" : "text-black"}`}>{selectedDisease.name}</h1>
-                    <p className={`text-lg text-left rounded-xl p-2 mt-2 cursor-text ${cookies.darkMode ? "text-white" : "text-black"}`}>
-                        {selectedDisease.description}
-                    </p>
-                    <table className="mt-5 mb-5">
-                        <tbody>
-                            <tr>
-                                <td className="font-bold p-4 bg-amber-50 text-black rounded-tl-xl">How to Identify</td>
-                                <td className="p-4 w-[50vw] bg-white text-left text-black rounded-tr-xl">
-                                    {selectedDisease.appearance.split('\n').map((line, idx) => (
-                                        <span key={idx}>{line}<br /></span>
-                                    ))}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="font-bold p-4 bg-amber-50 text-black rounded-bl-xl">How to Fix</td>
-                                <td className="p-4 w-[50vw] bg-white text-left text-black rounded-br-xl">
-                                    {selectedDisease.fix.split('\n').map((line, idx) => (
-                                        <span key={idx}>{line}<br /></span>
-                                    ))}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-                </motion.div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-xl text-gray-500">No diseases found matching your search</p>
+              </div>
             )}
+          </div>
+    
+          {/* Disease Modal */}
+          {isModalOpen && selectedDisease && (
+            <div className="fixed inset-0 z-50 overflow-y-auto">
+              <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+                {/* Pop up */}
+                <div className="fixed inset-0" onClick={() => setIsModalOpen(false)}>
+                    <div className="absolute inset-0 bg-transparent"></div>
+                    </div>
 
+    
+                {/* Modal Content- What disease is about */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
+                    cookies.darkMode ? "bg-gray-800" : "bg-white"
+                  }`}
+                >
+                  <div className="px-6 py-4">
+                    <div className="flex justify-between items-start">
+                      <h3 className={`text-2xl font-bold leading-6 ${
+                        cookies.darkMode ? "text-white" : "text-gray-900"
+                      }`}>
+                        {selectedDisease.name}
+                      </h3>
+                      <button
+                        onClick={() => setIsModalOpen(false)}
+                        className={`p-2 rounded-full hover:bg-opacity-20 ${
+                          cookies.darkMode 
+                            ? "text-gray-300 hover:bg-gray-700" 
+                            : "text-gray-500 hover:bg-gray-200"
+                        }`}
+                      >
+                        <FontAwesomeIcon icon={faClose} size="lg" />
+                      </button>
+                    </div>
+    
+                    <div className="mt-4">
+                      <p className={`text-lg ${
+                        cookies.darkMode ? "text-gray-300" : "text-gray-600"
+                      }`}>
+                        {selectedDisease.description}
+                      </p>
+    
+                      <div className="mt-6 space-y-4">
+                        <div className={`rounded-lg overflow-hidden ${
+                          cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                        }`}>
+                          <div className={`px-4 py-3 font-bold ${
+                            cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
+                          }`}>
+                            How to Identify
+                          </div>
+                          <div className={`px-4 py-3 ${
+                            cookies.darkMode ? "text-gray-200" : "text-gray-700"
+                          }`}>
+                            {selectedDisease.appearance.split('\n').map((line, idx) => (
+                              <p key={idx} className="mb-2 last:mb-0">• {line}</p>
+                            ))}
+                          </div>
+                        </div>
+    
+                        <div className={`rounded-lg overflow-hidden ${
+                          cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                        }`}>
+                          <div className={`px-4 py-3 font-bold ${
+                            cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
+                          }`}>
+                            How to Fix
+                          </div>
+                          <div className={`px-4 py-3 ${
+                            cookies.darkMode ? "text-gray-200" : "text-gray-700"
+                          }`}>
+                            {selectedDisease.fix.split('\n').map((line, idx) => (
+                              <p key={idx} className="mb-2 last:mb-0">• {line}</p>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          )}
         </div>
-    );
-}
-
-// Function to create a smooth scroll effect
-function useScrollOverflowMask(scrollXProgress) {
-    const maskImage = useMotionValue(
-        `linear-gradient(90deg, #000, #000 0%, #000 80%, transparent)`
-    );
-
-    useMotionValueEvent(scrollXProgress, "change", (value) => {
-        if (value === 0) {
-            animate(maskImage, `linear-gradient(90deg, #000, #000 0%, #000 80%, transparent)`);
-        } else if (value === 1) {
-            animate(maskImage, `linear-gradient(90deg, transparent, #000 20%, #000 100%, #000)`);
-        } else {
-            animate(maskImage, `linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent)`);
-        }
-    });
-
-    return maskImage;
-}
+      );
+    }
