@@ -326,7 +326,7 @@ export default function DiagnosisPage() {
                         exit={{ opacity: 0, scale: 0.9 }}
                         className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
                             cookies.darkMode 
-                                ? "bg-gradient-to-br from-blue-900 via-indigo-500 to-purple-400 border-indigo-600" 
+                                ? "bg-gradient-to-br from-blue-900 via-indigo-500 to-purple-400 border-indigo-900" 
                                 : "bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 border-sky-500"
                         }`}
                         onClick={(e) => e.stopPropagation()}
@@ -342,8 +342,8 @@ export default function DiagnosisPage() {
                                     onClick={() => setIsModalOpen(false)}
                                     className={`p-2 rounded-full hover:bg-opacity-20 ${
                                         cookies.darkMode 
-                                            ? "text-gray-300 hover:bg-gray-700" 
-                                            : "text-gray-500 hover:bg-gray-200"
+                                            ? "text-gray-300 hover:bg-gray-700 border-indigo-900" 
+                                            : "text-gray-500 hover:bg-gray-200 border-sky-500"
                                     }`}
                                 >
                                     <FontAwesomeIcon icon={faClose} size="lg" />
