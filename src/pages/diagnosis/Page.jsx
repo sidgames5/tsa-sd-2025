@@ -239,51 +239,30 @@ export default function DiagnosisPage() {
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"
               />
             </div>
-          </div>
+            
     
-          {/* Disease Grid- shows diseases and how to fix them with a description*/}
-          <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            {filteredDiseases.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            {/* Disease Cards with Scroll Effect */}
+            <motion.div
+                // style={{ maskImage }}
+                className="overflow-y-scroll flex flex-wrap gap-4 items-center justify-center mt-7 px-4 h-[90vh] w-[80vw] mb-8"
+            >
+                    
                 {filteredDiseases.map((disease, index) => (
-                  <motion.div
-                    key={index}
-                    className={`rounded-xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 ${
-                      cookies.darkMode 
-                        ? "bg-gray-800 hover:bg-gray-700 border-gray-700" 
-                        : "bg-white hover:bg-gray-50 border-gray-200"
-                    } border`}
-                    whileHover={{ y: -5 }}
-                    onClick={() => {
-                      setSelectedDisease(disease);
-                      setIsModalOpen(true);
-                    }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                  >
-                    <div className="p-6">
-                      <h3 className={`text-xl font-bold mb-2 ${
-                        cookies.darkMode ? "text-blue-400" : "text-blue-600"
-                      }`}>
-                        {disease.name}
-                      </h3>
-                      <p className={`${
-                        cookies.darkMode ? "text-gray-300" : "text-gray-600"
-                      }`}>
-                        {disease.description}
-                      </p>
-                      <div className="mt-4">
-                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                          cookies.darkMode 
-                            ? "bg-blue-900 text-blue-100" 
-                            : "bg-blue-100 text-blue-800"
-                        }`}>
-                          Click for details
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
+                    <motion.div key={index}
+                        className={`bg-gradient-to-r max-w-[20vw] h-[10vh] p-5 rounded-lg cursor-pointer flex-shrink-0 border-[3px] border-gray-950 ${cookies.darkMode ? "from-blue-900 to-gray-800" : "from-gray-200 to-orange-300 text-gray-700"}`}
+                        whileHover={{ scale: 1.35 }}
+                        transition={{ type: "spring", stiffness: 100 }}
+                        onClick={() => {
+                            setSelectedDisease(disease);
+                            setIsModalOpen(true);
+                        }}
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.45 }}
+                    >
+                        <h3 className="font-bold">{disease.name}</h3>
+                    </motion.div>
                 ))}
               </div>
             ) : (

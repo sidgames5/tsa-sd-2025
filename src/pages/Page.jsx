@@ -56,8 +56,8 @@ export default function App() {
                         transition={{ duration: 0.5 }}
                     >
                         <motion.h1
-                            className={`text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent ${
-                                cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.6)]' : ''
+                            className={`mt-10 text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent ${
+                                cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.65)]' : 'drop-shadow-[0_0_8px_rgba(56,182,255,0.6)]'
                             }`}
                             initial={{ width: 0 }}
                             whileInView={{ width: "100%" }}
@@ -88,11 +88,11 @@ export default function App() {
                     </motion.div>
                 </div>
                 
-                <table className="table-auto text-left w-[80vw] mt-20">
+                <table className="table-auto text-left w-[80vw] p-1 mt-10">
                     <tbody>
                         <tr>
                             <td
-                                className={`font-bold text-4xl p-4 rounded-tl-xl ${cookies.darkMode ? 'text-white bg-sky-950' : 'text-black bg-lime-100'}`}
+                                className={`font-bold text-4xl p-4 rounded-tl-xl ${cookies.darkMode ? 'text-white bg-sky-950' : 'text-black bg-sky-100'}`}
                             >
                                 About Us
                             </td>
@@ -104,7 +104,7 @@ export default function App() {
                         </tr>
                         <tr>
                             <td
-                                className={`font-bold text-4xl p-4 rounded-bl-xl ${cookies.darkMode ? 'text-white bg-sky-950' : 'text-black bg-lime-100'}`}
+                                className={`font-bold text-4xl p-4 rounded-bl-xl ${cookies.darkMode ? 'text-white bg-sky-950' : 'text-black bg-sky-100'}`}
                             >
                                 Why We Did This
                             </td>
