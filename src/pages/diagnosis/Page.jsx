@@ -206,14 +206,14 @@ export default function DiagnosisPage() {
     return (
         <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} min-h-screen w-full pb-20`}>
             {/* Header */}
-            <div className="w-full py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <div className="w-full py-20 px-4 sm:px-6 lg:px-8 text-center">
                 <motion.div 
                     initial={{ y: -20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
+                    animate={{ y: 10, opacity: 1 }}
                     transition={{ duration: 0.5 }}
                 >
                     <div className="flex justify-center items-center mb-2">
-                        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
+                        <h1 className="text-2xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
                             Plant Disease Guide
                         </h1>
                     </div>
@@ -259,8 +259,8 @@ export default function DiagnosisPage() {
                                 key={index}
                                 className={`rounded-xl overflow-hidden shadow-lg transition-all flex flex-col ${
                                     cookies.darkMode
-                                        ? "bg-gray-800 border-gray-700"
-                                        : "bg-white border-gray-200"
+                                        ? "bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900 border-indigo-600"
+                                        : "bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 border-indigo-300"
                                 } border`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -269,7 +269,7 @@ export default function DiagnosisPage() {
                                 <div className="p-6 flex-grow">
                                     <h3 className="font-bold text-lg mb-2">{disease.name}</h3>
                                     <p className={`text-sm line-clamp-3 mb-4 ${
-                                        cookies.darkMode ? "text-gray-300" : "text-gray-600"
+                                        cookies.darkMode ? "text-white" : "text-gray-800"
                                     }`}>
                                         {disease.description}
                                     </p>
@@ -325,7 +325,7 @@ export default function DiagnosisPage() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
-                                cookies.darkMode ? "bg-gray-800" : "bg-white"
+                                cookies.darkMode ? "bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900 border-indigo-600" : "bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 border-indigo-300"
                             }`}
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -370,7 +370,7 @@ export default function DiagnosisPage() {
                                                 How to Identify
                                             </div>
                                             <div className={`px-4 py-3 ${
-                                                cookies.darkMode ? "text-gray-200" : "text-gray-700"
+                                                cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
                                             }`}>
                                                 {selectedDisease.appearance.split('\n').map((line, idx) => (
                                                     <p key={idx} className="mb-2 last:mb-0">• {line}</p>
@@ -392,7 +392,7 @@ export default function DiagnosisPage() {
                                                 How to Fix
                                             </div>
                                             <div className={`px-4 py-3 ${
-                                                cookies.darkMode ? "text-gray-200" : "text-gray-700"
+                                                cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
                                             }`}>
                                                 {selectedDisease.fix.split('\n').map((line, idx) => (
                                                     <p key={idx} className="mb-2 last:mb-0">• {line}</p>

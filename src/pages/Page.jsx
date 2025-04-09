@@ -57,7 +57,7 @@ export default function App() {
                     >
                         <motion.h1
                             className={`mt-10 text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent ${
-                                cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.65)]' : 'drop-shadow-[0_0_8px_rgba(56,182,255,0.6)]'
+                                cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.8)]' : 'drop-shadow-[0_0_8px_rgba(56,182,255,0.5)]'
                             }`}
                             initial={{ width: 0 }}
                             whileInView={{ width: "100%" }}
