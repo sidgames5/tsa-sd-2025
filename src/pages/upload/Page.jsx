@@ -309,6 +309,14 @@ export default function UploadPage() {
                     </p>
                     <p className="text-center mt-2">
                         Need help interpreting results? Visit our{" "}
+                        <Link
+                        to="/diagnosis"
+                        className={`font-bold ${
+                                isDarkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-800"
+                            }`}
+                            >
+                                Diagnosis Page 🌿
+                            </Link>
                         
                     </p>
                     <p className="text-center mt-2">
