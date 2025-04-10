@@ -261,7 +261,7 @@ export default function UploadPage() {
                     </button>
                 </div>
 
-                {/* R */}
+                {/* Result from AI*/}
                 {result && (
                     <motion.div
                         className={`w-full mt-6 p-4 rounded-lg ${
