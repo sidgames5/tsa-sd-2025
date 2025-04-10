@@ -258,8 +258,8 @@ export default function UploadPage() {
                             className={`w-full max-w-lg p-6 rounded-2xl shadow-xl ring-1 ring-offset-2 ${
                                 result.status === "success"
                                     ? isDarkMode
-                                        ? "bg-gradient-to-br from-teal-500 via-teal-700 to-teal-900 text-white ring-teal-300/30 shadow-teal-800/30"
-                                        : "bg-gradient-to-br from-teal-100 via-teal-200 to-teal-300 text-teal-900 ring-teal-500/20 shadow-teal-200"
+                                        ? "bg-gradient-to-br from-slate-800 via-emerald-800 to-slate-900 text-green-100 ring-emerald-400/20 shadow-emerald-900/30"
+                                        : "bg-gradient-to-br from-white via-emerald-100 to-emerald-200 text-emerald-900 ring-emerald-300/20 shadow-emerald-100"
                                     : isDarkMode
                                     ? "bg-red-900 text-red-100 ring-red-300/30 shadow-red-800/30"
                                     : "bg-red-100 text-red-900 ring-red-500/20 shadow-red-200"
@@ -269,12 +269,12 @@ export default function UploadPage() {
                             transition={{ duration: 0.3 }}
                         >
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-teal-800">
+                                <h2 className="text-xl font-bold bg-gradient-to-tr from-emerald-500 via-teal-600 to-sky-600 bg-clip-text text-transparent">
                                     Prediction Result
                                 </h2>
                                 <button
                                     onClick={() => setResult(null)}
-                                    className="text-gray-600 hover:text-gray-900"
+                                    className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition"
                                 >
                                     <FontAwesomeIcon icon={faTimes} />
                                 </button>
@@ -282,12 +282,12 @@ export default function UploadPage() {
                             <div className="text-center">
                                 {result.status === "success" ? (
                                     <>
-                                        <p className="text-lg font-semibold">{result.prediction}</p>
-                                        <p className="text-sm text-gray-500">Confidence: {result.confidence}%</p>
-                                        <p className="text-xs text-gray-400">Timestamp: {result.timestamp}</p>
+                                        <p className="text-lg font-semibold bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">{result.prediction}</p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">Confidence: {result.confidence}%</p>
+                                        <p className="text-xs text-gray-400 dark:text-gray-500">Timestamp: {result.timestamp}</p>
                                     </>
                                 ) : (
-                                    <p className="text-red-500">{result.prediction}</p>
+                                    <p className="text-red-500 font-semibold">{result.prediction}</p>
                                 )}
                             </div>
                         </motion.div>
