@@ -260,7 +260,7 @@ export default function DiagnosisPage() {
                                 className={`rounded-xl overflow-hidden shadow-lg transition-all flex flex-col ${
                                     cookies.darkMode
                                         ? "bg-gradient-to-br from-sky-900 via-neutral-800 to-blue-900 border-white-600"
-                                        : "bg-gradient-to-br from-sky-200 via-emerald-100 to-blue-200 border-indigo-300"
+                                        : "bg-gradient-to-br from-indigo-200 to-sky-200 border-indigo-300"
                                 } border`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -329,7 +329,7 @@ export default function DiagnosisPage() {
                             className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
                                 cookies.darkMode 
                                     ? "bg-gradient-to-br from-black via-sky-900 to-teal-800 border-2 border-white shadow-teal-800/50" 
-                                    : "bg-gradient-to-br from-blue-200 via-sky-200 to-teal-200 border-sky-500"
+                                    : "bg-gradient-to-br from-sky-200 to-indigo-400 border-sky-500"
                             }`}
                             onClick={(e) => e.stopPropagation()}
                         >
