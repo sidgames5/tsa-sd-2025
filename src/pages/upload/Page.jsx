@@ -229,8 +229,8 @@ export default function UploadPage() {
                         disabled={loading || !image || apiStatus !== "connected"}
                         className={`px-6 py-2 rounded-lg flex items-center gap-2 shadow-md ring-1 ring-offset-2 ${
                             loading
-                                ? "bg-indigo-600 ring-indigo-700"
-                                : "bg-indigo-700 hover:bg-indigo-600 ring-indigo-600"
+                                ? "bg-blue-600 ring-blue-700"
+                                : "bg-blue-700 hover:bg-blue-600 ring-blue-600"
                         } text-white ${
                             !image || apiStatus !== "connected"
                                 ? "opacity-50 cursor-not-allowed"
