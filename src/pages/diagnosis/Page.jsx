@@ -321,6 +321,7 @@ export default function DiagnosisPage() {
             {/* Disease Modal */}
             {isModalOpen && selectedDisease && (
                 <div className="fixed inset-0 z-50 overflow-y-auto">
+<<<<<<< Updated upstream
                     <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -346,6 +347,50 @@ export default function DiagnosisPage() {
                                             cookies.darkMode 
                                                 ? "text-gray-300 hover:bg-red-500 border-indigo-900" 
                                                 : "text-gray-500 hover:bg-red-200 border-sky-500"
+=======
+                <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
+                            cookies.darkMode 
+                                ? "bg-gradient-to-br from-blue-900 via-indigo-500 to-purple-400 border-4 border-indigo-900" 
+                                : "bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 border-2 border-sky-300"
+                        }`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="px-6 py-4">
+                            <div className="flex justify-between items-start">
+                                <h3 className={`text-2xl font-bold leading-6 ${
+                                    cookies.darkMode ? "text-white" : "text-gray-900"
+                                }`}>
+                                    {selectedDisease.name}
+                                </h3>
+                                <button
+                                    onClick={() => setIsModalOpen(false)}
+                                    className={`p-2 rounded-full hover:bg-opacity-20 ${
+                                        cookies.darkMode 
+                                            ? "text-gray-300 hover:bg-gray-700 border-indigo-900" 
+                                            : "text-gray-500 hover:bg-gray-200 border-sky-500"
+                                    }`}
+                                >
+                                    <FontAwesomeIcon icon={faClose} size="lg" />
+                                </button>
+                            </div>
+        
+                            <div className="mt-4">
+                                <p className={`text-lg ${
+                                    cookies.darkMode ? "text-gray-300" : "text-gray-600"
+                                }`}>
+                                    {selectedDisease.description}
+                                </p>
+        
+                                <div className="mt-6 space-y-4">
+                                    <motion.div 
+                                        className={`rounded-lg overflow-hidden ${
+                                            cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+>>>>>>> Stashed changes
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faClose} size="lg" />
