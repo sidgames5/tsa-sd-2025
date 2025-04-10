@@ -321,34 +321,7 @@ export default function DiagnosisPage() {
             {/* Disease Modal */}
             {isModalOpen && selectedDisease && (
                 <div className="fixed inset-0 z-50 overflow-y-auto">
-<<<<<<< Updated upstream
                     <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
-                                cookies.darkMode 
-                                    ? "bg-gradient-to-br from-black via-sky-900 to-teal-800 border-2 border-white shadow-teal-800/50" 
-                                    : "bg-gradient-to-br from-indigo-200 to-blue-200 border-sky-500"
-                            }`}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className="px-6 py-4">
-                                <div className="flex justify-between items-start">
-                                    <h3 className={`text-2xl font-bold leading-6 mt-4 ${
-                                        cookies.darkMode ? "text-white" : "text-gray-900"
-                                    }`}>
-                                        {selectedDisease.name}
-                                    </h3>
-                                    <button
-                                        onClick={() => setIsModalOpen(false)}
-                                        className={`p-2 rounded-full hover:bg-opacity-100 ${
-                                            cookies.darkMode 
-                                                ? "text-gray-300 hover:bg-red-500 border-indigo-900" 
-                                                : "text-gray-500 hover:bg-red-200 border-sky-500"
-=======
-                <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -390,12 +363,13 @@ export default function DiagnosisPage() {
                                     <motion.div 
                                         className={`rounded-lg overflow-hidden ${
                                             cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
->>>>>>> Stashed changes
+
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faClose} size="lg" />
                                     </button>
                                 </div>
+                                    <motion.div
             
                                 <div className="mt-4">
                                     <p className={`text-lg ${
