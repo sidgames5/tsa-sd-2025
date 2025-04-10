@@ -204,9 +204,9 @@ export default function DiagnosisPage() {
     );
 
     return (
-        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} min-h-screen w-full pb-20`}>
+        <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-stone-50 text-black"} min-h-screen pb-20`}>
             {/* Header */}
-            <div className="w-full py-20 px-4 sm:px-6 lg:px-8 text-center">
+            <div className="w-full py-20 px-4 mt-10 text-center">
                 <motion.div 
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 10, opacity: 1 }}
@@ -224,7 +224,7 @@ export default function DiagnosisPage() {
             </div>
 
             {/* Search Bar */}
-            <div className="max-w-4xl mx-auto px-4 mb-8">
+            <div className="max-w-[90vw] mx-auto px-4 mb-8">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -248,7 +248,7 @@ export default function DiagnosisPage() {
             </div>
 
             {/* Disease Cards */}
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-[90vw] mx-auto px-4">
                 {filteredDiseases.length > 0 ? (
                     <motion.div
                         ref={containerRef}
@@ -259,8 +259,8 @@ export default function DiagnosisPage() {
                                 key={index}
                                 className={`rounded-xl overflow-hidden shadow-lg transition-all flex flex-col ${
                                     cookies.darkMode
-                                        ? "bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900 border-indigo-600"
-                                        : "bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 border-indigo-300"
+                                        ? "bg-gradient-to-br from-sky-900 via-neutral-800 to-blue-900 border-white-600"
+                                        : "bg-gradient-to-br from-sky-200 via-emerald-100 to-blue-200 border-indigo-300"
                                 } border`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -281,13 +281,15 @@ export default function DiagnosisPage() {
                                     }}
                                     className={`flex items-center justify-center gap-2 p-3 border-t ${
                                         cookies.darkMode 
-                                            ? "border-gray-700 text-blue-400 hover:bg-gray-700" 
+                                            ? "border-gray-700 text-blue-400 hover:bg-cyan-700" 
                                             : "border-gray-200 text-blue-600 hover:bg-gray-50"
                                     } transition-colors`}
                                 >
                                     <span>Learn More</span>
                                     <FontAwesomeIcon icon={faChevronRight} />
                                 </button>
+
+
                             </motion.div>
                         ))}
                     </motion.div>
@@ -319,94 +321,94 @@ export default function DiagnosisPage() {
             {/* Disease Modal */}
             {isModalOpen && selectedDisease && (
                 <div className="fixed inset-0 z-50 overflow-y-auto">
-                <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
-                            cookies.darkMode 
-                                ? "bg-gradient-to-br from-blue-900 via-indigo-500 to-purple-400 border-indigo-900" 
-                                : "bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 border-sky-500"
-                        }`}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="px-6 py-4">
-                            <div className="flex justify-between items-start">
-                                <h3 className={`text-2xl font-bold leading-6 ${
-                                    cookies.darkMode ? "text-white" : "text-gray-900"
-                                }`}>
-                                    {selectedDisease.name}
-                                </h3>
-                                <button
-                                    onClick={() => setIsModalOpen(false)}
-                                    className={`p-2 rounded-full hover:bg-opacity-20 ${
-                                        cookies.darkMode 
-                                            ? "text-gray-300 hover:bg-gray-700 border-indigo-900" 
-                                            : "text-gray-500 hover:bg-gray-200 border-sky-500"
-                                    }`}
-                                >
-                                    <FontAwesomeIcon icon={faClose} size="lg" />
-                                </button>
-                            </div>
-        
-                            <div className="mt-4">
-                                <p className={`text-lg ${
-                                    cookies.darkMode ? "text-gray-300" : "text-gray-600"
-                                }`}>
-                                    {selectedDisease.description}
-                                </p>
-        
-                                <div className="mt-6 space-y-4">
-                                    <motion.div 
-                                        className={`rounded-lg overflow-hidden ${
-                                            cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
+                                cookies.darkMode 
+                                    ? "bg-gradient-to-br from-black via-sky-900 to-teal-800 border-2 border-white shadow-teal-800/50" 
+                                    : "bg-gradient-to-br from-blue-200 via-sky-200 to-teal-200 border-sky-500"
+                            }`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="px-6 py-4">
+                                <div className="flex justify-between items-start">
+                                    <h3 className={`text-2xl font-bold leading-6 mt-4 ${
+                                        cookies.darkMode ? "text-white" : "text-gray-900"
+                                    }`}>
+                                        {selectedDisease.name}
+                                    </h3>
+                                    <button
+                                        onClick={() => setIsModalOpen(false)}
+                                        className={`p-2 rounded-full hover:bg-opacity-100 ${
+                                            cookies.darkMode 
+                                                ? "text-gray-300 hover:bg-red-500 border-indigo-900" 
+                                                : "text-gray-500 hover:bg-red-200 border-sky-500"
                                         }`}
-                                        initial={{ x: -20, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        transition={{ delay: 0.1 }}
                                     >
-                                        <div className={`px-4 py-3 font-bold ${
-                                            cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
-                                        }`}>
-                                            How to Identify
-                                        </div>
-                                        <div className={`px-4 py-3 ${
-                                            cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                        }`}>
-                                            {selectedDisease.appearance.split('\n').map((line, idx) => (
-                                                <p key={idx} className="mb-2 last:mb-0">• {line}</p>
-                                            ))}
-                                        </div>
-                                    </motion.div>
-        
-                                    <motion.div 
-                                        className={`rounded-lg overflow-hidden ${
-                                            cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
-                                        }`}
-                                        initial={{ x: -20, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        transition={{ delay: 0.2 }}
-                                    >
-                                        <div className={`px-4 py-3 font-bold ${
-                                            cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
-                                        }`}>
-                                            How to Fix
-                                        </div>
-                                        <div className={`px-4 py-3 ${
-                                            cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                        }`}>
-                                            {selectedDisease.fix.split('\n').map((line, idx) => (
-                                                <p key={idx} className="mb-2 last:mb-0">• {line}</p>
-                                            ))}
-                                        </div>
-                                    </motion.div>
+                                        <FontAwesomeIcon icon={faClose} size="lg" />
+                                    </button>
+                                </div>
+            
+                                <div className="mt-4">
+                                    <p className={`text-lg ${
+                                        cookies.darkMode ? "text-gray-300" : "text-gray-600"
+                                    }`}>
+                                        {selectedDisease.description}
+                                    </p>
+            
+                                    <div className="mt-6 space-y-4">
+                                        <motion.div 
+                                            className={`rounded-lg overflow-hidden ${
+                                                cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                                            }`}
+                                            initial={{ x: -20, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 0.1 }}
+                                        >
+                                            <div className={`px-4 py-3 font-bold ${
+                                                cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
+                                            }`}>
+                                                How to Identify
+                                            </div>
+                                            <div className={`px-4 py-3 ${
+                                                cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
+                                            }`}>
+                                                {selectedDisease.appearance.split('\n').map((line, idx) => (
+                                                    <p key={idx} className="mb-2 last:mb-0">• {line}</p>
+                                                ))}
+                                            </div>
+                                        </motion.div>
+            
+                                        <motion.div 
+                                            className={`rounded-lg overflow-hidden ${
+                                                cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                                            }`}
+                                            initial={{ x: -20, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 0.2 }}
+                                        >
+                                            <div className={`px-4 py-3 font-bold ${
+                                                cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
+                                            }`}>
+                                                How to Fix
+                                            </div>
+                                            <div className={`px-4 py-3 ${
+                                                cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
+                                            }`}>
+                                                {selectedDisease.fix.split('\n').map((line, idx) => (
+                                                    <p key={idx} className="mb-2 last:mb-0">• {line}</p>
+                                                ))}
+                                            </div>
+                                        </motion.div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </div>
-            </div>
             )}
         </div>
     );
