@@ -21,18 +21,27 @@ root.render(
             <Routes>
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<HomePage />} />
+                    
                     <Route path="upload" element={<UploadLayout />}>
                         <Route index element={<UploadPage />} />
                     </Route>
+
                     <Route path="diagnosis" element={<DiagnosisLayout />}>
                         <Route index element={<DiagnosisPage />} />
                     </Route>
+
                     <Route path="features" element={<FeaturesLayout />}>
                         <Route index element={<FeaturesPage />} />
                     </Route>
+
                     <Route path="results" element={<ResultsLayout />}>
                         <Route index element={<ResultsPage />} />
                     </Route>
+
+                    <Route path="login" element={<LoginLayout />}>
+                        <Route index element={<LoginPage />} />
+                    </Route>
+                    
                 </Route>
             </Routes>
         </BrowserRouter>
