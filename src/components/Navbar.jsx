@@ -27,7 +27,7 @@ export default function Navbar() {
                     </Link>
                 </button>
                 <button>
-                    <Link to="/result" className={`${cookies.darkMode ? "hover:text-gray-300": "hover:text-blue-500"} mr-4`}>
+                    <Link to="/results" className={`${cookies.darkMode ? "hover:text-gray-300": "hover:text-blue-500"} mr-4`}>
                         AI Chart
                     </Link>
                 </button>
