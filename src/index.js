@@ -12,6 +12,8 @@ import FeaturesLayout from './pages/features/Layout';
 import FeaturesPage from './pages/features/Page';
 import ResultsLayout from './pages/results/Layout';
 import ResultsPage from './pages/results/Page';
+import LoginPage from './pages/login/Page';
+import LoginLayout from './pages/login/Layout';
 import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -22,26 +24,25 @@ root.render(
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<HomePage />} />
                     
-                    <Route path="upload" element={<UploadLayout />}>
+                    <Route path="/upload" element={<UploadLayout />}>
                         <Route index element={<UploadPage />} />
                     </Route>
 
-                    <Route path="diagnosis" element={<DiagnosisLayout />}>
+                    <Route path="/diagnosis" element={<DiagnosisLayout />}>
                         <Route index element={<DiagnosisPage />} />
                     </Route>
 
-                    <Route path="features" element={<FeaturesLayout />}>
+                    <Route path="/features" element={<FeaturesLayout />}>
                         <Route index element={<FeaturesPage />} />
                     </Route>
 
-                    <Route path="results" element={<ResultsLayout />}>
+                    <Route path="/results" element={<ResultsLayout />}>
                         <Route index element={<ResultsPage />} />
                     </Route>
-
-                    <Route path="login" element={<LoginLayout />}>
+                    
+                    <Route path="/login" element={<LoginLayout />}>
                         <Route index element={<LoginPage />} />
                     </Route>
-                    
                 </Route>
             </Routes>
         </BrowserRouter>

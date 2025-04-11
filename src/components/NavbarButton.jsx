@@ -1,3 +1,4 @@
+{/*
 import { useCookies } from "react-cookie";
 
 export default function NavbarButton({ children }) {
@@ -8,4 +9,5 @@ export default function NavbarButton({ children }) {
     >
         {children}
     </div>;
-}
+}     
+    */}

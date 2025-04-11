@@ -1,3 +1,4 @@
+{/* 
 const NavbarItemsList = [
     ["Home", "/"],
     ["Upload", "/upload"],
@@ -6,4 +7,5 @@ const NavbarItemsList = [
     ["Features", "/features"],
 ];
 
-export default NavbarItemsList;
+export default NavbarItemsList;    
+    */}

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload, faSpinner, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faUpload, faSpinner, faCheck, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function UploadPage() {
     const [image, setImage] = useState(null);
@@ -14,9 +14,20 @@ export default function UploadPage() {
     const [progress, setProgress] = useState(0);
     const [apiStatus, setApiStatus] = useState(null);
     const [intervalId, setIntervalId] = useState(null);
-    const [cookies] = useCookies(["darkMode"]);
+    const [cookies, setCookie] = useCookies(["darkMode", "user"]);
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authMode, setAuthMode] = useState("login");
+    const [authEmail, setAuthEmail] = useState("");
+    const [authPassword, setAuthPassword] = useState("");
+    const [authConfirmPassword, setAuthConfirmPassword] = useState("");
+    const [authMessage, setAuthMessage] = useState("");
+    const [showAuthPassword, setShowAuthPassword] = useState(false);
     const dropAreaRef = useRef(null);
     const fileInputRef = useRef(null);
+    const navigate = useNavigate();
+
+    // Check if user is logged in
+    const isLoggedIn = !!cookies.user;
 
     useEffect(() => {
         return () => {
@@ -38,6 +49,11 @@ export default function UploadPage() {
     }, []);
 
     const handleImageChange = (event) => {
+        if (!isLoggedIn) {
+            setShowAuthModal(true);
+            return;
+        }
+
         const fileInput = event.target;
         const file = fileInput.files?.[0];
         fileInput.value = null;
@@ -69,6 +85,12 @@ export default function UploadPage() {
     const handleDrop = (event) => {
         event.preventDefault();
         handleDragLeave();
+        
+        if (!isLoggedIn) {
+            setShowAuthModal(true);
+            return;
+        }
+
         const file = event.dataTransfer.files[0];
         if (file && file.type.startsWith("image/")) {
             handleImageChange({ target: { files: [file] } });
@@ -76,6 +98,11 @@ export default function UploadPage() {
     };
 
     const handleUpload = async () => {
+        if (!isLoggedIn) {
+            setShowAuthModal(true);
+            return;
+        }
+
         if (!image || loading) return;
 
         try {
@@ -125,10 +152,68 @@ export default function UploadPage() {
     };
 
     const triggerFileInput = () => {
+        if (!isLoggedIn) {
+            setShowAuthModal(true);
+            return;
+        }
+
         if (fileInputRef.current) {
             fileInputRef.current.value = null;
             fileInputRef.current.click();
         }
+    };
+
+    const handleAuthSubmit = (e) => {
+        e.preventDefault();
+
+        if (!authEmail || !authPassword || (authMode === "signup" && !authConfirmPassword)) {
+            setAuthMessage("Please fill all fields.");
+            return;
+        }
+
+        if (authMode === "signup") {
+            if (authPassword !== authConfirmPassword) {
+                setAuthMessage("Passwords do not match!");
+                return;
+            }
+
+            const existingUser = localStorage.getItem(authEmail);
+            if (existingUser) {
+                setAuthMessage("User already exists. Please log in.");
+                return;
+            }
+
+            localStorage.setItem(authEmail, JSON.stringify({ password: authPassword }));
+            setAuthMessage("Account created! Please log in.");
+            setAuthMode("login");
+        } else {
+            const storedUser = localStorage.getItem(authEmail);
+            if (!storedUser) {
+                setAuthMessage("User not found. Please sign up.");
+                return;
+            }
+
+            const { password: storedPassword } = JSON.parse(storedUser);
+            if (authPassword === storedPassword) {
+                setAuthMessage("Login successful!");
+                setCookie("user", { email: authEmail }, { path: "/" });
+                setShowAuthModal(false);
+            } else {
+                setAuthMessage("Incorrect password.");
+            }
+        }
+    };
+
+    const handleLogout = () => {
+        setCookie("user", "", { path: "/", expires: new Date(0) });
+        setImage(null);
+        setPreview(null);
+        setResult(null);
+    };
+
+    const toggleAuthMode = () => {
+        setAuthMode(authMode === "login" ? "signup" : "login");
+        setAuthMessage("");
     };
 
     const isDarkMode = cookies.darkMode === true;
@@ -149,7 +234,34 @@ export default function UploadPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <h1 className={`text-3xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-sky-600"}`}>Plant Disease Detection 🌱</h1>
+                <div className="flex justify-between w-full mb-4">
+                    <h1 className={`text-3xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-sky-600"}`}>Plant Disease Detection 🌱</h1>
+                    {isLoggedIn ? (
+                        <button
+                            onClick={handleLogout}
+                            className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+                                isDarkMode
+                                    ? "bg-gray-700 hover:bg-gray-600 text-white"
+                                    : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                            }`}
+                        >
+                            <FontAwesomeIcon icon={faUser} />
+                            Logout
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => setShowAuthModal(true)}
+                            className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+                                isDarkMode
+                                    ? "bg-blue-700 hover:bg-blue-600 text-white"
+                                    : "bg-blue-600 hover:bg-blue-500 text-white"
+                            }`}
+                        >
+                            <FontAwesomeIcon icon={faUser} />
+                            Login
+                        </button>
+                    )}
+                </div>
 
                 {apiStatus && (
                     <div className={`text-sm mb-4 p-2 rounded ${
@@ -167,7 +279,25 @@ export default function UploadPage() {
                     </div>
                 )}
 
-                {!image && (
+                {!isLoggedIn && (
+                    <div className={`w-full p-8 mb-6 text-center rounded-lg ${
+                        isDarkMode ? "bg-gray-900/80 text-gray-300" : "bg-gray-100 text-gray-800"
+                    }`}>
+                        <p className="text-lg font-medium mb-2">Please login to upload and analyze plant images</p>
+                        <button
+                            onClick={() => setShowAuthModal(true)}
+                            className={`px-4 py-2 rounded-lg ${
+                                isDarkMode
+                                    ? "bg-blue-600 hover:bg-blue-500 text-white"
+                                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                            }`}
+                        >
+                            Login or Sign Up
+                        </button>
+                    </div>
+                )}
+
+                {isLoggedIn && !image && (
                     <div
                         ref={dropAreaRef}
                         onDragOver={handleDragOver}
@@ -213,43 +343,45 @@ export default function UploadPage() {
                     </motion.div>
                 )}
 
-                <div className="flex gap-4 w-full justify-center">
-                    <button
-                        onClick={triggerFileInput}
-                        className={`px-4 py-2 rounded-lg shadow-sm transition-all ring-1 ring-offset-1 ${
-                            isDarkMode
-                                ? "bg-gray-800 hover:bg-gray-700 text-white ring-gray-600"
-                                : "bg-gray-200 hover:bg-gray-300 text-black ring-gray-300"
-                        }`}
-                    >
-                        Change Image
-                    </button>
-                    <button
-                        onClick={handleUpload}
-                        disabled={loading || !image || apiStatus !== "connected"}
-                        className={`px-6 py-2 rounded-lg flex items-center gap-2 shadow-md ring-1 ring-offset-2 ${
-                            loading
-                                ? "bg-blue-600 ring-blue-700"
-                                : "bg-blue-700 hover:bg-blue-600 ring-blue-600"
-                        } text-white ${
-                            !image || apiStatus !== "connected"
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
-                        }`}
-                    >
-                        {loading ? (
-                            <>
-                                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-                                Analyzing ({timer}s)
-                            </>
-                        ) : (
-                            <>
-                                <FontAwesomeIcon icon={faUpload} />
-                                Analyze Now
-                            </>
-                        )}
-                    </button>
-                </div>
+                {isLoggedIn && (
+                    <div className="flex gap-4 w-full justify-center">
+                        <button
+                            onClick={triggerFileInput}
+                            className={`px-4 py-2 rounded-lg shadow-sm transition-all ring-1 ring-offset-1 ${
+                                isDarkMode
+                                    ? "bg-gray-800 hover:bg-gray-700 text-white ring-gray-600"
+                                    : "bg-gray-200 hover:bg-gray-300 text-black ring-gray-300"
+                            }`}
+                        >
+                            Change Image
+                        </button>
+                        <button
+                            onClick={handleUpload}
+                            disabled={loading || !image || apiStatus !== "connected"}
+                            className={`px-6 py-2 rounded-lg flex items-center gap-2 shadow-md ring-1 ring-offset-2 ${
+                                loading
+                                    ? "bg-blue-600 ring-blue-700"
+                                    : "bg-blue-700 hover:bg-blue-600 ring-blue-600"
+                            } text-white ${
+                                !image || apiStatus !== "connected"
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                            }`}
+                        >
+                            {loading ? (
+                                <>
+                                    <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                                    Analyzing ({timer}s)
+                                </>
+                            ) : (
+                                <>
+                                    <FontAwesomeIcon icon={faUpload} />
+                                    Analyze Now
+                                </>
+                            )}
+                        </button>
+                    </div>
+                )}
 
                 {/* Modal for Results */}
                 {result && (
@@ -258,37 +390,184 @@ export default function UploadPage() {
                             className={`w-full max-w-lg p-6 rounded-2xl shadow-xl ring-1 ring-offset-2 ${
                                 result.status === "success"
                                     ? isDarkMode
-                                        ? "bg-gradient-to-br from-slate-800 via-emerald-800 to-slate-900 text-green-100 ring-emerald-400/20 shadow-emerald-900/30"
-                                        : "bg-gradient-to-br from-white via-emerald-100 to-emerald-200 text-emerald-900 ring-emerald-300/20 shadow-emerald-100"
+                                        ? "bg-gradient-to-br from-slate-700 via-stone-600 to-emerald-500 text-green-100 shadow-lg ring-green-500/50"
+                                        : "bg-gradient-to-br from-teal-600 via-sky-500 to-emerald-500 text-white shadow-lg ring-emerald-200/50"
                                     : isDarkMode
-                                    ? "bg-red-900 text-red-100 ring-red-300/30 shadow-red-800/30"
-                                    : "bg-red-100 text-red-900 ring-red-500/20 shadow-red-200"
+                                    ? "bg-gradient-to-br from-red-700 via-stone-600 to-red-900 text-red-100 shadow-lg ring-red-500/30"
+                                    : "bg-gradient-to-br from-red-600 via-amber-500 to-orange-500 text-white shadow-lg ring-red-300/20"
                             }`}
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.3 }}
                         >
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold bg-gradient-to-tr from-emerald-500 via-teal-600 to-sky-600 bg-clip-text text-transparent">
+                            <h2 className={`text-xl font-bold ${ isDarkMode ? "text-white" : result.status === "success" ? "bg-gradient-to-r from-sky-300 to-blue-500 bg-clip-text text-transparent drop-shadow-md" : "text-amber-50 drop-shadow-md"}`}>
                                     Prediction Result
                                 </h2>
                                 <button
                                     onClick={() => setResult(null)}
-                                    className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition"
+                                    className={`p-2 rounded-full transition ${
+                                        isDarkMode 
+                                            ? "text-gray-300 hover:bg-gray-700 hover:text-white" 
+                                            : result.status === "success"
+                                                ? "text-amber-100 hover:bg-emerald-700/80 hover:text-white"
+                                                : "text-amber-100 hover:bg-amber-700/80 hover:text-white"
+                                    }`}
                                 >
-                                    <FontAwesomeIcon icon={faTimes} />
+                                    <FontAwesomeIcon className="p-2 pb-1" icon={faTimes} />
                                 </button>
                             </div>
                             <div className="text-center">
                                 {result.status === "success" ? (
                                     <>
-                                        <p className="text-lg font-semibold bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">{result.prediction}</p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">Confidence: {result.confidence}%</p>
-                                        <p className="text-xs text-gray-400 dark:text-gray-500">Timestamp: {result.timestamp}</p>
+                                        <p className={`text-2xl font-bold mb-3 ${isDarkMode ? "text-amber-300 drop-shadow-md" : "text-amber-300 drop-shadow-md"}`}>{result.prediction}</p>
+                                        <p className={`${cookies.darkMode ? "text-emerald-200" : "text-emerald-250"} text-sm`}>Confidence: {result.confidence}%</p>
+                                        <p className={`${cookies.darkMode ? "text-gray-400" : "text-gray-200"} text-sm`}>Timestamp: {result.timestamp}</p>
                                     </>
                                 ) : (
-                                    <p className="text-red-500 font-semibold">{result.prediction}</p>
+                                    <p className={`text-lg font-semibold ${
+                                        isDarkMode 
+                                            ? "text-amber-200" 
+                                            : "text-amber-500 drop-shadow-md"
+                                    }`}>
+                                        {result.prediction}
+                                    </p>
                                 )}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+
+                {/* Auth Modal */}
+                {showAuthModal && (
+                    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+                        <motion.div
+                            className={`w-full max-w-md p-8 rounded-2xl shadow-xl ${
+                                isDarkMode
+                                    ? "bg-gray-800 text-white"
+                                    : "bg-white text-gray-800"
+                            }`}
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold">
+                                    {authMode === "login" ? "Login" : "Sign Up"}
+                                </h2>
+                                <button
+                                    onClick={() => setShowAuthModal(false)}
+                                    className={`p-2 rounded-full ${
+                                        isDarkMode
+                                            ? "hover:bg-gray-700"
+                                            : "hover:bg-gray-200"
+                                    }`}
+                                >
+                                    <FontAwesomeIcon icon={faTimes} />
+                                </button>
+                            </div>
+
+                            {authMessage && (
+                                <div className={`mb-4 p-2 rounded ${
+                                    authMessage.includes("success")
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-red-100 text-red-800"
+                                }`}>
+                                    {authMessage}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleAuthSubmit} className="space-y-4">
+                                <div>
+                                    <label htmlFor="authEmail" className="block mb-1">
+                                        Email
+                                    </label>
+                                    <input
+                                        id="authEmail"
+                                        type="email"
+                                        value={authEmail}
+                                        onChange={(e) => setAuthEmail(e.target.value)}
+                                        className={`w-full p-2 rounded border ${
+                                            isDarkMode
+                                                ? "bg-gray-700 border-gray-600"
+                                                : "bg-white border-gray-300"
+                                        }`}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="authPassword" className="block mb-1">
+                                        Password
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            id="authPassword"
+                                            type={showAuthPassword ? "text" : "password"}
+                                            value={authPassword}
+                                            onChange={(e) => setAuthPassword(e.target.value)}
+                                            className={`w-full p-2 rounded border ${
+                                                isDarkMode
+                                                    ? "bg-gray-700 border-gray-600"
+                                                    : "bg-white border-gray-300"
+                                            }`}
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowAuthPassword(!showAuthPassword)}
+                                            className="absolute right-2 top-2 text-sm"
+                                        >
+                                            {showAuthPassword ? "Hide" : "Show"}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {authMode === "signup" && (
+                                    <div>
+                                        <label htmlFor="authConfirmPassword" className="block mb-1">
+                                            Confirm Password
+                                        </label>
+                                        <input
+                                            id="authConfirmPassword"
+                                            type={showAuthPassword ? "text" : "password"}
+                                            value={authConfirmPassword}
+                                            onChange={(e) => setAuthConfirmPassword(e.target.value)}
+                                            className={`w-full p-2 rounded border ${
+                                                isDarkMode
+                                                    ? "bg-gray-700 border-gray-600"
+                                                    : "bg-white border-gray-300"
+                                            }`}
+                                            required
+                                        />
+                                    </div>
+                                )}
+
+                                <button
+                                    type="submit"
+                                    className={`w-full py-2 rounded ${
+                                        isDarkMode
+                                            ? "bg-blue-600 hover:bg-blue-700"
+                                            : "bg-blue-500 hover:bg-blue-600 text-white"
+                                    }`}
+                                >
+                                    {authMode === "login" ? "Login" : "Sign Up"}
+                                </button>
+                            </form>
+
+                            <div className="mt-4 text-center">
+                                <button
+                                    onClick={toggleAuthMode}
+                                    className={`text-sm ${
+                                        isDarkMode
+                                            ? "text-blue-400 hover:text-blue-300"
+                                            : "text-blue-600 hover:text-blue-800"
+                                    }`}
+                                >
+                                    {authMode === "login"
+                                        ? "Don't have an account? Sign Up"
+                                        : "Already have an account? Login"}
+                                </button>
                             </div>
                         </motion.div>
                     </div>

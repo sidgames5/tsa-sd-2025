@@ -1,3 +1,4 @@
+{/*
 import { Link } from "react-router";
 import NavbarButton from "./NavbarButton";
 import NavbarItemsList from "./NavbarItemsList";
@@ -17,4 +18,6 @@ export default function MobileNavbar({ onClose }) {
             <FontAwesomeIcon icon={faClose} onClick={onClose} />
         </div>
     </div>
-}
+}    
+    */}
+
