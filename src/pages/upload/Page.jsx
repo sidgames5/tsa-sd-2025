@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload, faSpinner, faCheck, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
-
+import { updateUserChartData, getUserChartData} from '../results/chartStuff';
 export default function UploadPage() {
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
@@ -102,41 +102,68 @@ export default function UploadPage() {
             setShowAuthModal(true);
             return;
         }
-
+    
         if (!image || loading) return;
-
+    
         try {
             setLoading(true);
             setTimer(0);
             setProgress(0);
             if (intervalId) clearInterval(intervalId);
-
+    
             const newIntervalId = setInterval(() => {
                 setTimer((prev) => prev + 1);
                 setProgress((prev) => Math.min(prev + 10, 90));
             }, 1000);
             setIntervalId(newIntervalId);
-
+    
             const formData = new FormData();
             formData.append("image", image);
-
+    
             const response = await fetch("/predict", {
                 method: "POST",
                 body: formData,
             });
-
+    
             if (!response.ok) {
                 throw new Error(`Server error: ${response.status}`);
             }
-
+    
             const data = await response.json();
             setProgress(100);
-            setResult({
+            
+          
+            const now = new Date();
+            const newResult = {
                 status: data.success ? "success" : "error",
                 prediction: data.prediction || data.error,
                 confidence: data.confidence,
-                timestamp: new Date().toLocaleTimeString(),
-            });
+                timestamp: now.toLocaleString(),
+                image: preview,
+                date: now.toISOString().split('T')[0],
+                id: Date.now()
+            };
+            
+            setResult(newResult);
+    
+            
+            if (isLoggedIn && cookies.user?.email && data.success) {
+                const userEmail = cookies.user.email;
+                
+                
+                const userResults = JSON.parse(localStorage.getItem(`plantResults_${userEmail}`)) || [];
+                userResults.unshift(newResult);
+                localStorage.setItem(`plantResults_${userEmail}`, JSON.stringify(userResults));
+                
+            
+                const accuracy = data.confidence / 100; // Convert to 0-1 range
+                const loss = 1 - accuracy;
+                updateUserChartData(userEmail, accuracy, loss);
+                
+                
+                const updatedChartData = getUserChartData(userEmail);
+                
+            }
         } catch (error) {
             console.error("Upload error:", error);
             setResult({

@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import ImageSlider from "../components/Slider.jsx";
@@ -59,16 +60,17 @@ export default function App() {
                             className={`mt-10 text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent ${
                                 cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.8)]' : 'drop-shadow-[0_0_8px_rgba(56,182,255,0.5)]'
                             }`}
-                            initial={{ width: 0 }}
-                            whileInView={{ width: "100%" }}
+                            initial={{ clipPath: 'inset(0 100% 0 0)' }}
+                            whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
                             viewport={{ once: true }}
                             transition={{
-                                duration: 1.5,
-                                ease: [0.04, 0.62, 0.23, 0.98],
+                                duration: 0.8,
+                                ease: 'linear',
                             }}
                         >
                             Our Mission
                         </motion.h1>
+                        {/*
                         <motion.span
                             className={`h-12 w-1 mb-1 ml-1 ${
                                 cookies.darkMode ? "bg-white" : "bg-black"
@@ -79,12 +81,11 @@ export default function App() {
                             }}
                             viewport={{ once: true }}
                             transition={{
-                                duration: 0.8,
+                                duration: 2,
                                 repeat: Infinity,
-                                repeatDelay: 0.2,
-                                delay: 1.5,
+                                repeatDelay: 0.3,
                             }}
-                        />
+                        /> */}
                     </motion.div>
                 </div>
                 

@@ -39,9 +39,9 @@ export default function FeaturesPage() {
 
     return <main>
         <div className={`flex flex-col items-center justify-center mt-[8vh] py-10 gap-10 ${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
-            <h1 className={`text-5xl font-bold ${cookies.darkMode ? "text-gray-100" : "text-gray-900"}`}>Features</h1>
+            <h1 className={`text-5xl font-bold ${cookies.darkMode ? "text-gray-100" : "text-gray-900"} p-10`}>Features</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-3 gap-8">
                 {cardItems.map((item) => <HoverPopupCard title={item.emoji} color={item.color}>{item.text}</HoverPopupCard>)}
             </div>
         </div>
