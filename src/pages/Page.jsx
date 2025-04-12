@@ -29,7 +29,7 @@ export default function App() {
             <ImageSlider />
             {showScrollIcon && (
                 <motion.div
-                    className={`${cookies.darkMode ? "text-white hover:text-sky-450" : "text-black hover:text-sky-600"} fixed bottom-8 flex items-center justify-center transform -translate-x-1/2 cursor-pointer`}
+                    className={`${cookies.darkMode ? "text-white hover:text-sky-300" : "text-black hover:text-sky-600"} fixed bottom-8 flex items-center justify-center transform -translate-x-1/2 cursor-pointer`}
                     initial={{ translateY: 0 }}
                     animate={{ translateY: 0 }}
                     transition={{ duration: 2, type: "spring", stiffness: 100, damping: 10 }}
@@ -97,7 +97,7 @@ export default function App() {
                                 About Us
                             </td>
                             <td
-                                className={`text-2xl w-[50vw] p-4 rounded-tr-xl ${cookies.darkMode ? 'text-white bg-neutral-900' : 'text-black bg-gray-100'}`}
+                                className={`text-xl w-[50vw] p-4 rounded-tr-xl ${cookies.darkMode ? 'text-white bg-stone-900' : 'text-black bg-gray-100'}`}
                             >
                                 We are three high schoolers with a shared passion for coding, technology, and innovation. As young developers, we've spent countless hours learning and building projects that push our boundaries and expand our knowledge. We believe that coding is not just about writing lines of code, but about creating something meaningful that can make a real difference.
                             </td>
@@ -109,9 +109,9 @@ export default function App() {
                                 Why We Did This
                             </td>
                             <td
-                                className={`text-2xl w-[50vw] p-4 rounded-br-xl ${cookies.darkMode ? 'text-white bg-black' : 'text-black bg-gray-100'}`}
+                                className={`text-xl w-[50vw] p-4 rounded-br-xl ${cookies.darkMode ? 'text-white bg-stone-900' : 'text-black bg-gray-100'}`}
                             >
-                                We created this project because crops have been growing infected daily, and we wanted to provide farmers a way to identify them and provide them with solutions on how to treat their crops that are diseases. With our free solution that can be accessed anywhere, we wanted to show that with determination and the right tools, a valuable product can be created, which helps the most important people in the United States, which are farmers.
+                                We created this project due to the growing concern of food shortages. As the Earth's population rises, our current way of agriculture is not sustainable. While GMO's are a large part of the solution, the technology is still in infancy. A short term solution is to find ways to increase crop yields as much as possible, so GMO technology can catch up to human needs.
                             </td>
                         </tr>
                     </tbody>

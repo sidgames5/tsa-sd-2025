@@ -234,7 +234,7 @@ export default function UploadPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <div className="flex justify-between w-full mb-4">
+                <div className="flex justify-between w-full mt-2">
                     <h1 className={`text-3xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-sky-600"}`}>Plant Disease Detection 🌱</h1>
                     {isLoggedIn ? (
                         <button
