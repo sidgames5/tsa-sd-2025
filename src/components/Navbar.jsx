@@ -12,6 +12,7 @@ const tabs = [
   { path: "/upload", label: "Upload" },
   { path: "/diagnosis", label: "Diagnosis" },
   { path: "/results", label: "AI Chart" },
+  { path: "/features", label: "Features"}
 ]
 
 export default function Navbar() {
@@ -32,21 +33,21 @@ export default function Navbar() {
     <div className="w-full">
       <nav
         className={`w-full p-4 flex items-center shadow-md ${
-          isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+          isDark ? "bg-stone-950 text-white" : "bg-gray-100 text-black"
         }`}
       >
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 flex justify-between items-center">
           <Link
             to="/"
-            className={`text-lg font-bold mr-8 flex items-center bg-clip-text text-transparent ${
+            className={`text-lg font-bold ml-8 mr-2 flex items-center bg-clip-text text-transparent ${
               isDark
                 ? "bg-gradient-to-r from-green-400 to-blue-500"
                 : "bg-gradient-to-r from-green-600 to-lime-500"
             }`}
           >
             LeafLogic
-            <FontAwesomeIcon icon={faLeaf} className="ml-1" />
           </Link>
+          <FontAwesomeIcon icon={faLeaf} className="text-green-800" />
         </div>
 
         <div className="flex-grow flex justify-center gap-4">
@@ -64,14 +65,14 @@ export default function Navbar() {
               {selectedTab.label === item.label && (
                 <motion.div
                   layoutId="underline"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-500 rounded-full"
+                  className={`${cookies.darkMode ? "bg-blue-500" : "bg-green-500"} absolute bottom-0 left-0 right-0 h-0.5 rounded-full`}
                 />
               )}
             </motion.button>
           ))}
         </div>
 
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 mr-4">
           <button
             onClick={() => setCookies("darkMode", !cookies.darkMode)}
             className={`p-3 rounded-full ${

@@ -31,3 +31,5 @@ archive
 *.pth
 model_cache
 .env
+
+*.log*
