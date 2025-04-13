@@ -37,7 +37,7 @@ export default function ImageSlider() {
     }, [currentIndex]);
 
     return (
-        <div className={`relative flex w-full h-[101vh] items-center justify-center align-middle bg-opacity-0 ${cookies.darkMode ? "text-white" : "text-black"}`}>
+        <div className={`relative flex w-full h-[90vh] items-center justify-center align-middle bg-opacity-0 ${cookies.darkMode ? "text-white" : "text-black"}`}>
             {/* Left Section original gradient: bg-gradient-to-r to-sky-950 from-green-800*/}
             <div className={`flex flex-col items-start justify-center text-left w-1/2 h-full bg-gradient-to-l relative shadow-lg p-12 ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-sky-100"}`}>
                 <motion.h1
@@ -47,7 +47,7 @@ export default function ImageSlider() {
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
                 <span className="bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
-                Introducing LeafLogic
+                LeafLogic
                 </span>
                     <br /> <span className="text-5xl bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">AI Plant Detection</span>
                 </motion.h1>
@@ -58,7 +58,7 @@ export default function ImageSlider() {
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
-                    Don't know if your plant is healthy or not? Well don't worry, LeafLogic helps you with that. With easy-to-understand user interface, all you have to do is simply upload an image in the upload page and watch as AI gives you easy to understand results. The AI specializes in high demand crops like pepper bells, tomatoes, and potatoes. Watch as your crop yields increase!
+                    Not sure if your plant is healthy? LeafLogic’s easy-to-use AI analyzes images of crops like tomatoes, potatoes, and bell peppers to give you quick, clear results that help boost your yields.
                 </motion.h1>
 
                 {/* Upload Button*/}
@@ -74,7 +74,7 @@ export default function ImageSlider() {
             </div>
 
             {/* Right Section */}
-            <div className={`relative flex flex-col w-1/2 h-[101vh] items-center justify-center bg-gradient-to-r ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-sky-100"}`}>
+            <div className={`relative flex flex-col w-1/2 h-[90vh] items-center justify-center bg-gradient-to-r ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-sky-100"}`}>
                 <div className="flex items-center gap-6 w-full justify-center">
                     {/* Left Arrow */}
                     <motion.div

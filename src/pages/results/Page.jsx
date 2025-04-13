@@ -95,6 +95,9 @@ export default function ResultsPage() {
                   <p className="text-sm mt-2 text-center opacity-70">
                       Shows accuracy and loss metrics from recent predictions
                   </p>
+                  <p className="mt-3">
+                    Accuracy indicates how well the model is identifying plant health correctly over time. Model's error is the loss. <br /> <br /> A lower loss typically means better performance. This graph helps track trends, improvements, or dips in the AI’s reliability, especially as you upload more images. 
+                    </p>
               </div>
 
               {/* Right column - Plant results */}
