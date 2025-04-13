@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // Correct import
+import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router";
 import { useCookies } from "react-cookie";
-
+import { useNavigate } from "react-router";
 
 export default function ImageSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cookies] = useCookies(["darkMode"]);
+    const navigate = useNavigate();
 
     const images = [
         "480-360-max.png",
@@ -47,19 +47,30 @@ export default function ImageSlider() {
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
                 <span className="bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
-                AI Plant Detection
+                Introducing LeafLogic
                 </span>
-                    <br /> <span className="text-5xl bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">at Your Hands</span>
+                    <br /> <span className="text-5xl bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">AI Plant Detection</span>
                 </motion.h1>
-                {/* <motion.h3 className="text-white text-3xl ml-6 mr-6 underline cursor-pointer" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>Our Mission!</motion.h3> */}
+
                 <motion.h1
                     className=" text-lg mt-8"
                     initial={{ translateX: -100 }}
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
-                    Insanely easy UI. Simply upload an image in the upload page and watch as AI gives you easy to understand results. The AI specializes in high demand crops like pepper bells, tomatoes, and potatoes. Watch as your crop yields increase! <span className="text-sky-600 cursor-pointer underline hover:text-sky-300"><Link to="/upload">Upload Plant Image Now!</Link></span>
+                    Don't know if your plant is healthy or not? Well don't worry, LeafLogic helps you with that. With easy-to-understand user interface, all you have to do is simply upload an image in the upload page and watch as AI gives you easy to understand results. The AI specializes in high demand crops like pepper bells, tomatoes, and potatoes. Watch as your crop yields increase!
                 </motion.h1>
+
+                {/* Upload Button*/}
+                <motion.button
+                    className="mt-8 px-6 py-3 text-lg font-semibold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-md transition"
+                    onClick={() => navigate("/upload")}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.4 }}
+                >
+                    Upload Plant Image
+                </motion.button>
             </div>
 
             {/* Right Section */}
@@ -75,7 +86,7 @@ export default function ImageSlider() {
 
                     {/* Image with Animation */}
                     <motion.img
-                        key={currentIndex} // Forces re-render on change
+                        key={currentIndex}
                         src={`/assets/${images[currentIndex]}`}
                         alt={`Slide ${currentIndex}`}
                         className="rounded-xl max-h-[80vh] max-w-[75%] object-contain shadow-lg"
@@ -95,7 +106,5 @@ export default function ImageSlider() {
                 </div>
             </div>
         </div>
-
-
     );
 }
