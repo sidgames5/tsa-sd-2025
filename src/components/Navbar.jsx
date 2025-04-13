@@ -54,7 +54,7 @@ export default function Navbar() {
                             <motion.button
                                 key={item.label}
                                 onClick={() => setSelectedTab(item)}
-                                className={`relative px-4 py-2 rounded-md transition-colors duration-300 font-medium ${isDark
+                                className={`relative px-8 py-4 rounded-md transition-colors duration-300 font-medium ${isDark
                                     ? "hover:bg-gray-700 hover: text-sky-500"
                                     : "hover:bg-green-100 text-black hover:text-green-700"
                                     }`}

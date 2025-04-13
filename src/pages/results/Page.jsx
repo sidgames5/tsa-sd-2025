@@ -140,15 +140,15 @@ export default function ResultsPage() {
             <div className="flex flex-row w-full max-w-[80vw] gap-8">
                 <div className="flex-col flex w-full gap-8">
                     {/* Left column - Chart */}
-                    <div className={`flex-1 p-6 rounded-xl min-w-[60%] ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg`}>
+                    <div className={`flex flex-col items-center p-6 rounded-xl min-w-[60%] ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg`}>
                         <h2 className="text-2xl font-bold mb-4">Model Performance Metrics</h2>
-                        <div className="h-80">
+                        <div className="h-80 min-w-full">
                             <Chart darkMode={cookies.darkMode} />
                         </div>
-                        <p className="text-sm mt-2 text-center opacity-70">
+                        <p className="text-sm mt-2 text-center opacity-70 w-full">
                             Shows accuracy and loss metrics from recent predictions
                         </p>
-                        <p className="mt-3">
+                        <p className="mt-3 text-center w-full">
                             Accuracy indicates how well the model is identifying plant health correctly over time. Model's error is the loss. <br /> <br /> A lower loss typically means better performance. This graph helps track trends, improvements, or dips in the AI's reliability, especially as you upload more images.
                         </p>
                     </div>
@@ -175,8 +175,8 @@ export default function ResultsPage() {
                     {/* Right column - Combined Plant results and Email */}
                     <div className="flex-col flex gap-8 w-full min-h-full">
                         {/* Email section */}
-                        <div className={`p-6 rounded-xl ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg`}>
-                            <h2 className="text-2xl font-bold mb-4">Send Results via Email</h2>
+                        <div className={`p-6 rounded-xl ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg flex flex-col items-center justify-center *:w-full`}>
+                            <h2 className="text-2xl font-bold mb-4 w-full text-center">Send Results Via Email</h2>
                             <div className="space-y-3">
                                 <input
                                     type="email"
