@@ -1,75 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYREGULAR.OTF") format("opentype");
-    font-weight: 400;
-    font-style: normal;
-}
-
-
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYBLACKITALIC.OTF") format("opentype");
-    font-weight: 900;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYBOLD.OTF") format("opentype");
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYHEAVYITALIC.OTF") format("opentype");
-    font-weight: 800;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYLIGHTITALIC.OTF") format("opentype");
-    font-weight: 300;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYMEDIUM.OTF") format("opentype");
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF") format("opentype");
-    font-weight: 600;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYTHINITALIC.OTF") format("opentype");
-    font-weight: 100;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: "SF Pro";
-    src: url("../../public/assets/fonts/SFPRODISPLAYULTRALIGHTITALIC.OTF") format("opentype");
-    font-weight: 200;
-    font-style: italic;
-}
 
 * {
-    font-family: 'SF Pro', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;

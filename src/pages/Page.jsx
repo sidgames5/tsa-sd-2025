@@ -57,9 +57,8 @@ export default function App() {
                         transition={{ duration: 0.5 }}
                     >
                         <motion.h1
-                            className={`mt-10 text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent ${
-                                cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.8)]' : 'drop-shadow-[0_0_8px_rgba(56,182,255,0.5)]'
-                            }`}
+                            className={`mt-10 text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent ${cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.8)]' : 'drop-shadow-[0_0_8px_rgba(56,182,255,0.5)]'
+                                }`}
                             initial={{ clipPath: 'inset(0 100% 0 0)' }}
                             whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
                             viewport={{ once: true }}
@@ -88,7 +87,7 @@ export default function App() {
                         /> */}
                     </motion.div>
                 </div>
-                
+
                 <table className="table-auto text-left w-[80vw] p-1 mt-10">
                     <tbody>
                         <tr>

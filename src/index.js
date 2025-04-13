@@ -15,6 +15,9 @@ import ResultsPage from './pages/results/Page';
 import LoginPage from './pages/login/Page';
 import LoginLayout from './pages/login/Layout';
 import { CookiesProvider } from 'react-cookie';
+import "@fontsource/inter";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/400-italic.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,7 +26,7 @@ root.render(
             <Routes>
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<HomePage />} />
-                    
+
                     <Route path="/upload" element={<UploadLayout />}>
                         <Route index element={<UploadPage />} />
                     </Route>
@@ -39,7 +42,7 @@ root.render(
                     <Route path="/results" element={<ResultsLayout />}>
                         <Route index element={<ResultsPage />} />
                     </Route>
-                    
+
                     <Route path="/login" element={<LoginLayout />}>
                         <Route index element={<LoginPage />} />
                     </Route>

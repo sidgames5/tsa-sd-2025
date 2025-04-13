@@ -4,11 +4,12 @@ import time
 import torch
 import logging
 from PIL import Image
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, flask_email
 from flask_cors import CORS
 from logging.handlers import RotatingFileHandler
 from transformers import AutoConfig, AutoImageProcessor, AutoModelForImageClassification
 from werkzeug.utils import secure_filename
+from new_backend.email import send_email
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -161,6 +162,22 @@ def get_chart_data():
             "losses": history["losses"]
         }
     })
+
+@app.route("/send-results",methods=['POST'])
+def send_results():
+    data = request.get_json()
+    email = data.get('email')
+    message = data.get('message', 'Here are your latest LeafLogic scan results.')
+
+    if not email:
+        return jsonify({"success": False, "error": "Email is required"}), 400
+
+    success = send_email(email, message)
+    if success:
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "error": "Failed to send email"}), 500
+    
 
 if __name__ == "__main__":
     try:
