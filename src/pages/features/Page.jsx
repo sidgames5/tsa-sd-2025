@@ -8,7 +8,7 @@ function HoverPopupCard({ children, title, color }) {
 
     console.log(`bg-${color}`);
     return <div className={`${cookies.darkMode ? "bg-gray-700" : "bg-stone-200"} flex flex-col w-96 h-[28rem] p-4 rounded-3xl relative items-center`}>
-        <motion.div className="flex flex-col items-center bg-white w-72 h-[17rem] p-4 rounded-3xl absolute bottom-4"
+        <motion.div className="flex flex-col items-center bg-white w-72 h-[17rem] p-4 rounded-3xl absolute bottom-4 text-black"
             initial={{ translateY: 0, rotate: -1 }}
             whileHover={{ translateY: -125, rotate: -4 }}
             transition={{ type: "spring", stiffness: 90, damping: 15 }}

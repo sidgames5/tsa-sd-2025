@@ -15,18 +15,7 @@ def send_email(target,content="Scan Results from LeafLogic"):
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
             server.login(smtp_email, smtp_password)
             server.sendmail(smtp_email, target, message.as_string())
+            return True
     except Exception as e:
         print(f"Error sending email: {e}")
         return False
-    
-if __name__ == "__main__":
-    send_email("Rubisco412@gmail.com", content="""
-<html>
-
-<body>
-    <h1>LeafLogic</h1>
-    <p>Your scan is ready</p>
-</body>
-
-</html>
-               """)

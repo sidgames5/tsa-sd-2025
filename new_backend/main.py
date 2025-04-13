@@ -4,7 +4,7 @@ import time
 import torch
 import logging
 from PIL import Image
-from flask import Flask, request, jsonify, flask_email
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from logging.handlers import RotatingFileHandler
 from transformers import AutoConfig, AutoImageProcessor, AutoModelForImageClassification
@@ -167,7 +167,31 @@ def get_chart_data():
 def send_results():
     data = request.get_json()
     email = data.get('email')
-    message = data.get('message', 'Here are your latest LeafLogic scan results.')
+    results = data.get('results', [])
+    good_results = []
+    for result in results:
+        good_results.append({
+            "name": result["name"],
+            "confidence": result["confidence"],
+            "prediction": result["status"]
+        })
+    message = data.get('message', f"""<html>
+
+<body>
+    <h1>Your LeafLogic report is ready!</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Confidence</th>
+            <th>Status</th>
+        </tr>
+        {''.join(f"<tr><td>{res['name']}</td><td>{res['confidence']}</td><td>{res['prediction']}</td></tr>" for res in good_results)}
+    </table>
+    <p>Thank you for using LeafLogic!</p>
+    <p>Best regards,<br>LeafLogic Team</p>
+</body>
+
+</html>""")
 
     if not email:
         return jsonify({"success": False, "error": "Email is required"}), 400
