@@ -61,10 +61,10 @@ export default function ImageSlider() {
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
-                    Not sure if your plant is healthy? Don’t worry—LeafLogic has you covered. With an intuitive, user-friendly interface, all you need to do is upload an image on the upload page and let our AI deliver clear, actionable results. The AI is trained on high-demand crops like bell peppers, tomatoes, and potatoes. Watch your crop yields soar!
+                    Not sure if your plant is healthy? Don't worry—LeafLogic has you covered. With an intuitive, user-friendly interface, all you need to do is upload an image on the upload page and let our AI deliver clear, actionable results. The AI is trained on high-demand crops like bell peppers, tomatoes, and potatoes. Watch your crop yields soar!
                 </motion.h1>
 
-                <motion.div className="flex items-center justify-between gap-10"
+                <motion.div className="flex flex-col items-center justify-between gap-2"
                     initial={{ translateX: -100 }}
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}>
@@ -74,7 +74,7 @@ export default function ImageSlider() {
                         <GiPotato className="text-orange-800" />
                     </div>
                     <motion.button
-                        className="mt-8 px-6 py-3 mb-7 text-lg font-semibold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-md transition"
+                        className=" px-6 py-3 mb-7 text-lg font-semibold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-md transition"
                         onClick={() => navigate("/upload")}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
