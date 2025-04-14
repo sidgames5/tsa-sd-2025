@@ -116,6 +116,12 @@ export default function App() {
                         </tr>
                     </tbody>
                 </table>
+                <div className="p-4">
+                    <a href="/assets/documentation.pdf" className={`${cookies.darkMode ? "text-white": "text-black"} underline`}>
+                        Documentation Portfolio
+                    </a>
+                </div>
+
             </motion.div>
         </div>
     );

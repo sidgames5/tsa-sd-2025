@@ -17,9 +17,7 @@ export default function HomeLayout() {
                 <FontAwesomeIcon icon={faBars} />
             </div>}
             <Outlet />
-            <div className="p-4 *:underline">
-                <a href="/assets/documentation.pdf">Documentation Portfolio</a>
-            </div>
+            
         </div>
     );
 }
