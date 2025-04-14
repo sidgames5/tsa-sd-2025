@@ -134,7 +134,9 @@ export default function ResultsPage() {
     const emailError = "";
 
     return (
-        <div className={`flex flex-col items-center min-h-screen py-12 px-4 ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+        <main className={`w-full min-h-screen ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+            <div className="flex flex-col items-center w-full py-12 px-4">
+
             <h1 className="text-4xl font-bold mt-8 p-12">AI Plant Health Results</h1>
 
             <div className="flex flex-row w-full max-w-[80vw] gap-8">
@@ -286,5 +288,6 @@ export default function ResultsPage() {
                 </div>
             </div>
         </div>
+    </main>
     );
 }
