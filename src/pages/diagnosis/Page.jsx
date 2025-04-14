@@ -195,10 +195,10 @@ export default function DiagnosisPage() {
             fix: "Adjust watering practices based on soil moisture\nImprove soil drainage to prevent waterlogging\nEnsure plants receive sufficient sunlight\nUse a balanced fertilizer with iron, nitrogen, and magnesium."
         }
     ];
-    
 
 
-    const filteredDiseases = diseases.filter(disease => 
+
+    const filteredDiseases = diseases.filter(disease =>
         disease.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         disease.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -207,7 +207,7 @@ export default function DiagnosisPage() {
         <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-r from-white via-gray-100 to-white text-black"} min-h-screen pb-20`}>
             {/* Header */}
             <div className="w-full py-20 px-4 mt-10 text-center">
-                <motion.div 
+                <motion.div
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 10, opacity: 1 }}
                     transition={{ duration: 0.5 }}
@@ -239,8 +239,8 @@ export default function DiagnosisPage() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full p-4 pl-12 rounded-lg shadow-md text-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                         />
-                        <FontAwesomeIcon 
-                            icon={faSearch} 
+                        <FontAwesomeIcon
+                            icon={faSearch}
                             className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"
                         />
                     </div>
@@ -252,25 +252,23 @@ export default function DiagnosisPage() {
                 {filteredDiseases.length > 0 ? (
                     <motion.div
                         ref={containerRef}
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-h-[70vh] overflow-y-auto p-4"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4"
                     >
                         {filteredDiseases.map((disease, index) => (
                             <motion.div
                                 key={index}
-                                className={`rounded-xl overflow-hidden shadow-lg transition-all flex flex-col ${
-                                    cookies.darkMode
-                                        ? "bg-gradient-to-br from-sky-900 via-neutral-800 to-blue-900 border-white-600"
-                                        : "bg-gradient-to-br from-sky-200 via-neutral-200 to-blue-200 border-indigo-300"
-                                } border`}
+                                className={`rounded-xl overflow-hidden shadow-lg transition-all flex flex-col ${cookies.darkMode
+                                    ? "bg-gradient-to-br from-sky-900 via-neutral-800 to-blue-900 border-white-600"
+                                    : "bg-gradient-to-br from-sky-200 via-neutral-200 to-blue-200 border-indigo-300"
+                                    } border`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3, delay: index * 0.05 }}
                             >
                                 <div className="p-6 flex-grow">
                                     <h3 className="font-bold text-lg mb-2">{disease.name}</h3>
-                                    <p className={`text-sm line-clamp-3 mb-4 ${
-                                        cookies.darkMode ? "text-white" : "text-gray-800"
-                                    }`}>
+                                    <p className={`text-sm line-clamp-3 mb-4 ${cookies.darkMode ? "text-white" : "text-gray-800"
+                                        }`}>
                                         {disease.description}
                                     </p>
                                 </div>
@@ -279,11 +277,10 @@ export default function DiagnosisPage() {
                                         setSelectedDisease(disease);
                                         setIsModalOpen(true);
                                     }}
-                                    className={`flex items-center justify-center gap-2 p-3 border-t ${
-                                        cookies.darkMode 
-                                            ? "border-gray-700 text-blue-400 hover:bg-cyan-700" 
-                                            : "border-gray-200 text-blue-600 hover:bg-gray-50"
-                                    } transition-colors`}
+                                    className={`flex items-center justify-center gap-2 p-3 border-t ${cookies.darkMode
+                                        ? "border-gray-700 text-blue-400 hover:bg-cyan-700"
+                                        : "border-gray-200 text-blue-600 hover:bg-gray-50"
+                                        } transition-colors`}
                                 >
                                     <span>Learn More</span>
                                     <FontAwesomeIcon icon={faChevronRight} />
@@ -299,18 +296,17 @@ export default function DiagnosisPage() {
                         animate={{ opacity: 1 }}
                         className="text-center py-20"
                     >
-                        <FontAwesomeIcon 
-                            icon={faLeaf} 
+                        <FontAwesomeIcon
+                            icon={faLeaf}
                             className="text-5xl text-gray-400 mb-4"
                         />
                         <p className="text-xl text-gray-500 mb-4">No diseases found matching your search</p>
-                        <button 
+                        <button
                             onClick={() => setSearchTerm('')}
-                            className={`px-6 py-2 rounded-lg transition-colors ${
-                                cookies.darkMode 
-                                    ? "bg-blue-600 hover:bg-blue-700 text-white" 
-                                    : "bg-blue-500 hover:bg-blue-600 text-white"
-                            }`}
+                            className={`px-6 py-2 rounded-lg transition-colors ${cookies.darkMode
+                                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                : "bg-blue-500 hover:bg-blue-600 text-white"
+                                }`}
                         >
                             Reset Search
                         </button>
@@ -326,78 +322,68 @@ export default function DiagnosisPage() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
-                            className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${
-                                cookies.darkMode 
-                                    ? "bg-gradient-to-br from-black via-sky-900 to-teal-800 border-2 border-white shadow-teal-800/50" 
-                                    : "bg-gradient-to-br from-sky-300 via-stone-300 to-blue-300 border-2 border-black shadow-stone-300/50"
-                            }`}
+                            className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${cookies.darkMode
+                                ? "bg-gradient-to-br from-black via-sky-900 to-teal-800 border-2 border-white shadow-teal-800/50"
+                                : "bg-gradient-to-br from-sky-300 via-stone-300 to-blue-300 border-2 border-black shadow-stone-300/50"
+                                }`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="px-6 py-4">
                                 <div className="flex justify-between items-start">
-                                    <h3 className={`text-2xl font-bold leading-6 mt-4 ${
-                                        cookies.darkMode ? "text-white" : "text-gray-900"
-                                    }`}>
+                                    <h3 className={`text-2xl font-bold leading-6 mt-4 ${cookies.darkMode ? "text-white" : "text-gray-900"
+                                        }`}>
                                         {selectedDisease.name}
                                     </h3>
                                     <button
                                         onClick={() => setIsModalOpen(false)}
-                                        className={`p-2 rounded-full hover:bg-opacity-100 ${
-                                            cookies.darkMode 
-                                                ? "text-gray-300 hover:bg-red-500 border-indigo-900" 
-                                                : "text-gray-500 hover:bg-red-200 border-sky-500"
-                                        }`}
+                                        className={`p-2 rounded-full hover:bg-opacity-100 ${cookies.darkMode
+                                            ? "text-gray-300 hover:bg-red-500 border-indigo-900"
+                                            : "text-gray-500 hover:bg-red-200 border-sky-500"
+                                            }`}
                                     >
                                         <FontAwesomeIcon icon={faClose} size="lg" />
                                     </button>
                                 </div>
-            
+
                                 <div className="mt-4">
-                                    <p className={`text-lg ${
-                                        cookies.darkMode ? "text-gray-300" : "text-gray-600"
-                                    }`}>
+                                    <p className={`text-lg ${cookies.darkMode ? "text-gray-300" : "text-gray-600"
+                                        }`}>
                                         {selectedDisease.description}
                                     </p>
-            
+
                                     <div className="mt-6 space-y-4">
-                                        <motion.div 
-                                            className={`rounded-lg overflow-hidden ${
-                                                cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
-                                            }`}
+                                        <motion.div
+                                            className={`rounded-lg overflow-hidden ${cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                                                }`}
                                             initial={{ x: -20, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: 0.1 }}
                                         >
-                                            <div className={`px-4 py-3 font-bold ${
-                                                cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
-                                            }`}>
+                                            <div className={`px-4 py-3 font-bold ${cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
+                                                }`}>
                                                 How to Identify
                                             </div>
-                                            <div className={`px-4 py-3 ${
-                                                cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                            }`}>
+                                            <div className={`px-4 py-3 ${cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
+                                                }`}>
                                                 {selectedDisease.appearance.split('\n').map((line, idx) => (
                                                     <p key={idx} className="mb-2 last:mb-0">• {line}</p>
                                                 ))}
                                             </div>
                                         </motion.div>
-            
-                                        <motion.div 
-                                            className={`rounded-lg overflow-hidden ${
-                                                cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
-                                            }`}
+
+                                        <motion.div
+                                            className={`rounded-lg overflow-hidden ${cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                                                }`}
                                             initial={{ x: -20, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: 0.2 }}
                                         >
-                                            <div className={`px-4 py-3 font-bold ${
-                                                cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
-                                            }`}>
+                                            <div className={`px-4 py-3 font-bold ${cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
+                                                }`}>
                                                 How to Fix
                                             </div>
-                                            <div className={`px-4 py-3 ${
-                                                cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                            }`}>
+                                            <div className={`px-4 py-3 ${cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
+                                                }`}>
                                                 {selectedDisease.fix.split('\n').map((line, idx) => (
                                                     <p key={idx} className="mb-2 last:mb-0">• {line}</p>
                                                 ))}
