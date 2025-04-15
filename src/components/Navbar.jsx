@@ -43,7 +43,7 @@ export default function Navbar() {
                             : "bg-gradient-to-r from-green-600 to-lime-500"
                             }`}
                     >
-                        LeafLogic 3.0
+                        LeafLogic
                     </Link>
                     <FontAwesomeIcon icon={faLeaf} className="text-green-800" />
                 </div>
