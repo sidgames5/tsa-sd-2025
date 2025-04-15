@@ -20,4 +20,5 @@ tdqm
 tqdm
 #shutil
 flask-cors
+transformers
 
