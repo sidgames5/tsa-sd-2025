@@ -21,7 +21,6 @@ export const updateUserChartData = (userEmail, newAccuracy, newLoss) => {
     }
 };
 
-
 export const getUserChartData = (userEmail) => {
     try {
         return JSON.parse(localStorage.getItem(`chartData_${userEmail}`)) || {
@@ -36,3 +35,20 @@ export const getUserChartData = (userEmail) => {
         };
     }
 };
+
+export const clearUserChartData = (userEmail) => {
+    try {
+        localStorage.removeItem(`chartData_${userEmail}`);
+        return {
+            accuracies: [],
+            losses: []
+        };
+    } catch (error) {
+        console.error("Error clearing chart data:", error);
+        return {
+            accuracies: [],
+            losses: []
+        };
+    }
+};
+

@@ -13,9 +13,10 @@ export default function ImageSlider() {
     const navigate = useNavigate();
 
     const images = [
-        "480-360-max.png",
-        "612-344-max.png",
-        "1280-853-max.png"
+        "corn-294-max.jpg",
+        "100-486-max.jpg",
+        "187-364-max.jpg",
+        "bellPepper.jpg"
     ];
 
     function imageLeft() {
@@ -39,7 +40,7 @@ export default function ImageSlider() {
     }, [currentIndex]);
 
     return (
-        <div className={`relative flex w-full h-[101vh] items-center justify-center align-middle bg-opacity-0 ${cookies.darkMode ? "text-white" : "text-black"}`}>
+        <div className={`relative flex w-full h-[101vh] items-center justify-end align-middle bg-opacity-0 ${cookies.darkMode ? "text-white" : "text-black"}`}>
             {/* Left Section original gradient: bg-gradient-to-r to-sky-950 from-green-800*/}
             <div className={`flex flex-col items-start justify-center text-left w-1/2 h-full bg-gradient-to-l relative shadow-lg p-12 ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-sky-100"}`}>
                 <motion.h1
