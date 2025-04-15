@@ -40,4 +40,6 @@ $ npm start
 $ python -m new_backend.main
 ```
 
+Allowed Extensions are png, jpg, jpeg, and gif
+
 A new browser window should automatically open. If not, open to [http://localhost:3000](http://localhost:3000)
