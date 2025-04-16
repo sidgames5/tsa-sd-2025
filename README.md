@@ -38,8 +38,9 @@ $ npm start
 
 ```
 $ python -m new_backend.main
+$ if there is an error for installing pillow-heif, open a new terminal and run brew install libheif
 ```
 
-Allowed Extensions are png, jpg, jpeg, and gif
+Allowed Extensions are png, jpg, jpeg, gif, heic, hevc
 
 A new browser window should automatically open. If not, open to [http://localhost:3000](http://localhost:3000)
