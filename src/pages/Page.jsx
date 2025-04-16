@@ -111,7 +111,8 @@ export default function App() {
                             <td
                                 className={`text-xl w-[50vw] p-4 rounded-br-xl ${cookies.darkMode ? 'text-white bg-stone-900' : 'text-black bg-gray-100'}`}
                             >
-                                We created this project due to the growing concern of food shortages. As the Earth's population rises, our current way of agriculture is not sustainable. While GMO's are a large part of the solution, the technology is still in infancy. A short term solution is to find ways to increase crop yields as much as possible, so GMO technology can catch up to human needs.
+                                We created this project in response to the growing concern over food shortages. As the global population continues to rise, the sustainability of current agricultural practices is under pressure. One of the most immediate and impactful ways to address this challenge is by increasing crop yields through early detection and prevention of plant diseases. By identifying diseases before they spread, farmers can take timely action to protect their crops, reduce losses, and improve overall productivity. Our project aims to support this goal by providing a fast, accessible, and accurate tool for detecting plant diseases.
+
                             </td>
                         </tr>
                     </tbody>
