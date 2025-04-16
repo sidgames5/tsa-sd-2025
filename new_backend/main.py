@@ -3,13 +3,17 @@ import io
 import time
 import torch
 import logging
-from PIL import Image
+from PIL import Image #Python Imaging Library- Used for manipulating images
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from logging.handlers import RotatingFileHandler
 from transformers import AutoConfig, AutoImageProcessor, AutoModelForImageClassification
 from werkzeug.utils import secure_filename
 from new_backend.email import send_email
+import pillow_heif # this module handles heic and heif formats
+
+# Enable pillow-heif support for PIL
+pillow_heif.register_heif_opener()
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -18,7 +22,7 @@ CORS(app)
 # Configuration
 app.config.update({
     'MAX_CONTENT_LENGTH': 10 * 1024 * 1024,
-    'ALLOWED_EXTENSIONS': {'png', 'jpg', 'jpeg', 'gif'},
+    'ALLOWED_EXTENSIONS': {'png', 'jpg', 'jpeg', 'gif','heic','heif'},
     'MODEL_NAME': "linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification",
     'MODEL_CACHE': "./model_cache",
     'THROTTLE_LIMIT': 5  # requests per minute
@@ -67,11 +71,20 @@ class PlantDiseaseClassifier:
 
     def preprocess_image(self, image_bytes):
         try:
-            image = Image.open(io.BytesIO(image_bytes))
+            # Loads image directly with PIL
+            try:
+                image = Image.open(io.BytesIO(image_bytes))
+            except IOError:
+                # Fall back to pillow-heif for HEIC/HEIF
+                heif_file = pillow_heif.read_heif(io.BytesIO(image_bytes))
+                image = Image.frombytes(
+                    heif_file.mode, heif_file.size, heif_file.data, "raw"
+                )
+
             return image.convert('RGB') if image.mode != 'RGB' else image
         except Exception as e:
             app.logger.error(f"Image processing failed: {str(e)}")
-            raise ValueError("Invalid image file")
+            raise ValueError("Invalid or unsupported image file")
 
     def predict(self, image_bytes):
         try:
