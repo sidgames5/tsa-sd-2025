@@ -21,4 +21,4 @@ tqdm
 #shutil
 flask-cors
 transformers
-
+pillow-heif
