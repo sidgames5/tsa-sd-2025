@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faSearch, faLeaf, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faSearch, faLeaf, faChevronRight, faArrowDown} from "@fortawesome/free-solid-svg-icons";
+import { AnimatePresence } from "framer-motion";
+
+
 
 export default function DiagnosisPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +15,10 @@ export default function DiagnosisPage() {
     const [cookies] = useCookies(["darkMode"]);
     const [searchTerm, setSearchTerm] = useState('');
     const containerRef = useRef(null);
-
+    const [openSection, setOpenSection] = useState(null);
+    const toggleSection = (section) => {
+    setOpenSection(openSection === section ? null : section);
+    };
     const diseases = [
         {
             name: "Powdery Mildew",
@@ -314,88 +320,140 @@ export default function DiagnosisPage() {
                 )}
             </div>
 
-            {/* Disease Modal */}
-            {isModalOpen && selectedDisease && (
-                <div className="fixed inset-0 z-50 overflow-y-auto">
-                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            className={`inline-block align-bottom rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full ${cookies.darkMode
-                                ? "bg-gradient-to-br from-black via-sky-900 to-teal-800 border-2 border-white shadow-teal-800/50"
-                                : "bg-gradient-to-br from-sky-300 via-stone-300 to-blue-300 border-2 border-black shadow-stone-300/50"
-                                }`}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className="px-6 py-4">
-                                <div className="flex justify-between items-start">
-                                    <h3 className={`text-2xl font-bold leading-6 mt-4 ${cookies.darkMode ? "text-white" : "text-gray-900"
-                                        }`}>
-                                        {selectedDisease.name}
-                                    </h3>
+            
+            
+
+        {/* Disease Modal */}
+        {isModalOpen && selectedDisease && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                <div
+                    className="flex items-center justify-center min-h-screen p-4 text-center"
+                    onClick={() => setIsModalOpen(false)}
+                >
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        onClick={(e) => e.stopPropagation()}
+                        className={`w-full max-w-2xl rounded-2xl shadow-2xl border ${
+                            cookies.darkMode
+                                ? "bg-gradient-to-br from-gray-900 via-sky-950 to-teal-900 border-gray-700"
+                                : "bg-gradient-to-br from-sky-100 via-stone-200 to-blue-100 border-gray-300"
+                        }`}
+                    >
+                        {/*Title Text on Modal*/}
+                        <div className="flex items-start justify-between p-6 border-b border-opacity-20">
+                            <h3 className={`text-3xl font-bold mx-auto ${cookies.darkMode ? "text-white" : "text-gray-900"}`}>
+                                {selectedDisease.name}
+                            </h3>
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className={`p-2 rounded-full transition hover:scale-110 ${
+                                    cookies.darkMode
+                                        ? "text-gray-400 hover:bg-red-600 hover:text-white"
+                                        : "text-gray-500 hover:bg-red-200 hover:text-red-700"
+                                } absolute top-4 right-4`}
+                            >
+                                <FontAwesomeIcon icon={faClose} size="lg" />
+                            </button>
+                        </div>
+
+                        {/*Info Text*/}
+                        <div className="px-6 py-6 space-y-6 text-center">
+                            <p className={`text-lg leading-relaxed ${cookies.darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                {selectedDisease.description}
+                            </p>
+
+                            {/*How to fix and how to identify stuff*/}
+                            <div className="space-y-4">
+                                {/*How to Identify - Gang help me out here*/}
+                                <div className="rounded-xl overflow-hidden shadow-md">
                                     <button
-                                        onClick={() => setIsModalOpen(false)}
-                                        className={`p-2 rounded-full hover:bg-opacity-100 ${cookies.darkMode
-                                            ? "text-gray-300 hover:bg-red-500 border-indigo-900"
-                                            : "text-gray-500 hover:bg-red-200 border-sky-500"
-                                            }`}
+                                        onClick={() => toggleSection('identify')}
+                                        className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${
+                                            cookies.darkMode
+                                                ? "bg-gray-700 text-white hover:bg-gray-600"
+                                                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                        }`}
                                     >
-                                        <FontAwesomeIcon icon={faClose} size="lg" />
+                                        How to Identify
+                                        <FontAwesomeIcon icon={openSection === 'identify' ? faArrowDown : faArrowDown} rotation={openSection === 'identify' ? 180 : 0} />
                                     </button>
+                                    <AnimatePresence>
+                                        {openSection === 'identify' && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: "auto", opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                className={`px-6 py-4 ${
+                                                    cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
+                                                }`}
+                                            >
+                                                {selectedDisease.appearance.split("\n").map((line, idx) => (
+                                                    <p key={idx} className="flex justify-center items-center gap-2 mb-2">
+                                                        <span>•</span> <span>{line}</span>
+                                                    </p>
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
 
-                                <div className="mt-4">
-                                    <p className={`text-lg ${cookies.darkMode ? "text-gray-300" : "text-gray-600"
-                                        }`}>
-                                        {selectedDisease.description}
-                                    </p>
-
-                                    <div className="mt-6 space-y-4">
-                                        <motion.div
-                                            className={`rounded-lg overflow-hidden ${cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
+                                {/* How to Fix - Hopefully I can fix my sanity from how long this took*/}
+                                <div className="rounded-xl overflow-hidden shadow-md">
+                                    <button
+                                        onClick={() => toggleSection('fix')}
+                                        className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${
+                                            cookies.darkMode
+                                                ? "bg-gray-700 text-white hover:bg-gray-600"
+                                                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                        }`}
+                                    >
+                                        How to Fix
+                                        <FontAwesomeIcon icon={openSection === 'fix' ? faArrowDown : faArrowDown} rotation={openSection === 'fix' ? 180 : 0} />
+                                    </button>
+                                    <AnimatePresence>
+                                        {openSection === 'fix' && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: "auto", opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                className={`px-6 py-4 ${
+                                                    cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
                                                 }`}
-                                            initial={{ x: -20, opacity: 0 }}
-                                            animate={{ x: 0, opacity: 1 }}
-                                            transition={{ delay: 0.1 }}
-                                        >
-                                            <div className={`px-4 py-3 font-bold ${cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
-                                                }`}>
-                                                How to Identify
-                                            </div>
-                                            <div className={`px-4 py-3 ${cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                                }`}>
-                                                {selectedDisease.appearance.split('\n').map((line, idx) => (
-                                                    <p key={idx} className="mb-2 last:mb-0">• {line}</p>
+                                            >
+                                                {selectedDisease.fix.split("\n").map((line, idx) => (
+                                                    <p key={idx} className="flex justify-center items-center gap-2 mb-2">
+                                                        <span>•</span> <span>{line}</span>
+                                                    </p>
                                                 ))}
-                                            </div>
-                                        </motion.div>
-
-                                        <motion.div
-                                            className={`rounded-lg overflow-hidden ${cookies.darkMode ? "bg-gray-700" : "bg-gray-100"
-                                                }`}
-                                            initial={{ x: -20, opacity: 0 }}
-                                            animate={{ x: 0, opacity: 1 }}
-                                            transition={{ delay: 0.2 }}
-                                        >
-                                            <div className={`px-4 py-3 font-bold ${cookies.darkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"
-                                                }`}>
-                                                How to Fix
-                                            </div>
-                                            <div className={`px-4 py-3 ${cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                                }`}>
-                                                {selectedDisease.fix.split('\n').map((line, idx) => (
-                                                    <p key={idx} className="mb-2 last:mb-0">• {line}</p>
-                                                ))}
-                                            </div>
-                                        </motion.div>
-                                    </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </div>
-                        </motion.div>
-                    </div>
+                        </div>
+
+                        {/*Stuff outside where the main text is*/}
+                        <div className="px-6 py-4 border-t border-opacity-20 text-center">
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className={`px-6 py-2 text-lg font-semibold rounded-xl transition ${
+                                    cookies.darkMode
+                                        ? "bg-sky-700 hover:bg-sky-600 text-white"
+                                        : "bg-sky-400 hover:bg-sky-500 text-white"
+                                }`}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </motion.div>
                 </div>
-            )}
+            </div>
+        )}
+
+
         </div>
     );
 }
