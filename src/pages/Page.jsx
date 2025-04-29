@@ -43,7 +43,7 @@ export default function App() {
                 </motion.div>
             )}
             <motion.div
-                className="flex flex-col justify-center items-center h-[100vh] w-full"
+                className="flex flex-col justify-center items-center h-[105vh] w-full"
                 initial={{ backgroundColor: cookies.darkMode ? "#ffffff" : "#000000" }}
                 whileInView={{ backgroundColor: cookies.darkMode ? "#000000" : "#ffffff" }}
                 transition={{ type: "tween", duration: 0.7 }}
@@ -56,6 +56,7 @@ export default function App() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
+                        {/*
                         <motion.h1
                             className={`mt-10 text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent ${cookies.darkMode ? 'drop-shadow-[0_0_8px_rgba(56,182,255,0.8)]' : 'drop-shadow-[0_0_8px_rgba(56,182,255,0.5)]'
                                 }`}
@@ -69,6 +70,7 @@ export default function App() {
                         >
                             Our Mission
                         </motion.h1>
+                        */}
                         {/*
                         <motion.span
                             className={`h-12 w-1 mb-1 ml-1 ${
@@ -88,6 +90,54 @@ export default function App() {
                     </motion.div>
                 </div>
 
+                <div className="px-6 py-12 space-y-16 mt-70">
+                    <motion.div className="flex justify-between items-center md:flex-row item-center md:justify-between gap-8">
+                        <motion.img className={`w-full md:w-1/2 max-h-[275px] rounded-2xl shadow-lg p-2 ${cookies.darkMode ? "bg-blue-950" : "bg-blue-200"}`} src="https://cdn.pixabay.com/photo/2015/06/24/15/45/student-820274_1280.jpg" 
+                            alt="codeImg"
+                            initial={{ opacity: 50, scale: 0.5 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.4, scale: {visualDuration: 0.8} }} 
+                        />
+                        <div className={`md:w-[600px] text-lg p-5 ${cookies.darkMode ? " text-white" : "text-gray-800"}`}>
+                            <motion.h2 className="text-3xl mb-3" 
+                                initial={{ clipPath: 'inset(0 100% 0 0)' }}
+                                whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
+                                viewport={{ once: false }}
+                                transition={{
+                                    duration: 1.6,
+                                    ease: 'linear',
+                                }}
+                            >
+                                About us
+                            </motion.h2>
+                            <p>We are three high schoolers with a shared passion for coding, technology, and innovation. As young developers, we've spent countless hours learning and building projects that push our boundaries and expand our knowledge. We believe that coding is not just about writing lines of code, but about creating something meaningful that can make a real difference.</p>
+                        </div>
+                    </motion.div>
+                    <motion.div className="flex justify-between items-center md:flex-row item-center md:justify-between gap-8">
+                        <div className={`md:w-1/2 text-lg p-5 ${cookies.darkMode ? "text-white" : "text-gray-700"} `}>
+                            <motion.h2 className="text-3xl mb-3"
+                                initial={{ clipPath: 'inset(0 100% 0 0)' }}
+                                whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
+                                viewport={{ once: false }}
+                                transition={{
+                                    duration: 1.6,
+                                    ease: 'linear',
+                                }}
+                            >
+                                Why we built this
+                            </motion.h2>
+                            <p>We created this project to address rising concerns about food shortages. With a growing global population, agriculture faces increasing pressure. Early detection of plant diseases is a key way to protect crops and boost yields. By spotting issues early, farmers can act quickly and reduce losses. Our tool offers a fast, accessible, and accurate solution to support this effort.</p>
+                        </div>
+                        <motion.img className={`w-full md:w-1/2 max-h-[250px] rounded-2xl shadow-lg p-2 ${cookies.darkMode ? "bg-green-950" : "bg-green-200"}`} src="https://cdn.pixabay.com/photo/2023/03/31/14/52/rice-field-7890204_1280.jpg"
+                            alt="farmImg"
+                            initial={{ opacity: 50, scale: 0.5 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.4, scale: {visualDuration: 0.8} }} 
+                         />
+                    </motion.div>
+                </div>
+                
+                {/* 
                 <table className="table-auto text-left w-[80vw] p-1 mt-10">
                     <tbody>
                         <tr>
@@ -116,7 +166,7 @@ export default function App() {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table> */}
                 <div className="p-4">
                     <a href="/assets/TSA-SD Documentation-5.pdf" className={`${cookies.darkMode ? "text-white": "text-black"} underline`}>
                         Documentation Portfolio
@@ -124,6 +174,6 @@ export default function App() {
                 </div>
 
             </motion.div>
-        </div>
+        </div> 
     );
 }
