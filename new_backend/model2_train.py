@@ -7,7 +7,14 @@ from torchvision import datasets, transforms
 import os
 from new_backend.model2Class import SimpleCNN
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Device selection with MPS support
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+elif torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
+print(f"Using device: {device}")
 
 DATASET_DIR = "./New Plant Diseases Dataset(Augmented)"
 
