@@ -24,8 +24,12 @@ export default function Navbar() {
 
     useEffect(() => {
         const activeTab = tabs.find((tab) => tab.path === location.pathname)
-        if (activeTab) setSelectedTab(activeTab)
-    }, [location.pathname])
+        if (activeTab) {
+            setSelectedTab(activeTab);
+        } else if (location.pathname === "/") {
+            setSelectedTab({ path: "/", label: "LeafLogic" });
+        }
+    }, [location.pathname]);
 
     const isDark = cookies.darkMode
 
