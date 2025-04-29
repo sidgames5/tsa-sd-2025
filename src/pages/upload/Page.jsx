@@ -147,7 +147,7 @@ export default function UploadPage() {
       
       canvas.toBlob((blob) => {
         if (!blob) {
-          setErrorMessage("Failed to capture image, so try again.");
+          setErrorMessage("Failed to capture image. Try again.");
           // such an auraful moment
           return;
         }
@@ -478,7 +478,7 @@ export default function UploadPage() {
       }`}
     >
       <motion.div
-        className={`p-6 max-h-[120vh] mt-14 rounded-2xl w-full max-w-2xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
+        className={`p-6 max-h-[120vh] mt-14 rounded-2xl w-full max-w-6xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
           isDarkMode
             ? "bg-gradient-to-br from-gray-800 via-gray-900 to-black border-indigo-800 shadow-indigo-900/40 ring-indigo-500/20"
             : "bg-white border-blue-300 shadow-blue-200/40 ring-blue-400/20"
@@ -570,7 +570,7 @@ export default function UploadPage() {
         )}
 
         {isLoggedIn && !image && (
-          <div className="flex flex-col w-full gap-6 mb-8">
+          <div className="flex justify-between w-full gap-6 mb-8">
             <div
               ref={dropAreaRef}
               onDragOver={handleDragOver}
@@ -643,8 +643,10 @@ export default function UploadPage() {
             </div>
           </motion.div>
         )}
-
-        <div className="w-full mb-8 text-center">
+        <div className="w-full flex justify-between">
+          
+        </div>
+        <div className="w-1/2 mb-8 text-center">
           <label className="block mb-3 font-semibold">
             Select The Plant Type You Are Uploading:
           </label>
