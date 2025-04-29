@@ -57,12 +57,14 @@ export default function ImageSlider() {
                 </motion.h1>
                 {/* <motion.h3 className="text-white text-3xl ml-6 mr-6 underline cursor-pointer" initial={{ translateX: -100 }} animate={{ translateX: 0 }} transition={{ type: "spring", damping: 10, stiffness: 15 }}>Our Mission!</motion.h3> */}
                 <motion.h1
-                    className=" text-lg mt-8"
+                    className=" text-1xl mt-8 space-y-1"
                     initial={{ translateX: -100 }}
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
-                    Not sure if your plant is healthy? Don't worry—LeafLogic has you covered. With an intuitive, user-friendly interface, all you need to do is upload an image on the upload page and let our AI deliver clear, actionable results. The AI is trained on high-demand crops like bell peppers, tomatoes, and potatoes. Watch your crop yields soar!
+                    <p>Unsure if your plant is healthy? LeafLogic makes it easy—just upload a</p> 
+                    <p>photo, and our AI, trained on top crops like bell peppers, tomatoes,</p>
+                    <p>and potatoes, gives you clear results. Boost your yields today!</p>
                 </motion.h1>
 
                 <motion.div className="flex flex-col items-center justify-between gap-2"
