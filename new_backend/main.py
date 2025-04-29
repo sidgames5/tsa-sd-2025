@@ -42,6 +42,11 @@ history = {
     "losses": []
 }
 
+def safe_softmax(logits):
+    if logits is None or not logits.shape:
+        return None
+    return torch.nn.functional.softmax(logits, dim=-1)
+
 class PlantDiseaseClassifier:
     def __init__(self):
         self.model_hf = None
@@ -69,7 +74,7 @@ class PlantDiseaseClassifier:
                 cache_dir=app.config['MODEL_CACHE']
             ).to(self.device)
             self.labels_hf = self.model_hf.config.id2label
-            app.logger.info(f"HuggingFace model loaded.")
+            app.logger.info("HuggingFace model loaded.")
 
             # Load your trained CNN model
             self.model_cnn = SimpleCNN(num_classes=38)
@@ -77,14 +82,13 @@ class PlantDiseaseClassifier:
                 self.model_cnn.load_state_dict(torch.load("plant_disease_model.pth", map_location=self.device))
                 self.model_cnn = self.model_cnn.to(self.device)
                 self.model_cnn.eval()
-                app.logger.info(f"SimpleCNN model loaded.")
+                app.logger.info("SimpleCNN model loaded.")
             else:
-                app.logger.error("CNN model file not found! Please train the model first.")
                 raise FileNotFoundError("CNN model file not found.")
 
             # Setup CNN labels from folder names
             dataset_folder = './New Plant Diseases Dataset(Augmented)'
-            self.labels_cnn = {idx: class_name for idx, class_name in enumerate(os.listdir(dataset_folder))}
+            self.labels_cnn = {idx: class_name for idx, class_name in enumerate(sorted(os.listdir(dataset_folder)))}
 
             app.logger.info(f"All models loaded in {time.time() - start_time:.2f} seconds.")
 
@@ -109,33 +113,44 @@ class PlantDiseaseClassifier:
             results = []
 
             # HuggingFace model prediction
-            inputs_hf = self.processor_hf(images=image, return_tensors="pt").to(self.device)
-            with torch.no_grad():
-                outputs_hf = self.model_hf(**inputs_hf)
-                logits_hf = outputs_hf.logits
-                probs_hf = torch.nn.functional.softmax(logits_hf, dim=-1)
-                predicted_idx_hf = logits_hf.argmax(-1).item()
-                confidence_hf = probs_hf[0][predicted_idx_hf].item()
-                results.append(("HuggingFace", self.labels_hf[predicted_idx_hf], confidence_hf))
+            try:
+                inputs_hf = self.processor_hf(images=image, return_tensors="pt").to(self.device)
+                with torch.no_grad():
+                    outputs_hf = self.model_hf(**inputs_hf)
+                    logits_hf = outputs_hf.logits
+                    probs_hf = torch.nn.functional.softmax(logits_hf, dim=-1)
+                    predicted_idx_hf = logits_hf.argmax(-1).item()
+                    confidence_hf = probs_hf[0][predicted_idx_hf].item()
+                    results.append(("HuggingFace", self.labels_hf[predicted_idx_hf], confidence_hf))
+            except Exception as e:
+                app.logger.warning(f"HuggingFace prediction failed: {e}")
 
             # Your CNN model prediction
-            transform = transforms.Compose([
-                transforms.Resize((224, 224)),
-                transforms.ToTensor()
-            ])
-            img_tensor = transform(image).unsqueeze(0).to(self.device)
-            with torch.no_grad():
-                logits_cnn = self.model_cnn(img_tensor)
-                probs_cnn = torch.nn.functional.softmax(logits_cnn, dim=-1)
-                predicted_idx_cnn = logits_cnn.argmax(-1).item()
-                confidence_cnn = probs_cnn[0][predicted_idx_cnn].item()
-                results.append(("SimpleCNN", self.labels_cnn[predicted_idx_cnn], confidence_cnn))
+            try:
+                transform = transforms.Compose([
+                    transforms.Resize((224, 224)),
+                    transforms.ToTensor()
+                ])
+                img_tensor = transform(image).unsqueeze(0).to(self.device)
+                with torch.no_grad():
+                    logits_cnn = self.model_cnn(img_tensor)
+                    probs_cnn = torch.nn.functional.softmax(logits_cnn, dim=-1)
+                    predicted_idx_cnn = logits_cnn.argmax(-1).item()
+                    confidence_cnn = probs_cnn[0][predicted_idx_cnn].item()
+                    results.append(("SimpleCNN", self.labels_cnn[predicted_idx_cnn], confidence_cnn))
+            except Exception as e:
+                app.logger.warning(f"CNN prediction failed: {e}")
+
+            if not results:
+                raise ValueError("No predictions could be made by either model.")
 
             # Select model based on plant type
-            if plant_type.lower() in ['pepper bell', 'potato', 'tomato', 'tomatoes']:
+            if plant_type.lower() in ['pepper bell', 'potato', 'tomato', 'tomatoes'] and len(results) > 0:
                 selected_model, selected_label, selected_confidence = results[0]
-            else:
+            elif len(results) > 1:
                 selected_model, selected_label, selected_confidence = results[1]
+            else:
+                selected_model, selected_label, selected_confidence = results[0]
 
             return {
                 "success": True,
@@ -148,7 +163,7 @@ class PlantDiseaseClassifier:
             app.logger.error(f"Prediction error: {str(e)}")
             return {"success": False, "error": str(e)}
 
-# Instantiate classifier
+
 classifier = PlantDiseaseClassifier()
 
 @app.route('/health', methods=['GET'])
@@ -162,6 +177,7 @@ def health_check():
         })
     except Exception as e:
         return jsonify({"status": "unhealthy", "error": str(e)}), 500
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
@@ -194,23 +210,19 @@ def send_results():
     data = request.get_json()
     email = data.get('email')
     results = data.get('results', [])
-    good_results = []
-    for result in results:
-        good_results.append({
-            "name": result["name"],
-            "confidence": result["confidence"],
-            "prediction": result["status"]
-        })
+    good_results = [{
+        "name": r["name"],
+        "confidence": r["confidence"],
+        "prediction": r["status"]
+    } for r in results]
+
     message = data.get('message', f"""<html><body><h1>Your LeafLogic report is ready!</h1><table><tr><th>Name</th><th>Confidence</th><th>Status</th></tr>{''.join(f"<tr><td>{res['name']}</td><td>{res['confidence']}</td><td>{res['prediction']}</td></tr>" for res in good_results)}</table><p>Thank you for using LeafLogic!</p><p>Best regards,<br>LeafLogic Team</p></body></html>""")
 
     if not email:
         return jsonify({"success": False, "error": "Email is required"}), 400
 
     success = send_email(email, message)
-    if success:
-        return jsonify({"success": True})
-    else:
-        return jsonify({"success": False, "error": "Failed to send email"}), 500
+    return jsonify({"success": success, "error": None if success else "Failed to send email"}), 500 if not success else 200
 
 if __name__ == "__main__":
     try:
