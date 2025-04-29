@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpload, faSpinner, faCheck, faTimes, faUser, faCamera, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import { faUpload, faSpinner, faCheck, faTimes, faUser, faCamera, faTimesCircle, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 import { updateUserChartData, getUserChartData} from "../results/chartStuff";
 import heic2any from 'heic2any';
 export default function UploadPage() {
@@ -66,28 +66,70 @@ export default function UploadPage() {
       setShowAuthModal(true);
       return;
     }
-
+  
     setCameraError(null);
     try {
+      // First try rear camera
+      let mediaStream;
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "environment", // Prefer rear camera
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: false,
+        });
+      } catch (rearError) {
+        // Fallback to front camera if rear fails
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: true, // Let browser choose default (usually front) camera
+          audio: false,
+        });
+      }
+  
+      setStream(mediaStream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+      }
+      setShowCameraModal(true);
+    } catch (error) {
+      console.error("Camera error:", error);
+      let errorMessage = "Could not access camera.";
+      
+      if (error.name === "NotAllowedError") {
+        errorMessage = "Please allow camera access in your browser settings.";
+      } else if (error.name === "NotFoundError") {
+        errorMessage = "No camera detected on this device.";
+      }
+      
+      setCameraError(errorMessage);
+    }
+  };
+  const switchCamera = async () => {
+    if (!stream) return;
+  
+    const videoTrack = stream.getVideoTracks()[0];
+    const settings = videoTrack.getSettings();
+    const newFacingMode = settings.facingMode === "user" ? "environment" : "user";
+  
+    try {
+      stopCamera();
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: "environment", // Prefer rear camera
+          facingMode: newFacingMode,
           width: { ideal: 1280 },
           height: { ideal: 720 },
         },
         audio: false,
       });
       setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
-      setShowCameraModal(true);
-    } catch (err) {
-      console.error("Camera error:", err);
-      setCameraError("Could not access camera. Please check permissions.");
+      videoRef.current.srcObject = mediaStream;
+    } catch (error) {
+      console.error("Error switching camera:", error);
+      setCameraError("Failed to switch camera. Please try again.");
     }
   };
-
   const capturePhoto = () => {
     if (!videoRef.current || !canvasRef.current) {
       setErrorMessage("Camera is not ready, so please try again.");
@@ -967,6 +1009,18 @@ export default function UploadPage() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2 }}
             >
+                <div className="text-white/80 text-sm mb-2">
+                    Using: {stream?.getVideoTracks()[0]?.getSettings().facingMode === "environment" 
+                        ? "Rear camera" 
+                        : "Front camera"}
+                    </div>
+                    <button
+                        onClick={switchCamera}
+                        className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/70"
+                        title="Switch camera"
+                        >
+                        <FontAwesomeIcon icon={faSyncAlt} />
+                    </button>
             {cameraError ? (
                 <div className={`p-6 rounded-lg text-center ${
                 isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
