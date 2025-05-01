@@ -1,50 +1,71 @@
-import * as motion from "motion/react-client";
 import React from "react";
 import { useCookies } from "react-cookie";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
-function HoverPopupCard({ children, title, color }) {
-
+export function FeatureCard({ icon, description, delay = 0 }) {
     const [cookies] = useCookies(["darkMode"]);
+    const isDark = cookies.darkMode;
+    const bg = isDark ? "bg-gray-800/60 backdrop-blur-md" : "bg-white/70 backdrop-blur-lg";
+    const text = isDark ? "text-white" : "text-gray-900";
+    const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
-    console.log(`bg-${color}`);
-    return <div className={`${cookies.darkMode ? "bg-gray-700" : "bg-stone-200"} flex flex-col w-96 h-[28rem] p-4 rounded-3xl relative items-center`}>
-        <motion.div className="flex flex-col items-center bg-white w-72 h-[17rem] p-4 rounded-3xl absolute bottom-4 text-black"
-            initial={{ translateY: 0, rotate: -1 }}
-            whileHover={{ translateY: -125, rotate: -4 }}
-            transition={{ type: "spring", stiffness: 90, damping: 15 }}
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: "easeOut", delay }}
+            whileHover={{
+                scale: 1.04,
+                rotate: 0.5,
+                boxShadow: isDark
+                    ? "0 10px 30px rgba(255, 255, 255, 0.1)"
+                    : "0 10px 30px rgba(0, 0, 0, 0.1)",
+                transition: { duration: 0.3 }
+            }}
+            className={`transition-all duration-300 ${bg} ${text} rounded-3xl p-6 min-h-[220px] flex flex-col items-start gap-4 border border-white/20 shadow-xl`}
         >
-            <span className="text-8xl">{title}</span>
-            <div className="text-xl mt-8 text-center">{children}</div>
+            <div className="text-4xl">{icon}</div>
+            <p className="text-md sm:text-lg leading-relaxed">{description}</p>
         </motion.div>
-        <div className={`absolute ${cookies.darkMode ? "bg-gray-700" : "bg-stone-200"} bottom-0 w-96 h-[7rem] rounded-3xl pointer-events-none`}>
-            <div className={`absolute bg-gradient-to-t ${cookies.darkMode ? "from-gray-700" : "from-stone-200"} to-transparent h-[4rem] w-96 bottom-full`}>&nbsp;</div>
-        </div>
-    </div>;
+    );
 }
 
 export default function FeaturesPage() {
     const [cookies] = useCookies(["darkMode"]);
 
     const cardItems = [
-        { emoji: "📤", text: "Upload photos easily", color: "slate-600" },
-        { emoji: "🔍", text: "Analyze images effectively", color: "slate-600" },
-        { emoji: "📞", text: "Contact support anytime", color: "slate-600" },
-        { emoji: "🔒", text: "Good Data Security", color: "slate-600" },
-        { emoji: "⚙️", text: "Customize settings", color: "slate-600" },
-        { emoji: "📂", text: "Manage files effortlessly", color: "slate-600" },
-        { emoji: "📊", text: "View detailed analytics and support", color: "slate-600" },
-        { emoji: "🧭", text: "Easy to navigate", color: "slate-600" },
-        { emoji: "👵", text: "User friendly", color: "slate-600" }
+        { emoji: "📤", text: "Upload plant images quickly and easily." },
+        { emoji: "🔍", text: "AI-powered image analysis for accurate diagnosis." },
+        { emoji: "📞", text: "Dedicated support team available to assist anytime." },
+        { emoji: "🔒", text: "Secure data handling with robust privacy practices." },
+        { emoji: "⚙️", text: "Customizable settings to tailor the experience." },
+        { emoji: "📂", text: "Organize and manage your plant image library." },
+        { emoji: "📊", text: "Access comprehensive visual reports and analytics." },
+        { emoji: "🧭", text: "Simple, intuitive navigation throughout the app." },
+        { emoji: "👵", text: "User-friendly interface for all experience levels." }
     ];
 
-    return <main className={`${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"} w-full min-h-screen`}>
-            <div className="flex flex-col items-center justify-center mt-[8vh] py-10 gap-10">
+    return (
+        <main className={`${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"} w-full min-h-screen`}>
+            <div className="max-w-6xl mx-auto px-4 mt-24"> 
+                <h1 className={`text-4xl font-semibold mb-12 text-center ${cookies.darkMode ? "text-gray-100" : "text-gray-900"}`}>
+                    Key Features
+                </h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {cardItems.map((item, index) => (
+                    <FeatureCard
+                        key={index}
+                        icon={item.emoji}
+                        description={item.text}
+                        delay={index * 0.1} // stagger effect
+                    />
+                ))}
 
-            <h1 className={`text-5xl font-bold ${cookies.darkMode ? "text-gray-100" : "text-gray-900"} p-10`}>Features</h1>
-
-            <div className="grid grid-cols-3 gap-8">
-                {cardItems.map((item) => <HoverPopupCard title={item.emoji} color={item.color}>{item.text}</HoverPopupCard>)}
+                </div>
             </div>
-        </div>
-    </main>;
+        </main>
+    );
 }
+

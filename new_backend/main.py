@@ -87,7 +87,7 @@ class PlantDiseaseClassifier:
                 raise FileNotFoundError("CNN model file not found.")
 
             # Setup CNN labels from folder names
-            dataset_folder = './New Plant Diseases Dataset(Augmented)'
+            dataset_folder = '/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/new_backend/PlantVillage'
             if not os.path.exists(dataset_folder):
                 raise FileNotFoundError(f"Dataset folder not found: {dataset_folder}")
 

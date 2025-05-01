@@ -36,7 +36,7 @@ const Chart = ({ darkMode }) => {
                 labels: chartData.accuracies.map((_, index) => `Scan ${index + 1}`),
                 datasets: [
                     {
-                        label: 'Accuracy',
+                        label: 'Confidence',
                         data: chartData.accuracies,
                         borderColor: "#4fd1c5",
                         backgroundColor: "rgba(79, 209, 197, 0.1)",

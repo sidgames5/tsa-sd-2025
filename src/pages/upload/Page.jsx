@@ -487,9 +487,9 @@ export default function UploadPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex justify-between w-full mt-2 ">
+        <div className="flex justify-between w-full mt-2 text-center">
           <h1
-            className={`text-3xl font-bold mb-6 ${
+            className={`text-3xl text-center font-bold mb-6 ${
               isDarkMode ? "text-white" : "text-sky-600"
             }`}
           >
@@ -683,6 +683,9 @@ export default function UploadPage() {
               </option>
               <option value="Potato" className="text-center">
                 Potato
+              </option>
+              <option value="Potato" className="text-center">
+                Pepper Bell
               </option>
               <option value="Raspberry" className="text-center">
                 Raspberry

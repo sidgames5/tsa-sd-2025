@@ -219,8 +219,8 @@ export default function DiagnosisPage() {
                     transition={{ duration: 0.5 }}
                 >
                     <div className="flex justify-center items-center mb-2">
-                        <h1 className="text-2xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">
-                            Plant Disease Guide
+                        <h1 className={`text-2xl md:text-5xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${cookies.darkMode ? "from-blue-600 to-sky-400" : "from-green-600 to-green-400"} `}>
+                            Plant Disease Guide 🌱
                         </h1>
                     </div>
                     <p className="text-lg md:text-xl max-w-3xl mx-auto">
@@ -265,7 +265,7 @@ export default function DiagnosisPage() {
                                 key={index}
                                 className={`rounded-xl overflow-hidden shadow-lg transition-all flex flex-col ${cookies.darkMode
                                     ? "bg-gradient-to-br from-sky-900 via-neutral-800 to-blue-900 border-white-600"
-                                    : "bg-gradient-to-br from-sky-200 via-neutral-200 to-blue-200 border-indigo-300"
+                                    : "bg-gradient-to-br from-green-200 via-neutral-200 to-emerald-200 border-lime-700"
                                     } border`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -285,7 +285,7 @@ export default function DiagnosisPage() {
                                     }}
                                     className={`flex items-center justify-center gap-2 p-3 border-t ${cookies.darkMode
                                         ? "border-gray-700 text-blue-400 hover:bg-cyan-700"
-                                        : "border-gray-200 text-blue-600 hover:bg-gray-50"
+                                        : "border-neutral-300 text-green-600 hover:bg-gray-50"
                                         } transition-colors`}
                                 >
                                     <span>Learn More</span>
@@ -342,7 +342,7 @@ export default function DiagnosisPage() {
                                 : "bg-gradient-to-br from-sky-100 via-stone-200 to-blue-100 border-gray-300"
                         }`}
                     >
-                        {/*Title Text on Modal*/}
+                        {/*Modal closing/opening*/}
                         <div className="flex items-start justify-between p-6 border-b border-opacity-20">
                             <h3 className={`text-3xl font-bold mx-auto ${cookies.darkMode ? "text-white" : "text-gray-900"}`}>
                                 {selectedDisease.name}
