@@ -14,6 +14,7 @@ import ResultsLayout from './pages/results/Layout';
 import ResultsPage from './pages/results/Page';
 import LoginPage from './pages/login/Page';
 import LoginLayout from './pages/login/Layout';
+import SupportLayout from './support/Layout';
 import { CookiesProvider } from 'react-cookie';
 import "@fontsource/inter";
 import "@fontsource/inter/400.css";
@@ -45,6 +46,9 @@ root.render(
 
                     <Route path="/login" element={<LoginLayout />}>
                         <Route index element={<LoginPage />} />
+                    </Route>
+                    <Route path="/support" element={<SupportLayout />}>
+                        <Route index element={<SupportPage />} />
                     </Route>
                 </Route>
             </Routes>
