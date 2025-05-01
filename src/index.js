@@ -15,6 +15,7 @@ import ResultsPage from './pages/results/Page';
 import LoginPage from './pages/login/Page';
 import LoginLayout from './pages/login/Layout';
 import SupportLayout from './support/Layout';
+import SupportPage from './support/Page';
 import { CookiesProvider } from 'react-cookie';
 import "@fontsource/inter";
 import "@fontsource/inter/400.css";

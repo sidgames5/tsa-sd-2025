@@ -13,6 +13,7 @@ const tabs = [
     { path: "/diagnosis", label: "Diagnosis" },
     { path: "/results", label: "AI Chart" },
     { path: "/features", label: "Features" },
+    { path: "/support", label: "Support" }
 ]
 
 export default function Navbar() {

@@ -247,6 +247,85 @@ def send_results():
     success = send_email(email, message)
     return jsonify({"success": success, "error": None if success else "Failed to send email"}), 500 if not success else 200
 
+
+@app.route("/ollama-support", methods=["POST"])
+def ollama_support():
+    data = request.get_json()
+    prompt = data.get("prompt", "").strip().lower()
+
+    # Static responses for certain steps like uploading images or feature-related questions
+    feature_keywords = [
+        "features", "what can you do", "capabilities", "app features",
+        "how can you help", "what's good", "functions", "tools",
+        "what is leaflogic", "tell me about leaflogic", "leaflogic features"
+    ]
+    
+    upload_keywords = [
+        "upload", "how to upload", "upload an image", "how do I upload"
+    ]
+    
+    # Fixed feature list response
+    hardcoded_feature_reply = """
+Sure! Here are the features of LeafLogic:
+
+- 📸 **Plant Disease Detection**: Upload a photo of a plant to detect diseases using advanced AI.
+- 🧠 **Dual Models**: Uses both HuggingFace and a custom-trained CNN model for accurate results.
+- 📊 **Model Performance Dashboard**: Shows accuracy and loss metrics for each model.
+- 📬 **Email Results**: Get your plant analysis emailed to you for easy access later.
+- 🔍 **Searchable Diagnosis Page**: Quickly search through plant disease records and results.
+- 🗂 **Grouped History**: View all your plant analyses grouped by individual plants.
+- 🌱 **Plant Care Tips**: Get tips on how to treat or manage specific diseases.
+- 🤖 **AI Support Chat**: Ask questions like this anytime — LeafLogic Assistant is here to help!
+""".strip()
+    
+    # Static step-by-step guide for uploading an image
+    hardcoded_upload_reply = """
+To upload an image of your plant for disease detection, follow these steps:
+1. Go to the **Diagnosis Page** on your LeafLogic app.
+2. Look for the **'Upload Image'** button and click it.
+3. Select an image of your plant that you'd like to analyze.
+4. Wait for the system to process the image and display the disease analysis results.
+5. Optionally, you can email the results to yourself by entering your email after the analysis.
+"""
+    
+    # If the prompt asks about features
+    if any(keyword in prompt for keyword in feature_keywords):
+        return jsonify({"reply": hardcoded_feature_reply})
+    
+    # If the prompt asks about uploading an image
+    elif any(keyword in prompt for keyword in upload_keywords):
+        return jsonify({"reply": hardcoded_upload_reply})
+
+    # Using deepseek for all other questions
+    try:
+        response = ollama.chat(
+            model="deepseek-r1:1.5b",  
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are the AI assistant for *LeafLogic*, a web app that helps farmers identify plant diseases from images. "
+                        "The app includes features like image-based disease detection, dual-model predictions, email reporting, search tools, disease history tracking, and farming support. "
+                        "You are NOT related to any ERP software or cannabis industry product. "
+                        "If the user asks about the app's features, respond with a bulleted list of them as clearly and helpfully as possible. "
+                        "Always stay in the farming context."
+                    )
+                },
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return jsonify({"reply": response["message"]["content"]})
+    
+    except Exception as e:
+        app.logger.error(f"Ollama support error: {e}")
+        return jsonify({"reply": "Sorry, something went wrong while trying to help."}), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+
 if __name__ == "__main__":
     try:
         classifier.load_model()
