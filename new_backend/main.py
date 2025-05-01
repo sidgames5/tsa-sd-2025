@@ -76,7 +76,7 @@ class PlantDiseaseClassifier:
             self.labels_hf = self.model_hf.config.id2label
             app.logger.info("HuggingFace model loaded.")
 
-            # Load your trained CNN model
+            # Load CNN model
             self.model_cnn = SimpleCNN(num_classes=38)
             if os.path.exists("plant_disease_model.pth"):
                 self.model_cnn.load_state_dict(torch.load("plant_disease_model.pth", map_location=self.device))
@@ -88,7 +88,26 @@ class PlantDiseaseClassifier:
 
             # Setup CNN labels from folder names
             dataset_folder = './New Plant Diseases Dataset(Augmented)'
-            self.labels_cnn = {idx: class_name for idx, class_name in enumerate(sorted(os.listdir(dataset_folder)))}
+            if not os.path.exists(dataset_folder):
+                raise FileNotFoundError(f"Dataset folder not found: {dataset_folder}")
+
+            folder_names = sorted([
+                d for d in os.listdir(dataset_folder)
+                if os.path.isdir(os.path.join(dataset_folder, d))
+            ])
+            if not folder_names:
+                raise ValueError(f"No class folders found in dataset folder: {dataset_folder}")
+
+            self.labels_cnn = {idx: class_name for idx, class_name in enumerate(folder_names)}
+            app.logger.info(f"CNN Labels: {self.labels_cnn}")
+            app.logger.info(f"HF model output classes: {len(self.labels_hf)}")
+            app.logger.info(f"CNN model output classes: {len(self.labels_cnn)}")
+
+            # Final sanity check
+            if not isinstance(self.labels_cnn, dict) or not self.labels_cnn:
+                raise ValueError("CNN labels are not loaded correctly.")
+            if not isinstance(self.labels_hf, dict) or not self.labels_hf:
+                raise ValueError("HuggingFace labels are not loaded correctly.")
 
             app.logger.info(f"All models loaded in {time.time() - start_time:.2f} seconds.")
 
@@ -107,9 +126,7 @@ class PlantDiseaseClassifier:
     def predict(self, image_bytes, plant_type):
         try:
             self.load_model()
-
             image = self.preprocess_image(image_bytes)
-
             results = []
 
             # HuggingFace model prediction
@@ -121,11 +138,14 @@ class PlantDiseaseClassifier:
                     probs_hf = torch.nn.functional.softmax(logits_hf, dim=-1)
                     predicted_idx_hf = logits_hf.argmax(-1).item()
                     confidence_hf = probs_hf[0][predicted_idx_hf].item()
-                    results.append(("HuggingFace", self.labels_hf[predicted_idx_hf], confidence_hf))
+
+                    label_hf = self.labels_hf.get(predicted_idx_hf, "Unknown") if isinstance(self.labels_hf, dict) else "Unknown"
+                    results.append(("HuggingFace", label_hf, confidence_hf))
+                app.logger.info(f"HuggingFace predicted: {label_hf} ({confidence_hf:.2f})")
             except Exception as e:
                 app.logger.warning(f"HuggingFace prediction failed: {e}")
 
-            # Your CNN model prediction
+            # SimpleCNN model prediction
             try:
                 transform = transforms.Compose([
                     transforms.Resize((224, 224)),
@@ -137,14 +157,17 @@ class PlantDiseaseClassifier:
                     probs_cnn = torch.nn.functional.softmax(logits_cnn, dim=-1)
                     predicted_idx_cnn = logits_cnn.argmax(-1).item()
                     confidence_cnn = probs_cnn[0][predicted_idx_cnn].item()
-                    results.append(("SimpleCNN", self.labels_cnn[predicted_idx_cnn], confidence_cnn))
+
+                    label_cnn = self.labels_cnn.get(predicted_idx_cnn, "Unknown") if isinstance(self.labels_cnn, dict) else "Unknown"
+                    results.append(("SimpleCNN", label_cnn, confidence_cnn))
+                app.logger.info(f"SimpleCNN predicted: {label_cnn} ({confidence_cnn:.2f})")
             except Exception as e:
-                app.logger.warning(f"CNN prediction failed: {e}")
+                app.logger.warning(f"SimpleCNN prediction failed: {e}")
 
+            # Handle result selection
             if not results:
-                raise ValueError("No predictions could be made by either model.")
+                raise ValueError("No model produced a prediction.")
 
-            # Select model based on plant type
             if plant_type.lower() in ['pepper bell', 'potato', 'tomato', 'tomatoes'] and len(results) > 0:
                 selected_model, selected_label, selected_confidence = results[0]
             elif len(results) > 1:
