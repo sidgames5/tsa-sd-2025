@@ -147,7 +147,7 @@ export default function UploadPage() {
       
       canvas.toBlob((blob) => {
         if (!blob) {
-          setErrorMessage("Failed to capture image, so try again.");
+          setErrorMessage("Failed to capture image. Try again.");
           // such an auraful moment
           return;
         }
@@ -478,16 +478,16 @@ export default function UploadPage() {
       }`}
     >
       <motion.div
-        className={`p-6 max-h-[120vh] mt-14 rounded-2xl w-full max-w-2xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
+        className={`p-6 max-h-[120vh] mt-20 rounded-2xl w-full max-w-6xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
           isDarkMode
-            ? "bg-gradient-to-br from-gray-800 via-gray-900 to-black border-indigo-800 shadow-indigo-900/40 ring-indigo-500/20"
+            ? "bg-gradient-to-br from-neutral-950 via-sky-950 to-black border-indigo-800 shadow-indigo-900/40 ring-indigo-500/20"
             : "bg-white border-blue-300 shadow-blue-200/40 ring-blue-400/20"
         }`}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex justify-between w-full mt-2">
+        <div className="flex justify-between w-full mt-2 ">
           <h1
             className={`text-3xl font-bold mb-6 ${
               isDarkMode ? "text-white" : "text-sky-600"
@@ -570,7 +570,7 @@ export default function UploadPage() {
         )}
 
         {isLoggedIn && !image && (
-          <div className="flex flex-col w-full gap-6 mb-8">
+          <div className="flex justify-between w-full gap-6 mb-8">
             <div
               ref={dropAreaRef}
               onDragOver={handleDragOver}
@@ -602,7 +602,7 @@ export default function UploadPage() {
               </p>
             </div>
 
-            <div className="text-center text-gray-500 mb-4">- OR -</div>
+            <div className="text-center text-gray-500 mb-4 mt-10">- OR -</div>
 
             <button
               onClick={startCamera}
@@ -643,70 +643,69 @@ export default function UploadPage() {
             </div>
           </motion.div>
         )}
-
-        <div className="w-full mb-8 text-center">
-          <label className="block mb-3 font-semibold">
-            Select The Plant Type You Are Uploading:
-          </label>
-          <select
-            value={plantType}
-            onChange={(e) => setPlantType(e.target.value)}
-            className={`w-full p-2 rounded border text-center ${
-              isDarkMode
-                ? "bg-gray-700 border-gray-600 text-white"
-                : "bg-white border-gray-300"
-            }`}
-          >
-            <option value="" className="text-center">
-              Select a Plant
-            </option>
-            <option value="Apple" className="text-center">
-              Apple
-            </option>
-            <option value="Blueberry" className="text-center">
-              Blueberry
-            </option>
-            <option value="Cherry" className="text-center">
-              Cherry
-            </option>
-            <option value="Corn" className="text-center">
-              Corn
-            </option>
-            <option value="Grape" className="text-center">
-              Grape
-            </option>
-            <option value="Orange" className="text-center">
-              Orange
-            </option>
-            <option value="Peach" className="text-center">
-              Peach
-            </option>
-            <option value="Potato" className="text-center">
-              Potato
-            </option>
-            <option value="Raspberry" className="text-center">
-              Raspberry
-            </option>
-            <option value="Soybean" className="text-center">
-              Soybean
-            </option>
-            <option value="Squash" className="text-center">
-              Squash
-            </option>
-            <option value="Strawberry" className="text-center">
-              Strawberry
-            </option>
-            <option value="Tomato" className="text-center">
-              Tomato
-            </option>
-          </select>
-        </div>
-
-        {isLoggedIn && (
-          <div className="flex gap-4 w-full justify-center">
+        <div className="w-full flex justify-between">
+          <div className="w-1/3 mb-8 text-center ml-20">
+            <label className="block mb-3 font-semibold">
+              Select The Plant Type You Are Uploading:
+            </label>
+            <select
+              value={plantType}
+              onChange={(e) => setPlantType(e.target.value)}
+              className={`w-full p-2 rounded border text-center ${
+                isDarkMode
+                  ? "bg-gray-700 border-white text-white"
+                  : "bg-white border-gray-300"
+              }`}
+            >
+              <option value="" className="text-center">
+                Select a Plant
+              </option>
+              <option value="Apple" className="text-center">
+                Apple
+              </option>
+              <option value="Blueberry" className="text-center">
+                Blueberry
+              </option>
+              <option value="Cherry" className="text-center">
+                Cherry
+              </option>
+              <option value="Corn" className="text-center">
+                Corn
+              </option>
+              <option value="Grape" className="text-center">
+                Grape
+              </option>
+              <option value="Orange" className="text-center">
+                Orange
+              </option>
+              <option value="Peach" className="text-center">
+                Peach
+              </option>
+              <option value="Potato" className="text-center">
+                Potato
+              </option>
+              <option value="Raspberry" className="text-center">
+                Raspberry
+              </option>
+              <option value="Soybean" className="text-center">
+                Soybean
+              </option>
+              <option value="Squash" className="text-center">
+                Squash
+              </option>
+              <option value="Strawberry" className="text-center">
+                Strawberry
+              </option>
+              <option value="Tomato" className="text-center">
+                Tomato
+              </option>
+            </select>
+          </div>
+          {isLoggedIn && (
+          <div className="flex gap-10 justify-between items-center h-1/2 mt-8 mr-16">
             <button
               onClick={triggerFileInput}
-              className={`px-4 py-2 rounded-lg shadow-sm transition-all ring-1 ring-offset-1 ${
+              className={`px-4 py-2 rounded-lg shadow-sm transition-all ring-1 ring-offset-1 w-[180px] ${
                 isDarkMode
                   ? "bg-gray-800 hover:bg-gray-700 text-white ring-gray-600"
                   : "bg-gray-200 hover:bg-gray-300 text-black ring-gray-300"
@@ -741,6 +740,10 @@ export default function UploadPage() {
             </button>
           </div>
         )}
+      </div>
+        
+
+        
 
         <div
           className={`w-full mt-8 p-4 rounded-lg ${
@@ -1002,9 +1005,9 @@ export default function UploadPage() {
 
       {/* Camera Modal */}
       {showCameraModal && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-90">
+        <div className="fixed inset-50 z-50 flex justify-center items-center bg-black bg-opacity-90 border-2 rounded-2xl w-2/5 h-3/5">
             <motion.div
-            className="w-full max-w-md p-4"
+            className="w-full max-w-md p-8"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2 }}
@@ -1064,11 +1067,11 @@ export default function UploadPage() {
                 <>
                 <div className="relative">
                     <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted
-                    className="w-full h-auto rounded-lg"
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-full h-auto rounded-lg"
                     />
                     <canvas ref={canvasRef} className="hidden" />
                     

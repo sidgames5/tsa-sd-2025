@@ -42,16 +42,16 @@ export default function ImageSlider() {
     return (
         <div className={`relative flex w-full h-[101vh] items-center justify-end align-middle bg-opacity-0 ${cookies.darkMode ? "text-white" : "text-black"}`}>
             {/* Left Section original gradient: bg-gradient-to-r to-sky-950 from-green-800*/}
-            <div className={`flex flex-col items-start justify-center text-left w-1/2 h-full bg-gradient-to-l relative shadow-lg p-12 ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-sky-100"}`}>
+            <div className={`flex flex-col items-start justify-center text-left w-1/2 h-full relative shadow-lg p-12 bg-gradient-to-l ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-green-100"}`}>
                 <motion.h1
                     className={`text-6xl font-semibold ${cookies.darkMode ? "bg-gradient-to-r from-blue-400 via-blue-600 to-blue-800 bg-clip-text text-transparent" : "text-emerald-950"}`}
                     initial={{ translateX: -100 }}
                     animate={{ translateX: 0 }}
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
-                    <span className="bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent">LeafLogic</span>
+                    <span className={`bg-gradient-to-r ${cookies.darkMode ? "from-blue-600 to-sky-400" : "from-green-600 via-emerald-400 to-teal-400"}  bg-clip-text text-transparent`}>LeafLogic</span>
                     <br />
-                    <span className="bg-gradient-to-r from-blue-600 to-sky-400 bg-clip-text text-transparent text-4xl">
+                    <span className={`bg-gradient-to-r ${cookies.darkMode ? "from-blue-600 to-sky-400" : "from-green-600 via-emerald-400 to-teal-400"} from-blue-600 to-sky-400 bg-clip-text text-transparent text-4xl`}>
                         AI Plant Detection
                     </span>
                 </motion.h1>
@@ -77,7 +77,7 @@ export default function ImageSlider() {
                         <GiPotato className="text-orange-800" />
                     </div>
                     <motion.button
-                        className=" px-6 py-3 mb-7 text-lg font-semibold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-md transition"
+                        className={`px-6 py-3 mb-7 text-lg font-semibold rounded-lg ${cookies.darkMode ? "bg-sky-600 hover:bg-sky-500" : "bg-green-600 hover:bg-green-500"}  text-white shadow-md transition`}
                         onClick={() => navigate("/upload")}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -89,7 +89,7 @@ export default function ImageSlider() {
             </div>
 
             {/* Right Section */}
-            <div className={`relative flex flex-col w-1/2 h-[101vh] items-center justify-center bg-gradient-to-r ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-sky-100"}`}>
+            <div className={`relative flex flex-col w-1/2 h-[101vh] items-center justify-center bg-gradient-to-r ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-green-100"}`}>
                 <div className="flex items-center gap-6 w-full justify-center">
                     {/* Left Arrow */}
                     <motion.div
@@ -121,7 +121,5 @@ export default function ImageSlider() {
                 </div>
             </div>
         </div>
-
-
     );
 }
