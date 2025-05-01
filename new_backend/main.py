@@ -127,59 +127,59 @@ class PlantDiseaseClassifier:
         try:
             self.load_model()
             image = self.preprocess_image(image_bytes)
+
+            # Flags to check if CNN should be used exclusively
+            use_cnn_only = plant_type.strip().lower() in ['pepper bell', 'potato', 'tomato', 'tomatoes']
+
             results = []
 
-            # HuggingFace model prediction
-            try:
-                inputs_hf = self.processor_hf(images=image, return_tensors="pt").to(self.device)
-                with torch.no_grad():
-                    outputs_hf = self.model_hf(**inputs_hf)
-                    logits_hf = outputs_hf.logits
-                    probs_hf = torch.nn.functional.softmax(logits_hf, dim=-1)
-                    predicted_idx_hf = logits_hf.argmax(-1).item()
-                    confidence_hf = probs_hf[0][predicted_idx_hf].item()
+            if not use_cnn_only:
+                # HuggingFace model prediction
+                try:
+                    inputs_hf = self.processor_hf(images=image, return_tensors="pt").to(self.device)
+                    with torch.no_grad():
+                        outputs_hf = self.model_hf(**inputs_hf)
+                        logits_hf = outputs_hf.logits
+                        probs_hf = torch.nn.functional.softmax(logits_hf, dim=-1)
+                        predicted_idx_hf = logits_hf.argmax(-1).item()
+                        confidence_hf = int(round(probs_hf[0][predicted_idx_hf].item() * 100))
 
-                    label_hf = self.labels_hf.get(predicted_idx_hf, "Unknown") if isinstance(self.labels_hf, dict) else "Unknown"
-                    results.append(("HuggingFace", label_hf, confidence_hf))
-                app.logger.info(f"HuggingFace predicted: {label_hf} ({confidence_hf:.2f})")
-            except Exception as e:
-                app.logger.warning(f"HuggingFace prediction failed: {e}")
+                        label_hf = self.labels_hf.get(predicted_idx_hf, "Unknown") if isinstance(self.labels_hf, dict) else "Unknown"
+                        results.append(("HuggingFace", label_hf, confidence_hf))
+                    app.logger.info(f"HuggingFace predicted: {label_hf} ({confidence_hf}%)")
+                except Exception as e:
+                    app.logger.warning(f"HuggingFace prediction failed: {e}")
 
-            # SimpleCNN model prediction
-            try:
-                transform = transforms.Compose([
-                    transforms.Resize((224, 224)),
-                    transforms.ToTensor()
-                ])
-                img_tensor = transform(image).unsqueeze(0).to(self.device)
-                with torch.no_grad():
-                    logits_cnn = self.model_cnn(img_tensor)
-                    probs_cnn = torch.nn.functional.softmax(logits_cnn, dim=-1)
-                    predicted_idx_cnn = logits_cnn.argmax(-1).item()
-                    confidence_cnn = probs_cnn[0][predicted_idx_cnn].item()
+            if use_cnn_only or not results:
+                # SimpleCNN model prediction
+                try:
+                    transform = transforms.Compose([
+                        transforms.Resize((224, 224)),
+                        transforms.ToTensor()
+                    ])
+                    img_tensor = transform(image).unsqueeze(0).to(self.device)
+                    with torch.no_grad():
+                        logits_cnn = self.model_cnn(img_tensor)
+                        probs_cnn = torch.nn.functional.softmax(logits_cnn, dim=-1)
+                        predicted_idx_cnn = logits_cnn.argmax(-1).item()
+                        confidence_cnn = int(round(probs_cnn[0][predicted_idx_cnn].item() * 100))
 
-                    label_cnn = self.labels_cnn.get(predicted_idx_cnn, "Unknown") if isinstance(self.labels_cnn, dict) else "Unknown"
-                    results.append(("SimpleCNN", label_cnn, confidence_cnn))
-                app.logger.info(f"SimpleCNN predicted: {label_cnn} ({confidence_cnn:.2f})")
-            except Exception as e:
-                app.logger.warning(f"SimpleCNN prediction failed: {e}")
+                        label_cnn = self.labels_cnn.get(predicted_idx_cnn, "Unknown") if isinstance(self.labels_cnn, dict) else "Unknown"
+                        results.append(("SimpleCNN", label_cnn, confidence_cnn))
+                    app.logger.info(f"SimpleCNN predicted: {label_cnn} ({confidence_cnn}%)")
+                except Exception as e:
+                    app.logger.warning(f"SimpleCNN prediction failed: {e}")
 
-            # Handle result selection
             if not results:
                 raise ValueError("No model produced a prediction.")
 
-            if plant_type.lower() in ['pepper bell', 'potato', 'tomato', 'tomatoes'] and len(results) > 0:
-                selected_model, selected_label, selected_confidence = results[0]
-            elif len(results) > 1:
-                selected_model, selected_label, selected_confidence = results[1]
-            else:
-                selected_model, selected_label, selected_confidence = results[0]
+            selected_model, selected_label, selected_confidence = results[-1]  # use last result (HF or CNN)
 
             return {
                 "success": True,
                 "model_used": selected_model,
                 "prediction": selected_label,
-                "confidence": round(selected_confidence * 100, 2)
+                "confidence": selected_confidence  # now an integer percentage
             }
 
         except Exception as e:

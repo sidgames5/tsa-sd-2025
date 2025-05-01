@@ -46,7 +46,7 @@ class SimpleCNN(nn.Module):
 
 # Training function
 def train_model():
-    DATASET_DIR = "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/new_backend/New Plant Diseases Dataset(Augmented)"
+    DATASET_DIR = "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/new_backend/PlantVillage"
 
     if not os.path.exists(DATASET_DIR):
         print(f"Dataset directory {DATASET_DIR} not found. Please check the path.")
