@@ -40,9 +40,9 @@ export default function ImageSlider() {
     }, [currentIndex]);
 
     return (
-        <div className={`relative flex w-full h-[101vh] items-center justify-end align-middle bg-opacity-0 ${cookies.darkMode ? "text-white" : "text-black"}`}>
+        <div className={`relative flex w-full h-[101vh] items-center justify-end align-middle bg-opacity-0 shadow-lg ${cookies.darkMode ? "text-white" : "text-black"}`}>
             {/* Left Section original gradient: bg-gradient-to-r to-sky-950 from-green-800*/}
-            <div className={`flex flex-col items-start justify-center text-left w-1/2 h-full relative shadow-lg p-12 bg-gradient-to-l ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-green-100"}`}>
+            <div className={`flex flex-col items-start justify-center text-left w-1/2 h-full relative p-12 bg-gradient-to-l ${cookies.darkMode ? "from-black to-sky-950" : "from-white to-green-100"}`}>
                 <motion.h1
                     className={`text-6xl font-semibold ${cookies.darkMode ? "bg-gradient-to-r from-blue-400 via-blue-600 to-blue-800 bg-clip-text text-transparent" : "text-emerald-950"}`}
                     initial={{ translateX: -100 }}

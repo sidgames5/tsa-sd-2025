@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 export function FeatureCard({ icon, description, delay = 0 }) {
     const [cookies] = useCookies(["darkMode"]);
     const isDark = cookies.darkMode;
-    const bg = isDark ? "bg-gray-800/60 backdrop-blur-md" : "bg-white/70 backdrop-blur-lg";
+    const bg = isDark ? "bg-gray-800/60 backdrop-blur-md" : "bg-gradient-to-br from-green-50 via-white to-emerald-50/70 backdrop-blur-lg";
     const text = isDark ? "text-white" : "text-gray-900";
     const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -15,7 +15,7 @@ export function FeatureCard({ icon, description, delay = 0 }) {
             ref={ref}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: "easeOut", delay }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             whileHover={{
                 scale: 1.04,
                 rotate: 0.5,
@@ -48,21 +48,20 @@ export default function FeaturesPage() {
     ];
 
     return (
-        <main className={`${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"} w-full min-h-screen`}>
-            <div className="max-w-6xl mx-auto px-4 mt-24"> 
-                <h1 className={`text-4xl font-semibold mb-12 text-center ${cookies.darkMode ? "text-gray-100" : "text-gray-900"}`}>
+        <main className={`${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"} w-full h-[110vh]`}>
+            <div className="max-w-6xl mx-auto px-4 mt-20"> 
+                <h1 className={`text-4xl font-semibold p-12 text-center ${cookies.darkMode ? "text-white" : "text-green-900"}`}>
                     Key Features
                 </h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {cardItems.map((item, index) => (
-                    <FeatureCard
-                        key={index}
-                        icon={item.emoji}
-                        description={item.text}
-                        delay={index * 0.1} // stagger effect
-                    />
-                ))}
-
+                    {cardItems.map((item, index) => (
+                        <FeatureCard
+                            key={index}
+                            icon={item.emoji}
+                            description={item.text}
+                            delay={index * 0.1} // stagger effect
+                        />
+                    ))}
                 </div>
             </div>
         </main>

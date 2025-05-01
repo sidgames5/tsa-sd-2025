@@ -481,7 +481,7 @@ export default function UploadPage() {
         className={`p-6 max-h-[120vh] mt-20 rounded-2xl w-full max-w-6xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
           isDarkMode
             ? "bg-gradient-to-br from-neutral-950 via-sky-950 to-black border-indigo-800 shadow-indigo-900/40 ring-indigo-500/20"
-            : "bg-white border-blue-300 shadow-blue-200/40 ring-blue-400/20"
+            : "bg-gradient-to-br from-emerald-200 via-neutral-200 to-green-200 border-green-600 shadow-green-600/40 ring-green-600/20"
         }`}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -490,7 +490,7 @@ export default function UploadPage() {
         <div className="flex justify-between w-full mt-2 text-center">
           <h1
             className={`text-3xl text-center font-bold mb-6 ${
-              isDarkMode ? "text-white" : "text-sky-600"
+              isDarkMode ? "text-white" : "text-neutral-600"
             }`}
           >
             Plant Disease Detection 🌱

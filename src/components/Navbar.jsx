@@ -12,7 +12,7 @@ const tabs = [
     { path: "/upload", label: "Upload" },
     { path: "/diagnosis", label: "Diagnosis" },
     { path: "/results", label: "AI Chart" },
-    { path: "/features", label: "Features" }
+    { path: "/features", label: "Features" },
 ]
 
 export default function Navbar() {
