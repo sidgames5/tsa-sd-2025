@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 from new_backend.email import send_email
 from new_backend.model2_train import SimpleCNN
 import pillow_heif
-
+import ollama
 # Enable pillow-heif support
 pillow_heif.register_heif_opener()
 
