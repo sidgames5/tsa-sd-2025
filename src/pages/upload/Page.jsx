@@ -34,6 +34,7 @@ export default function UploadPage() {
   const [plantType, setPlantType] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   
+  
 
   // Check if user is logged in
   const isLoggedIn = !!cookies.user;

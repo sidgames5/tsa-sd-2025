@@ -19,22 +19,91 @@ export default function App() {
     const [isCameraAllowed, setIsCameraAllowed] = useState(false);
     const [videoStream, setVideoStream] = useState(null);
     const videoRef = useRef(null);
+    const [reviewsCleared, setReviewsCleared] = useState(false);
+
     const avatarList = [
         "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
         "https://cdn-icons-png.flaticon.com/512/4140/4140048.png", 
         "https://cdn-icons-png.flaticon.com/512/921/921071.png",
-        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+        "https://cdn-icons-png.flaticon.com/128/2202/2202112.png",
+        "https://cdn-icons-png.flaticon.com/128/1256/1256650.png"
       ];
-      const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
-
+    const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
     const constraintsRef = useRef(null);
-  
+    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+    const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
+    const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+    const handleAdminLogin = () => {
+        if (
+            adminCredentials.username === "admin" &&
+            adminCredentials.password === "LeafLogicAdmin123"
+        ) {
+            setIsAdminAuthenticated(true);
+            setIsAdminModalOpen(false);
+    
+            // Clear reviews immediately upon login
+            console.log("Admin logged in, clearing reviews...");
+            setReviews([]); // Clear reviews in the frontend state
+            alert("All reviews have been cleared.");
+        } else {
+            alert("Invalid credentials.");
+        }
+    };
+    
+    const clearReviews = async () => {
+        if (!isAdminAuthenticated) {
+            setIsAdminModalOpen(true);  // Open the admin modal if not authenticated
+            return;
+        }
+    
+        // Proceed with clearing the reviews if admin is authenticated
+        if (!window.confirm("Are you sure you want to clear all reviews?")) return;
+    
+        try {
+            const response = await fetch("/api/admin/reviews", {
+                method: "DELETE",
+            });
+    
+            if (response.ok) {
+                setReviews([]); // Clear the reviews in the state
+                alert("All testimonials cleared.");
+            } else {
+                alert("Failed to clear testimonials.");
+            }
+        } catch (error) {
+            console.error("Error clearing reviews:", error);
+            alert("Error clearing testimonials.");
+        }
+    };
+    
     useEffect(() => {
-      fetch("/api/get-reviews")
-        .then((res) => res.json())
-        .then((data) => setReviews(data.reviews || []));
+        fetch("/api/get-reviews")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.reviews && data.reviews.length > 0) {
+                    setReviews(data.reviews);
+                } else {
+                    console.log("No reviews found or reviews were cleared.");
+                    setReviews([]); // Ensure reviews are cleared if no reviews are fetched
+                }
+            });
     }, []);
-  
+    
+    const resetReviews = () => {
+        // Remove the "reviewsCleared" flag to allow fetching from backend
+        localStorage.removeItem("reviewsCleared");
+        // Optionally, you can also trigger the backend fetch to get reviews
+        fetch("/api/get-reviews")
+            .then((res) => res.json())
+            .then((data) => setReviews(data.reviews || []))
+            .catch((error) => {
+                console.error("Error fetching reviews after reset:", error);
+            });
+    };
+    
+    
+
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -55,7 +124,7 @@ export default function App() {
         setVideoStream(null);
       }
     };
-  
+
     const handleCameraPermission = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -84,52 +153,48 @@ export default function App() {
         }
       }, "image/jpeg");
     };
-  
+    
     const handleSubmit = async (e) => {
+        e.preventDefault();
+      
         if (!formData.message.trim()) {
-            alert("Please write a testimonial.");
-            return;
-          }
-        
-          // Add the new review to the list
-          const newReview = {
-            name: formData.name.trim(),
-            message: formData.message.trim(),
-            photo: formData.photo || null,
-          };
-        
-          setReviews(prevReviews => [newReview, ...prevReviews]);
-        
-          // Clear the form
-          setFormData({
-            name: "",
-            message: "",
-            photo: null,
+          alert("Please write a testimonial.");
+          return;
+        }
+      
+        const form = new FormData();
+        form.append("name", formData.name.trim());
+        form.append("message", formData.message.trim());
+      
+        if (formData.profileImage) {
+          form.append("profileImage", formData.profileImage);
+        } else if (formData.photo) {
+          form.append("photo", formData.photo); // Avatar URL
+        }
+      
+        try {
+          const res = await fetch("/api/submit-review", {
+            method: "POST",
+            body: form,
           });
-        
-          // Close the modal
-          closeModal();
-      const form = new FormData();
-      form.append("name", formData.name);
-      form.append("message", formData.message);
-      if (formData.profileImage) {
-        form.append("profileImage", formData.profileImage);
-      }
-  
-      const res = await fetch("/api/submit-review", {
-        method: "POST",
-        body: form,
-      });
-  
-      const result = await res.json();
-      if (result.success) {
-        setReviews([result.review, ...reviews]);
-        setFormData({ name: "", message: "", profileImage: null });
+      
+          const result = await res.json();
+      
+          if (result.success) {
+            setReviews((prev) => [result.review, ...prev]);
+          } else {
+            alert(result.error || "Submission failed.");
+          }
+        } catch (err) {
+          console.error("Error submitting review:", err);
+          alert("An error occurred during submission.");
+        }
+      
+        // Reset form and close modal AFTER submission
+        setFormData({ name: "", message: "", photo: null, profileImage: null });
         closeModal();
-      } else {
-        alert(result.error || "Submission failed.");
-      }
-    };
+      };
+    
     const [showScrollIcon, setShowScrollIcon] = useState(true);
     const [cookies] = useCookies(["darkMode"]);
     const missionRef = useRef(null);
@@ -419,6 +484,54 @@ export default function App() {
                             </motion.div>
                         </div>
                     )}
+                    {isAdminModalOpen && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 z-50">
+                            <motion.div
+                            className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            >
+                            <h3 className="text-xl font-bold mb-4 text-gray-800 text-center">Admin Login</h3>
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                value={adminCredentials.username}
+                                onChange={(e) =>
+                                setAdminCredentials({ ...adminCredentials, username: e.target.value })
+                                }
+                                className="w-full mb-3 p-3 border border-gray-300 rounded-md text-gray-800"
+                            />
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                value={adminCredentials.password}
+                                onChange={(e) =>
+                                setAdminCredentials({ ...adminCredentials, password: e.target.value })
+                                }
+                                className="w-full mb-4 p-3 border border-gray-300 rounded-md text-gray-800"
+                            />
+                            <div className="flex justify-between">
+                                <button
+                                onClick={() => setIsAdminModalOpen(false)}
+                                className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+                                >
+                                Cancel
+                                </button>
+                                <button
+                                onClick={handleAdminLogin}
+                                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+                                >
+                                Log In
+                                </button>
+                                
+                            </div>
+                            </motion.div>
+                        </div>
+                        )}
+
                     {/* All comments */}
                     <div className="max-h-[500px] overflow-y-auto px-4">
                     {reviews.length === 0 ? (
@@ -442,7 +555,7 @@ export default function App() {
                             >
                             <div className="flex items-center gap-4 mb-4">
                                 <img
-                                src={review.photo || defaultAvatar}
+                                src={review.image || defaultAvatar}
                                 alt="User avatar"
                                 className="w-14 h-14 rounded-full object-cover border border-gray-300"
                                 />
@@ -455,10 +568,15 @@ export default function App() {
                         ))}
                         </div>
                     )}
+                    <div className="flex justify-center mt-8">
+                        <button
+                            onClick={clearReviews}  // This will trigger the process including the modal if needed
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full"
+                        >
+                            Clear Testimonial History
+                        </button>
                     </div>
 
-
-                    
                 </div>
             </div>
 
@@ -470,6 +588,7 @@ export default function App() {
             </div>
             */}
         </div> 
+    </div>
         
     );
 }

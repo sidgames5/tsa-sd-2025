@@ -27,9 +27,6 @@ pillow_heif.register_heif_opener()
 app = Flask(__name__)
 CORS(app)
 
-# Load environment variables from .env file
-load_dotenv()
-
 # Configuration using environment variables
 ADMIN_CREDENTIALS = {
     "username": os.getenv("ADMIN_USERNAME", "admin"),  # Default to 'admin' if not set
@@ -368,22 +365,27 @@ To upload an image of your plant for disease detection, follow these steps:
         app.logger.error(f"Ollama support error: {e}")
         return jsonify({"reply": "Sorry, something went wrong while trying to help."}), 500
 
-
-
-
 def save_review_to_file(review):
     try:
         if not os.path.exists(REVIEW_FILE):
             with open(REVIEW_FILE, "w") as f:
-                json.dump([], f)
+                json.dump([], f)  # Initialize an empty list if the file doesn't exist
 
+        # Load existing reviews and add the new review
         with open(REVIEW_FILE, "r") as f:
             reviews = json.load(f)
 
         reviews.append(review)
 
+        # Save the updated list of reviews back to the file
         with open(REVIEW_FILE, "w") as f:
             json.dump(reviews, f, indent=4)
+
+        return True
+    except Exception as e:
+        app.logger.error(f"Failed to save review: {str(e)}")
+        return False
+
 
         return True
     except Exception as e:
@@ -396,11 +398,12 @@ def submit_review():
         name = request.form.get('name', 'Anonymous')
         message = request.form.get('message', '')
         image_file = request.files.get('profileImage')
+        photo_url = request.form.get('photo')  # <-- this was missing before
 
         if not message:
             return jsonify({"success": False, "error": "Review message is required"}), 400
 
-        # Handle image upload or use default
+        # Determine which image to use: uploaded file or avatar URL
         if image_file and allowed_file(image_file.filename):
             filename = secure_filename(f"{int(time.time())}_{image_file.filename}")
             filepath = os.path.join('static/reviews', filename)
@@ -411,13 +414,13 @@ def submit_review():
                 app.logger.error(f"Failed to save image: {str(e)}")
                 image_url = "/static/reviews/default_user.png"
         else:
-            image_url = "/static/reviews/default_user.png"
+            image_url = photo_url or "/static/reviews/default_user.png"
 
         review_data = {
             "name": name,
             "message": message,
             "image": image_url,
-            "timestamp": time.time()  # Add timestamp for sorting
+            "timestamp": time.time()
         }
 
         if save_review_to_file(review_data):
@@ -429,23 +432,16 @@ def submit_review():
         app.logger.error(f"Review submission error: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-@app.route("/get-reviews", methods=["GET"])
+@app.route('/testimonials', methods=['GET'])
 def get_reviews():
     try:
-        if not os.path.exists(REVIEW_FILE):
-            return jsonify({"success": True, "reviews": []}), 200
-        
+        # Load the reviews from the file every time the endpoint is hit
         with open(REVIEW_FILE, "r") as f:
             reviews = json.load(f)
-        
-        # Sort reviews by timestamp (newest first)
-        reviews.sort(key=lambda x: x.get('timestamp', 0), reverse=True)
-        
-        return jsonify({"success": True, "reviews": reviews}), 200
+        return jsonify(reviews)
     except Exception as e:
-        app.logger.error(f"Failed to retrieve reviews: {str(e)}")
-        return jsonify({"success": False, "error": "Failed to retrieve reviews"}), 500
-
+        app.logger.error(f"Failed to load reviews: {str(e)}")
+        return jsonify([]), 500
 
 # Admin login decorator
 def admin_required(f):
@@ -468,17 +464,24 @@ def admin_login():
     else:
         return jsonify({"success": False, "error": "Invalid credentials"}), 401
 
-@app.route('/admin/reviews', methods=['DELETE'])
+@app.route('/testimonials', methods=['DELETE'])
 @admin_required
 def delete_all_reviews():
     try:
         with open(REVIEW_FILE, "w") as f:
             json.dump([], f)
+        app.logger.info("All reviews successfully deleted.")
+
+        # Confirm deletion
+        with open(REVIEW_FILE, "r") as f:
+            reviews = json.load(f)
+            app.logger.info(f"File contents after deletion: {reviews}")
+
         return jsonify({"success": True, "message": "All reviews deleted"})
     except Exception as e:
         app.logger.error(f"Failed to delete reviews: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
-    
+
 
 
 if __name__ == "__main__":
