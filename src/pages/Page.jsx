@@ -294,6 +294,7 @@ export default function App() {
                         </motion.button>
                     </div>
                     {/* Modal */}
+                    {/* Made it avatars rather than images */}
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 bg-opacity-60 z-50">
                             <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg"
@@ -339,6 +340,7 @@ export default function App() {
                                         ))}
                                     </div>
                                 </div>
+                                {/* Avatar preview */}
                                 {formData.photo && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 10}}
@@ -347,7 +349,7 @@ export default function App() {
                                     >
                                         <span className="text-sm text-gray-500">Selected Avatar</span>
                                         <img src={formData.photo} alt="Selected avatar"
-                                            
+                                            className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
                                         />
                                     </motion.div>
                                 )}
