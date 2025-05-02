@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Test",
+        "message": "Test",
+        "image": "/static/reviews/default_user.png"
+    },
+    {
+        "name": "",
+        "message": "test",
+        "image": "/static/reviews/default_user.png"
+    }
+]

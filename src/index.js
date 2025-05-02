@@ -16,6 +16,8 @@ import LoginPage from './pages/login/Page';
 import LoginLayout from './pages/login/Layout';
 import SupportLayout from './support/Layout';
 import SupportPage from './support/Page';
+import ReviewsPage from './pages/reviews/Page';
+import ReviewsLayout from './pages/reviews/Layout';
 import { CookiesProvider } from 'react-cookie';
 import "@fontsource/inter";
 import "@fontsource/inter/400.css";
@@ -35,6 +37,10 @@ root.render(
 
                     <Route path="/diagnosis" element={<DiagnosisLayout />}>
                         <Route index element={<DiagnosisPage />} />
+                    </Route>
+
+                    <Route path="/reviews" element={<ReviewsLayout />}>
+                        <Route index element={<ReviewsPage />} />
                     </Route>
 
                     <Route path="/features" element={<FeaturesLayout />}>

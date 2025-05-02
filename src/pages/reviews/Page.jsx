@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faPerson } from "@fortawesome/free-solid-svg-icons";
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState([]);
@@ -11,14 +11,10 @@ export default function ReviewsPage() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCameraAllowed, setIsCameraAllowed] = useState(false);
-  const [stream, setStream] = useState(null);
-  const [cameraError, setCameraError] = useState(null);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
 
   // Fetch previous reviews when component mounts
   useEffect(() => {
-    fetch("/get-reviews")
+    fetch("api/get-reviews")
       .then((res) => res.json())
       .then((data) => setReviews(data.reviews || []));
   }, []);
@@ -44,56 +40,9 @@ export default function ReviewsPage() {
     setIsModalOpen(false);
   };
 
-  // Start camera for profile picture
-  const startCamera = async () => {
-    setCameraError(null);
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: false,
-      });
-
-      setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
-      setIsCameraAllowed(true);
-    } catch (error) {
-      setCameraError("Camera access denied. Please enable it in your browser settings.");
-      console.error("Camera error:", error);
-    }
-  };
-
-  const capturePhoto = () => {
-    if (!videoRef.current || !canvasRef.current) {
-      setCameraError("Camera is not ready. Please try again.");
-      return;
-    }
-
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    try {
-      canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          setCameraError("Failed to capture image. Try again.");
-          return;
-        }
-
-        const file = new File([blob], `capture-${Date.now()}.jpg`, { type: "image/jpeg" });
-        setFormData((prev) => ({ ...prev, profileImage: file }));
-        setIsCameraAllowed(false);
-        setStream(null);
-        setIsModalOpen(false);
-      }, "image/jpeg", 0.9);
-    } catch (error) {
-      setCameraError("Failed to capture image. Please try again.");
-      console.error("Capture error:", error);
-    }
+  // Handle camera access
+  const handleCameraPermission = () => {
+    setIsCameraAllowed(true);
   };
 
   // Submit the review
@@ -158,35 +107,29 @@ export default function ReviewsPage() {
                 className="w-full p-3 border border-gray-300 rounded-md h-28 resize-none focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800"
               />
 
-              {/* Camera for Profile Image */}
+              {/* Profile Image - Camera Button */}
               <div className="flex items-center space-x-4">
                 <button
                   type="button"
-                  onClick={startCamera}
+                  onClick={handleCameraPermission}
                   className="flex items-center space-x-2 bg-gray-200 py-2 px-4 rounded-full hover:bg-gray-300 transition-all"
                 >
-                  <FontAwesomeIcon icon={faCamera} className="text-xl text-gray-700" />
+                  <FontAwesomeIcon icon={faPerson} className="text-xl text-gray-700" />
                   <span className="text-gray-700">Take Profile Picture</span>
                 </button>
 
                 {isCameraAllowed && (
-                  <>
-                    <video ref={videoRef} width="200" height="200" autoPlay />
-                    <canvas ref={canvasRef} className="hidden" />
-                    <button
-                      type="button"
-                      onClick={capturePhoto}
-                      className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600"
-                    >
-                      Capture
-                    </button>
-                  </>
+                  <video id="video" width="200" height="200" autoPlay />
                 )}
               </div>
 
-              {cameraError && (
-                <div className="text-red-500 text-sm mt-2">{cameraError}</div>
-              )}
+              <input
+                type="file"
+                name="profileImage"
+                accept="image/*"
+                onChange={handleChange}
+                className="w-full"
+              />
 
               <div className="flex justify-end space-x-4">
                 <button
@@ -218,15 +161,15 @@ export default function ReviewsPage() {
               key={idx}
               className="bg-white border p-4 rounded-lg shadow flex items-start space-x-4"
             >
-              {rev.profileImage ? (
+              {rev.image ? (
                 <img
-                  src={rev.profileImage}
+                  src={rev.image}
                   alt="Profile"
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
                 <FontAwesomeIcon
-                  icon={faUser}
+                  icon={faPerson}
                   className="text-4xl text-gray-400"
                 />
               )}

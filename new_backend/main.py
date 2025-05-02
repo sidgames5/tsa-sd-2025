@@ -14,6 +14,10 @@ from new_backend.email import send_email
 from new_backend.model2_train import SimpleCNN
 import pillow_heif
 import ollama
+import re # regex, will be used to remove the <think> sections
+import json
+
+REVIEW_FILE = "new_backend/reviews.json"
 # Enable pillow-heif support
 pillow_heif.register_heif_opener()
 
@@ -247,8 +251,7 @@ def send_results():
     success = send_email(email, message)
     return jsonify({"success": success, "error": None if success else "Failed to send email"}), 500 if not success else 200
 
-
-@app.route("/ollama-support", methods=["POST"])
+@app.route('/ollama-support', methods=['POST'])
 def ollama_support():
     data = request.get_json()
     prompt = data.get("prompt", "").strip().lower()
@@ -266,16 +269,16 @@ def ollama_support():
     
     # Fixed feature list response
     hardcoded_feature_reply = """
-Sure! Here are the features of LeafLogic:
+Sure! Here are the features of LeafLogic: \n
 
-- 📸 **Plant Disease Detection**: Upload a photo of a plant to detect diseases using advanced AI.
-- 🧠 **Dual Models**: Uses both HuggingFace and a custom-trained CNN model for accurate results.
-- 📊 **Model Performance Dashboard**: Shows accuracy and loss metrics for each model.
-- 📬 **Email Results**: Get your plant analysis emailed to you for easy access later.
-- 🔍 **Searchable Diagnosis Page**: Quickly search through plant disease records and results.
-- 🗂 **Grouped History**: View all your plant analyses grouped by individual plants.
-- 🌱 **Plant Care Tips**: Get tips on how to treat or manage specific diseases.
-- 🤖 **AI Support Chat**: Ask questions like this anytime — LeafLogic Assistant is here to help!
+- 📸 **Plant Disease Detection**: Upload a photo of a plant to detect diseases using advanced AI. \n
+- 🧠 **Dual Models**: Uses both HuggingFace and a custom-trained CNN model for accurate results. \n
+- 📊 **Model Performance Dashboard**: Shows accuracy and loss metrics for each model. \n
+- 📬 **Email Results**: Get your plant analysis emailed to you for easy access later. \n
+- 🔍 **Searchable Diagnosis Page**: Quickly search through plant disease records and results. \n
+- 🗂 **Grouped History**: View all your plant analyses grouped by individual plants. \n
+- 🌱 **Plant Care Tips**: Get tips on how to treat or manage specific diseases. \n
+- 🤖 **AI Support Chat**: Ask questions like this anytime — LeafLogic Assistant is here to help! \n
 """.strip()
     
     # Static step-by-step guide for uploading an image
@@ -308,22 +311,92 @@ To upload an image of your plant for disease detection, follow these steps:
                         "The app includes features like image-based disease detection, dual-model predictions, email reporting, search tools, disease history tracking, and farming support. "
                         "You are NOT related to any ERP software or cannabis industry product. "
                         "If the user asks about the app's features, respond with a bulleted list of them as clearly and helpfully as possible. "
-                        "Always stay in the farming context."
+                        "Always stay in the farming context. Remove the thinking from your response. Give short answers"
                     )
                 },
                 {"role": "user", "content": prompt}
             ]
         )
-        return jsonify({"reply": response["message"]["content"]})
+        
+        # Remove <think> sections from the response
+        cleaned_response = re.sub(r'<think>.*?</think>', '', response["message"]["content"], flags=re.DOTALL)
+        
+        return jsonify({"reply": cleaned_response})
     
     except Exception as e:
         app.logger.error(f"Ollama support error: {e}")
         return jsonify({"reply": "Sorry, something went wrong while trying to help."}), 500
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
 
+REVIEW_FILE = "reviews.json"
+
+def save_review_to_file(review):
+    try:
+        if not os.path.exists(REVIEW_FILE):
+            with open(REVIEW_FILE, "w") as f:
+                json.dump([], f)
+
+        with open(REVIEW_FILE, "r") as f:
+            reviews = json.load(f)
+
+        reviews.append(review)
+
+        with open(REVIEW_FILE, "w") as f:
+            json.dump(reviews, f, indent=4)
+
+        return True
+    except Exception as e:
+        app.logger.error(f"Failed to save review: {str(e)}")
+        return False
+
+@app.route('/submit-review', methods=['POST'])
+def submit_review():
+    try:
+        name = request.form.get('name', 'Anonymous')
+        message = request.form.get('message', '')
+        image_file = request.files.get('profileImage')
+
+        if not message:
+            return jsonify({"success": False, "error": "Review message is required"}), 400
+
+        # Handle image upload or use default
+        if image_file and allowed_file(image_file.filename):
+            filename = secure_filename(f"{int(time.time())}_{image_file.filename}")
+            filepath = os.path.join('static/reviews', filename)
+            image_file.save(filepath)
+            image_url = f"/static/reviews/{filename}"
+        else:
+            image_url = "/static/reviews/default_user.png"
+
+        review_data = {
+            "name": name,
+            "message": message,
+            "image": image_url
+        }
+
+        if save_review_to_file(review_data):
+            return jsonify({"success": True, "review": review_data}), 200
+        else:
+            return jsonify({"success": False, "error": "Failed to save review"}), 500
+
+    except Exception as e:
+        app.logger.error(f"Review submission error: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route("/get-reviews", methods=["GET"])
+def get_reviews():
+    try:
+        if not os.path.exists(REVIEW_FILE):
+            return jsonify({"success": False, "error": "No reviews found."}), 404
+        
+        with open(REVIEW_FILE, "r") as f:
+            reviews = json.load(f)
+        
+        return jsonify({"success": True, "reviews": reviews}), 200
+    except Exception as e:
+        app.logger.error(f"Failed to retrieve reviews: {str(e)}")
+        return jsonify({"success": False, "error": "Failed to retrieve reviews"}), 500
 
 
 if __name__ == "__main__":
