@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { Send } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 
 export default function SupportPage() {
-    const [cookies, setCookies] = useCookies(["darkMode", "user"]);
+    const [cookies] = useCookies(["darkMode", "user"]);
     const [query, setQuery] = useState("");
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -75,7 +75,7 @@ export default function SupportPage() {
                     formatted.push(
                         <ul className="list-disc list-inside space-y-1 mb-2" key={`ul-${index}`}>
                             {currentList.map((item, idx) => (
-                                <li key={`li-${idx}`}>{renderFormattedText(item, `li-${idx}`)}</li>
+                                <li key={`li-${index}-${idx}`}>{renderFormattedText(item, `li-${index}-${idx}`)}</li>
                             ))}
                         </ul>
                     );
@@ -100,7 +100,7 @@ export default function SupportPage() {
 
         if (currentList.length > 0) {
             formatted.push(
-                <ul className="list-disc list-inside space-y-1 mb-2" key={`ul-final`}>
+                <ul className="list-disc list-inside space-y-1 mb-2" key="ul-final">
                     {currentList.map((item, idx) => (
                         <li key={`li-final-${idx}`}>{renderFormattedText(item, `li-final-${idx}`)}</li>
                     ))}
@@ -115,58 +115,56 @@ export default function SupportPage() {
         <main className={`mt-20 ${isDark ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"} w-full min-h-screen py-20 px-6`}>
             <div className="max-w-3xl mx-auto">
                 <h1 className="text-4xl font-bold text-center mb-10">Support Assistant</h1>
-
-                <>
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4 max-h-[70vh] overflow-y-auto mb-6">
-                        {messages.map((msg, idx) => (
-                            <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className={`rounded-xl px-4 py-2 w-fit max-w-[80%] whitespace-pre-wrap ${msg.sender === "user" ? "ml-auto bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-700"}`}
-                            >
-                                {msg.sender === "bot" ? formatBotText(msg.text) : msg.text}
-                            </motion.div>
-                        ))}
-                        {loading && (
-                            <motion.div
-                                className="w-full h-1 bg-blue-200 dark:bg-gray-600 rounded overflow-hidden mb-2"
-                                initial={{ width: 0 }}
-                                animate={{ width: "100%" }}
-                                transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
-                            >
-                                <motion.div
-                                    className="h-full bg-blue-600"
-                                    initial={{ x: "-100%" }}
-                                    animate={{ x: "100%" }}
-                                    transition={{
-                                        duration: 1.5,
-                                        ease: "linear",
-                                        repeat: Infinity,
-                                    }}
-                                />
-                            </motion.div>
-                        )}
-                    </div>
-
-                    <div className="flex gap-4 items-center">
-                        <input
-                            type="text"
-                            placeholder="Ask a farming question..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            className="flex-grow px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800"
-                            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                        />
-                        <button
-                            onClick={handleSend}
-                            className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition"
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4 max-h-[70vh] overflow-y-auto mb-6">
+                    {messages.map((msg, idx) => (
+                        <motion.div
+                            key={idx}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className={`rounded-xl px-4 py-2 w-fit max-w-[80%] whitespace-pre-wrap ${msg.sender === "user" ? "ml-auto bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-700"}`}
                         >
-                            <Send size={20} />
-                        </button>
-                    </div>
-                </>
+                            {msg.sender === "bot" ? formatBotText(msg.text) : msg.text}
+                        </motion.div>
+                    ))}
+
+                    {loading && (
+                        <motion.div
+                            className="w-full h-1 bg-blue-200 dark:bg-gray-600 rounded overflow-hidden mb-2"
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
+                        >
+                            <motion.div
+                                className="h-full bg-blue-600"
+                                initial={{ x: "-100%" }}
+                                animate={{ x: "100%" }}
+                                transition={{
+                                    duration: 1.5,
+                                    ease: "linear",
+                                    repeat: Infinity,
+                                }}
+                            />
+                        </motion.div>
+                    )}
+                </div>
+
+                <div className="flex gap-4 items-center">
+                    <input
+                        type="text"
+                        placeholder="Ask a farming question..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                        className="flex-grow px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800"
+                    />
+                    <button
+                        onClick={handleSend}
+                        className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition"
+                    >
+                        <Send size={20} />
+                    </button>
+                </div>
             </div>
         </main>
     );

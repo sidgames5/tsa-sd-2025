@@ -45,6 +45,19 @@ app.config.update({
     'THROTTLE_LIMIT': 5  # requests per minute
 })
 
+# Add this right after your Flask app initialization
+os.makedirs('static/reviews', exist_ok=True)
+
+# Create a default user image if it doesn't exist
+default_user_path = 'static/reviews/default_user.png'
+if not os.path.exists(default_user_path):
+    # Create a simple blank avatar
+    from PIL import Image, ImageDraw
+    img = Image.new('RGB', (200, 200), color=(200, 200, 200))
+    draw = ImageDraw.Draw(img)
+    draw.text((50, 80), "User", fill=(0, 0, 0))
+    img.save(default_user_path)
+
 # Logging setup
 handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=3)
 handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
@@ -61,6 +74,23 @@ def safe_softmax(logits):
     if logits is None or not logits.shape:
         return None
     return torch.nn.functional.softmax(logits, dim=-1)
+
+def ensure_reviews_file():
+    """Ensure reviews.json exists and is valid"""
+    if not os.path.exists(REVIEW_FILE):
+        with open(REVIEW_FILE, 'w') as f:
+            json.dump([], f)
+    else:
+        # Verify file contains valid JSON
+        try:
+            with open(REVIEW_FILE, 'r') as f:
+                json.load(f)
+        except json.JSONDecodeError:
+            # Reset if corrupted
+            with open(REVIEW_FILE, 'w') as f:
+                json.dump([], f)
+
+ensure_reviews_file()
 
 class PlantDiseaseClassifier:
     def __init__(self):
@@ -374,15 +404,20 @@ def submit_review():
         if image_file and allowed_file(image_file.filename):
             filename = secure_filename(f"{int(time.time())}_{image_file.filename}")
             filepath = os.path.join('static/reviews', filename)
-            image_file.save(filepath)
-            image_url = f"/static/reviews/{filename}"
+            try:
+                image_file.save(filepath)
+                image_url = f"/static/reviews/{filename}"
+            except Exception as e:
+                app.logger.error(f"Failed to save image: {str(e)}")
+                image_url = "/static/reviews/default_user.png"
         else:
             image_url = "/static/reviews/default_user.png"
 
         review_data = {
             "name": name,
             "message": message,
-            "image": image_url
+            "image": image_url,
+            "timestamp": time.time()  # Add timestamp for sorting
         }
 
         if save_review_to_file(review_data):
@@ -398,10 +433,13 @@ def submit_review():
 def get_reviews():
     try:
         if not os.path.exists(REVIEW_FILE):
-            return jsonify({"success": False, "error": "No reviews found."}), 404
+            return jsonify({"success": True, "reviews": []}), 200
         
         with open(REVIEW_FILE, "r") as f:
             reviews = json.load(f)
+        
+        # Sort reviews by timestamp (newest first)
+        reviews.sort(key=lambda x: x.get('timestamp', 0), reverse=True)
         
         return jsonify({"success": True, "reviews": reviews}), 200
     except Exception as e:
@@ -440,6 +478,8 @@ def delete_all_reviews():
     except Exception as e:
         app.logger.error(f"Failed to delete reviews: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
+    
+
 
 if __name__ == "__main__":
     try:

@@ -19,12 +19,13 @@ export default function App() {
     const [isCameraAllowed, setIsCameraAllowed] = useState(false);
     const [videoStream, setVideoStream] = useState(null);
     const videoRef = useRef(null);
-    const avatarList= [
-        "/assets/avatar1.png",
-        "/assets/avatar2.png",
-        "/assets/avatar3.png",
-        "/assets/avatar4.png"
-    ]
+    const avatarList = [
+        "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
+        "https://cdn-icons-png.flaticon.com/512/4140/4140048.png", 
+        "https://cdn-icons-png.flaticon.com/512/921/921071.png",
+        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+      ];
+      const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
 
     const constraintsRef = useRef(null);
   
@@ -38,7 +39,10 @@ export default function App() {
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
     };
-  
+    const handleImageError = (e) => {
+        // Fallback to default human avatar if the image fails to load
+        e.target.src = defaultAvatar;
+    };
     const openModal = () => {
       setIsModalOpen(true);
       setIsCameraAllowed(false);
@@ -82,7 +86,29 @@ export default function App() {
     };
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
+        if (!formData.message.trim()) {
+            alert("Please write a testimonial.");
+            return;
+          }
+        
+          // Add the new review to the list
+          const newReview = {
+            name: formData.name.trim(),
+            message: formData.message.trim(),
+            photo: formData.photo || null,
+          };
+        
+          setReviews(prevReviews => [newReview, ...prevReviews]);
+        
+          // Clear the form
+          setFormData({
+            name: "",
+            message: "",
+            photo: null,
+          });
+        
+          // Close the modal
+          closeModal();
       const form = new FormData();
       form.append("name", formData.name);
       form.append("message", formData.message);
@@ -330,34 +356,49 @@ export default function App() {
                                 <div className="space-y-2">
                                     <label className="block font-medium text-gray-700">Choose an Avatar:</label>
                                     <div className="grid grid-cols-4 gap-3">
-                                        {avatarList.map(( avatar, index ) => (
+                                        {/* Avatar Selector */}
+                                        <div className="col-span-4">
+                                        <label className="block mb-2 text-sm font-medium text-gray-700">Choose an Avatar</label>
+                                        <div className="flex gap-4 mb-4">
+                                            {avatarList.map((avatar, index) => (
                                             <button
                                                 key={index}
                                                 type="button"
-                                                onClick={() => setFormData({ ...formData, photo: avatar})}
-                                                className={`border-2 rounded-xl p-1 transition ${formData.photo === avatar ? "border-green-500" : "border-transparent hover:border-gray-300"} `}
+                                                className={`rounded-full overflow-hidden border-4 ${
+                                                formData.photo === avatar ? "border-green-500" : "border-transparent"
+                                                }`}
+                                                onClick={() => setFormData({ ...formData, photo: avatar })}
                                             >
-                                                <img src={avatar} 
-                                                alt={`Avatar ${index + 1}`}
-                                                className="w-16 h-16 object-cover rounded-lg"
+                                                <img 
+                                                src={avatar}
+                                                alt={`Avatar ${index + 1}`} 
+                                                className="w-16 h-16 object-cover" 
+                                                onError={handleImageError}
                                                 />
                                             </button>
-                                        ))}
+                                            ))}
+                                        </div>
+                                        </div>
+
+                                        {/* Preview */}
+                                        {formData.photo && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="flex flex-col items-center gap-2 pt-4 col-span-4"
+                                        >
+                                            <span className="text-sm text-gray-500">Selected Avatar</span>
+                                            <img
+                                            src={formData.photo}
+                                            alt="Selected avatar"
+                                            className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
+                                            onError={handleImageError}
+                                            />
+                                        </motion.div>
+                                        )}
                                     </div>
                                 </div>
-                                {/* Avatar preview */}
-                                {formData.photo && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10}}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="flex flex-col items-center gap-2 pt-4"
-                                    >
-                                        <span className="text-sm text-gray-500">Selected Avatar</span>
-                                        <img src={formData.photo} alt="Selected avatar"
-                                            className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
-                                        />
-                                    </motion.div>
-                                )}
+
                                 
                                 <div className="flex justify-end space-x-4">
                                     <button
@@ -379,34 +420,44 @@ export default function App() {
                         </div>
                     )}
                     {/* All comments */}
-                    <div className="max-h-[500px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {reviews.length === 0 && (
-                            <p className="text-center text-gray-500 col-span-2">No reviews yet.</p>
-                            )}
-                            {reviews.map((rev, idx) => (
+                    <div className="max-h-[500px] overflow-y-auto px-4">
+                    {reviews.length === 0 ? (
+                        <p className="text-center text-gray-500">No reviews yet.</p>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center">
+                        {reviews.map((review, index) => (
                             <motion.div
-                                key={idx}
-                                className="bg-gray-50 p-6 rounded-2xl shadow-md flex flex-col items-center text-center border border-gray-100"
-                                whileHover={{ scale: 1.02 }}
+                            key={index}
+                            className={`bg-white shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 ${
+                                index % 3 === 0
+                                ? "border-green-400"
+                                : index % 3 === 1
+                                ? "border-blue-400"
+                                : "border-yellow-400"
+                            }`}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, delay: index * 0.1 }}
                             >
-                                {rev.image ? (
+                            <div className="flex items-center gap-4 mb-4">
                                 <img
-                                    src={rev.image}
-                                    alt="Profile"
-                                    className="w-16 h-16 rounded-full object-cover mb-4 shadow"
+                                src={review.photo || defaultAvatar}
+                                alt="User avatar"
+                                className="w-14 h-14 rounded-full object-cover border border-gray-300"
                                 />
-                                ) : (
-                                <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                                    <FontAwesomeIcon icon={faPerson} className="text-3xl text-gray-600" />
-                                </div>
-                                )}
-                                <p className="italic text-gray-700">"{rev.message}"</p>
-                                <p className="mt-4 font-semibold text-gray-800">{rev.name || "Anonymous"}</p>
+                                <h3 className="text-lg font-semibold text-gray-800">
+                                {review.name || "Anonymous"}
+                                </h3>
+                            </div>
+                            <p className="text-gray-700 text-base break-words whitespace-pre-wrap">{review.message}</p>
                             </motion.div>
-                            ))}
+                        ))}
                         </div>
+                    )}
                     </div>
+
+
                     
                 </div>
             </div>
