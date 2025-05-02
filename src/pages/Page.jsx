@@ -20,11 +20,13 @@ export default function App() {
     const [videoStream, setVideoStream] = useState(null);
     const videoRef = useRef(null);
     const avatarList= [
-        "/avatars/avatar1.png",
-        "/avatars/avatar2.png",
-        "/avatars/avatar3.png",
-        "/avatars/avatar4.png"
+        "/assets/avatar1.png",
+        "/assets/avatar2.png",
+        "/assets/avatar3.png",
+        "/assets/avatar4.png"
     ]
+
+    const constraintsRef = useRef(null);
   
     useEffect(() => {
       fetch("/api/get-reviews")
@@ -286,7 +288,7 @@ export default function App() {
                     <div className="text-center mb-12">
                         <motion.button
                             onClick={openModal}
-                            className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-full text-lg"
+                            className={`${cookies.darkMode ? "bg-blue-600 hover:bg-blue-700": "bg-green-600 hover:bg-green-700"} text-white font-medium py-2.5 px-6 rounded-full text-lg`}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -296,12 +298,15 @@ export default function App() {
                     {/* Modal */}
                     {/* Made it avatars rather than images */}
                     {isModalOpen && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 bg-opacity-60 z-50">
+                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 bg-opacity-60 z-50"
+                            ref={constraintsRef}
+                        >
                             <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg"
                                         initial={{ scale: 0.9, opacity: 0 }}
                                         animate={{ scale: 1, opacity: 1 }}
                                         exit={{ scale:0.9, opacity: 0 }}
                                         drag
+                                        dragConstraints={constraintsRef}
                             >
                                 <h3 className="text-3xl font-bold mb-4 text-gray-800 text-center">Submit Your Review</h3>
                                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -374,32 +379,35 @@ export default function App() {
                         </div>
                     )}
                     {/* All comments */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {reviews.length === 0 && (
-                        <p className="text-center text-gray-500 col-span-2">No reviews yet.</p>
-                        )}
-                        {reviews.map((rev, idx) => (
-                        <motion.div
-                            key={idx}
-                            className="bg-gray-50 p-6 rounded-2xl shadow-md flex flex-col items-center text-center border border-gray-100"
-                            whileHover={{ scale: 1.02 }}
-                        >
-                            {rev.image ? (
-                            <img
-                                src={rev.image}
-                                alt="Profile"
-                                className="w-16 h-16 rounded-full object-cover mb-4 shadow"
-                            />
-                            ) : (
-                            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                                <FontAwesomeIcon icon={faPerson} className="text-3xl text-gray-600" />
-                            </div>
+                    <div className="max-h-[500px] overflow-y-auto pr-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {reviews.length === 0 && (
+                            <p className="text-center text-gray-500 col-span-2">No reviews yet.</p>
                             )}
-                            <p className="italic text-gray-700">"{rev.message}"</p>
-                            <p className="mt-4 font-semibold text-gray-800">{rev.name || "Anonymous"}</p>
-                        </motion.div>
-                        ))}
+                            {reviews.map((rev, idx) => (
+                            <motion.div
+                                key={idx}
+                                className="bg-gray-50 p-6 rounded-2xl shadow-md flex flex-col items-center text-center border border-gray-100"
+                                whileHover={{ scale: 1.02 }}
+                            >
+                                {rev.image ? (
+                                <img
+                                    src={rev.image}
+                                    alt="Profile"
+                                    className="w-16 h-16 rounded-full object-cover mb-4 shadow"
+                                />
+                                ) : (
+                                <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+                                    <FontAwesomeIcon icon={faPerson} className="text-3xl text-gray-600" />
+                                </div>
+                                )}
+                                <p className="italic text-gray-700">"{rev.message}"</p>
+                                <p className="mt-4 font-semibold text-gray-800">{rev.name || "Anonymous"}</p>
+                            </motion.div>
+                            ))}
+                        </div>
                     </div>
+                    
                 </div>
             </div>
 

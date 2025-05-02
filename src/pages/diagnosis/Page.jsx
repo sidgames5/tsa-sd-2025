@@ -19,6 +19,7 @@ export default function DiagnosisPage() {
     const toggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
     };
+    const constraintsRef = useRef(null);
     const diseases = [
         {
             name: "Powdery Mildew",
@@ -325,10 +326,14 @@ export default function DiagnosisPage() {
 
         {/* Disease Modal */}
         {isModalOpen && selectedDisease && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                <div
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+                ref={constraintsRef}
+            >
+                <motion.div
                     className="flex items-center justify-center min-h-screen p-4 text-center"
                     onClick={() => setIsModalOpen(false)}
+                    drag
+                    dragConstraints={constraintsRef}
                 >
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -347,16 +352,6 @@ export default function DiagnosisPage() {
                             <h3 className={`text-3xl font-bold mx-auto ${cookies.darkMode ? "text-white" : "text-gray-900"}`}>
                                 {selectedDisease.name}
                             </h3>
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className={`p-2 rounded-full transition hover:scale-110 ${
-                                    cookies.darkMode
-                                        ? "text-gray-400 hover:bg-red-600 hover:text-white"
-                                        : "text-gray-500 hover:bg-red-200 hover:text-red-700"
-                                } absolute top-4 right-4`}
-                            >
-                                <FontAwesomeIcon icon={faClose} size="lg" />
-                            </button>
                         </div>
 
                         {/*Info Text*/}
@@ -449,7 +444,7 @@ export default function DiagnosisPage() {
                             </button>
                         </div>
                     </motion.div>
-                </div>
+                </motion.div>
             </div>
         )}
 
