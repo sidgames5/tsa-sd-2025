@@ -481,16 +481,16 @@ export default function UploadPage() {
         className={`p-6 max-h-[120vh] mt-20 rounded-2xl w-full max-w-6xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
           isDarkMode
             ? "bg-gradient-to-br from-neutral-950 via-sky-950 to-black border-indigo-800 shadow-indigo-900/40 ring-indigo-500/20"
-            : "bg-white border-blue-300 shadow-blue-200/40 ring-blue-400/20"
+            : "bg-gradient-to-br from-emerald-200 via-neutral-200 to-green-200 border-green-600 shadow-green-600/40 ring-green-600/20"
         }`}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex justify-between w-full mt-2 ">
+        <div className="flex justify-between w-full mt-2 text-center">
           <h1
-            className={`text-3xl font-bold mb-6 ${
-              isDarkMode ? "text-white" : "text-sky-600"
+            className={`text-3xl text-center font-bold mb-6 ${
+              isDarkMode ? "text-white" : "text-neutral-600"
             }`}
           >
             Plant Disease Detection 🌱
@@ -500,8 +500,8 @@ export default function UploadPage() {
               onClick={handleLogout}
               className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
                 isDarkMode
-                  ? "bg-gray-700 hover:bg-gray-600 text-white"
-                  : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                  ? "bg-gray-700 hover:bg-gray-600 duration-300 text-white"
+                  : "bg-gray-200 hover:bg-gray-300 duration-300 text-gray-800"
               }`}
             >
               <FontAwesomeIcon icon={faUser} />
@@ -512,8 +512,8 @@ export default function UploadPage() {
               onClick={() => setShowAuthModal(true)}
               className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
                 isDarkMode
-                  ? "bg-blue-700 hover:bg-blue-600 text-white"
-                  : "bg-blue-600 hover:bg-blue-500 text-white"
+                  ? "bg-blue-700 hover:bg-blue-600 duration-300 text-white"
+                  : "bg-blue-600 hover:bg-blue-500 duration-300 text-white"
               }`}
             >
               <FontAwesomeIcon icon={faUser} />
@@ -683,6 +683,9 @@ export default function UploadPage() {
               </option>
               <option value="Potato" className="text-center">
                 Potato
+              </option>
+              <option value="Potato" className="text-center">
+                Pepper Bell
               </option>
               <option value="Raspberry" className="text-center">
                 Raspberry

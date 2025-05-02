@@ -6,8 +6,12 @@ import { useInView } from "react-intersection-observer";
 export function FeatureCard({ icon, description, delay = 0 }) {
     const [cookies] = useCookies(["darkMode"]);
     const isDark = cookies.darkMode;
-    const bg = isDark ? "bg-gray-800/60 backdrop-blur-md" : "bg-gradient-to-br from-green-50 via-white to-emerald-50/70 backdrop-blur-lg";
-    const text = isDark ? "text-white" : "text-gray-900";
+
+    const bg = isDark
+        ? "bg-gray-800/60 backdrop-blur-md"
+        : "bg-white/80 backdrop-blur-md";
+    const text = isDark ? "text-white" : "text-gray-800";
+
     const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
     return (
@@ -15,51 +19,59 @@ export function FeatureCard({ icon, description, delay = 0 }) {
             ref={ref}
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: "easeOut", delay }}
             whileHover={{
-                scale: 1.04,
-                rotate: 0.5,
+                scale: 1.03,
+                rotate: 0.3,
                 boxShadow: isDark
-                    ? "0 10px 30px rgba(255, 255, 255, 0.1)"
-                    : "0 10px 30px rgba(0, 0, 0, 0.1)",
+                    ? "0 12px 24px rgba(255, 255, 255, 0.08)"
+                    : "0 12px 24px rgba(0, 0, 0, 0.08)",
                 transition: { duration: 0.3 }
             }}
-            className={`transition-all duration-300 ${bg} ${text} rounded-3xl p-6 min-h-[220px] flex flex-col items-start gap-4 border border-white/20 shadow-xl`}
+            className={`transition-all duration-300 ${bg} ${text} rounded-2xl p-6 min-h-[200px] flex flex-col justify-start items-start gap-4 border border-white/10 shadow-md`}
         >
-            <div className="text-4xl">{icon}</div>
-            <p className="text-md sm:text-lg leading-relaxed">{description}</p>
+            <div className="text-5xl">{icon}</div>
+            <p className="text-base sm:text-lg font-medium leading-relaxed">{description}</p>
         </motion.div>
     );
 }
 
 export default function FeaturesPage() {
     const [cookies] = useCookies(["darkMode"]);
+    const isDark = cookies.darkMode;
 
     const cardItems = [
         { emoji: "📤", text: "Upload plant images quickly and easily." },
         { emoji: "🔍", text: "AI-powered image analysis for accurate diagnosis." },
-        { emoji: "📞", text: "Dedicated support team available to assist anytime." },
-        { emoji: "🔒", text: "Secure data handling with robust privacy practices." },
-        { emoji: "⚙️", text: "Customizable settings to tailor the experience." },
-        { emoji: "📂", text: "Organize and manage your plant image library." },
-        { emoji: "📊", text: "Access comprehensive visual reports and analytics." },
-        { emoji: "🧭", text: "Simple, intuitive navigation throughout the app." },
-        { emoji: "👵", text: "User-friendly interface for all experience levels." }
+        { emoji: "📞", text: "24/7 support from our expert team." },
+        { emoji: "🔒", text: "Secure data handling with industry-grade encryption." },
+        { emoji: "⚙️", text: "Flexible settings to personalize your workflow." },
+        { emoji: "📂", text: "Effortlessly manage your plant image collections." },
+        { emoji: "📊", text: "Detailed visual reports and insightful analytics." },
+        { emoji: "🧭", text: "Clean, intuitive app navigation." },
+        { emoji: "👵", text: "Accessible design for users of all experience levels." }
     ];
 
     return (
-        <main className={`${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"} w-full h-[110vh]`}>
-            <div className="max-w-6xl mx-auto px-4 mt-20"> 
-                <h1 className={`text-4xl font-semibold p-12 text-center ${cookies.darkMode ? "text-white" : "text-green-900"}`}>
+        <main className={`${isDark ? "bg-gray-900" : "bg-gray-50"} w-full min-h-screen py-16`}>
+            <div className="max-w-6xl mx-auto px-4 mt-10">
+                <h1
+                    className={`text-4xl sm:text-5xl font-bold text-center mb-16 
+                        bg-clip-text text-transparent 
+                        ${isDark 
+                            ? "bg-gradient-to-r from-blue-400 via-sky-500 to-indigo-500" 
+                        : "bg-gradient-to-r from-green-500 via-emerald-600 to-teal-500"}`}
+                    >
                     Key Features
                 </h1>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {cardItems.map((item, index) => (
                         <FeatureCard
                             key={index}
                             icon={item.emoji}
                             description={item.text}
-                            delay={index * 0.1} // stagger effect
+                            delay={index * 0.1}
                         />
                     ))}
                 </div>
@@ -67,4 +79,3 @@ export default function FeaturesPage() {
         </main>
     );
 }
-

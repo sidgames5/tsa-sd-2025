@@ -5,10 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router';
 import { useCookies } from 'react-cookie';
 
-
-
-
-export default function AuthPage() {
+export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,10 +76,9 @@ export default function AuthPage() {
 
   return (
     <>
-    
       <div
         className={`${
-          darkMode
+          cookies.darkMode
             ? 'bg-gray-900 text-white'
             : 'bg-gradient-to-br from-blue-100 via-white to-purple-100'
         } min-h-screen flex items-center justify-center px-4`}
@@ -92,7 +88,7 @@ export default function AuthPage() {
           animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className={`w-full max-w-md p-8 rounded-2xl shadow-xl border ${
-            darkMode
+            cookies.darkMode
               ? 'bg-gray-800 border-gray-700'
               : 'bg-white/80 border-gray-200 backdrop-blur-lg'
           }`}
@@ -127,7 +123,7 @@ export default function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="you@example.com"
-                className="mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:border-gray-600"
+                className="mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:border-gray-600 text-black"
               />
             </div>
 
@@ -143,7 +139,7 @@ export default function AuthPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Your password"
-                  className="mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:border-gray-600"
+                  className="mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:border-gray-600 text-black"
                 />
                 <button
                   type="button"

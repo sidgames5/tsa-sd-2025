@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPerson } from "@fortawesome/free-solid-svg-icons";
 
+// copy and pasted from akshay's webmaster code basically
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({

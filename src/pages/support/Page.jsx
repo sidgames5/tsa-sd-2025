@@ -14,12 +14,15 @@ export default function SupportPage() {
     const isDark = cookies.darkMode;
     const user = cookies.user;
 
-    useEffect(() => {
-        if (!user) {
-            // If the user is not logged in, redirect to login page
-            navigate("/login");
-        }
-    }, [user, navigate]);
+    if (!user) {
+    return (
+        <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white">
+            <p className="text-lg font-semibold">You need to log in to view this page.</p>
+        </div>
+    );
+}
+
+    
 
     const handleSend = async () => {
         if (!query.trim()) return;
@@ -129,7 +132,26 @@ export default function SupportPage() {
                                     {msg.sender === "bot" ? formatBotText(msg.text) : msg.text}
                                 </motion.div>
                             ))}
-                            {loading && <div className="text-sm text-gray-500 italic">Thinking...</div>}
+                            {loading && (
+                                <motion.div
+                                    className="w-full h-1 bg-blue-200 dark:bg-gray-600 rounded overflow-hidden mb-2"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: "100%" }}
+                                    transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
+                                >
+                                    <motion.div
+                                        className="h-full bg-blue-600"
+                                        initial={{ x: "-100%" }}
+                                        animate={{ x: "100%" }}
+                                        transition={{
+                                            duration: 1.5,
+                                            ease: "linear",
+                                            repeat: Infinity,
+                                        }}
+                                    />
+                                </motion.div>
+                            )}
+
                         </div>
 
                         <div className="flex gap-4 items-center">
