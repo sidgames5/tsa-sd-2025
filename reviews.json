@@ -8,5 +8,10 @@
         "name": "",
         "message": "test",
         "image": "/static/reviews/default_user.png"
+    },
+    {
+        "name": "ok",
+        "message": "ok",
+        "image": "/static/reviews/default_user.png"
     }
 ]

@@ -16,6 +16,8 @@ import pillow_heif
 import ollama
 import re # regex, will be used to remove the <think> sections
 import json
+from functools import wraps
+from dotenv import load_dotenv
 
 REVIEW_FILE = "new_backend/reviews.json"
 # Enable pillow-heif support
@@ -24,6 +26,15 @@ pillow_heif.register_heif_opener()
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Configuration using environment variables
+ADMIN_CREDENTIALS = {
+    "username": os.getenv("ADMIN_USERNAME", "admin"),  # Default to 'admin' if not set
+    "password": os.getenv("ADMIN_PASSWORD", "leafadmin123")  # Default password if not set
+}
 
 # Configuration
 app.config.update({
@@ -329,7 +340,6 @@ To upload an image of your plant for disease detection, follow these steps:
 
 
 
-REVIEW_FILE = "reviews.json"
 
 def save_review_to_file(review):
     try:
@@ -398,6 +408,38 @@ def get_reviews():
         app.logger.error(f"Failed to retrieve reviews: {str(e)}")
         return jsonify({"success": False, "error": "Failed to retrieve reviews"}), 500
 
+
+# Admin login decorator
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not (auth.username == ADMIN_CREDENTIALS["username"] and auth.password == ADMIN_CREDENTIALS["password"]):
+            return jsonify({"success": False, "error": "Authentication required"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/admin/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({"success": False, "error": "Username and password required"}), 400
+    
+    if data['username'] == ADMIN_CREDENTIALS["username"] and data['password'] == ADMIN_CREDENTIALS["password"]:
+        return jsonify({"success": True, "message": "Login successful"})
+    else:
+        return jsonify({"success": False, "error": "Invalid credentials"}), 401
+
+@app.route('/admin/reviews', methods=['DELETE'])
+@admin_required
+def delete_all_reviews():
+    try:
+        with open(REVIEW_FILE, "w") as f:
+            json.dump([], f)
+        return jsonify({"success": True, "message": "All reviews deleted"})
+    except Exception as e:
+        app.logger.error(f"Failed to delete reviews: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == "__main__":
     try:
