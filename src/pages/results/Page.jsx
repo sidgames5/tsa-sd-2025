@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { useCookies } from "react-cookie";
 import Chart from "./Chart";
 import { getUserChartData, clearUserChartData } from "./chartStuff";
+import AIChatbot from "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/src/components/SupportAI.jsx";
+
 
 export default function ResultsPage() {
     const [cookies] = useCookies(["darkMode", "user"]);
@@ -121,9 +123,26 @@ export default function ResultsPage() {
             </div>
         );
     }
+    const containerVariants = {
+        hidden: { opacity: 0, y: 20 },
+        show: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2,
+            },
+        },
+    };
+    
+    const itemVariants = {
+        hidden: { opacity: 0, y: 10 },
+        show: { opacity: 1, y: 0 },
+    };
 
     return (
         <main className={`w-full min-h-screen ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+            <AIChatbot />
             <div className="flex flex-col items-center w-full py-12 px-4">
                 <h1 className="text-4xl font-bold mt-8 p-12">AI Plant Health Results</h1>
 
@@ -146,11 +165,18 @@ export default function ResultsPage() {
 
                         <div className={`p-6 rounded-xl ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg w-full flex flex-col items-center justify-center`}>
                             <h2 className="text-2xl font-bold mb-4">Plant Care Tips</h2>
-                            <div className="grid grid-cols-1 xl:grid-cols-2 min-w-full items-center justify-center align-middle">
+
+                            <motion.div
+                                className="grid grid-cols-1 xl:grid-cols-2 min-w-full items-center justify-center align-middle"
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate="show"
+                            >
                                 {tips.map((tip, index) => (
                                     <motion.div
                                         key={index}
                                         className="flex items-start gap-3 p-3 rounded-lg hover:bg-opacity-10 hover:bg-gray-500"
+                                        variants={itemVariants}
                                         whileHover={{ x: 5 }}
                                         transition={{ type: "spring", stiffness: 300 }}
                                     >
@@ -158,7 +184,7 @@ export default function ResultsPage() {
                                         <span>{tip}</span>
                                     </motion.div>
                                 ))}
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
 

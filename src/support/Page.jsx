@@ -138,7 +138,7 @@ export default function SupportPage() {
                                 placeholder="Ask a farming question..."
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
-                                className="flex-grow px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800"
+                                className={`${cookies.darkMode ? "text-white" : "text-gray-950"} flex-grow px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-800`}
                                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                             />
                             <button

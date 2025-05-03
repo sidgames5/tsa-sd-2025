@@ -6,6 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload, faSpinner, faCheck, faTimes, faUser, faCamera, faTimesCircle, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 import { updateUserChartData, getUserChartData} from "../results/chartStuff";
 import heic2any from 'heic2any';
+import AIChatbot from "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/src/components/SupportAI.jsx";
+
+
 export default function UploadPage() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -480,6 +483,7 @@ export default function UploadPage() {
           : "bg-gradient-to-b from-slate-50 via-white to-slate-200 text-gray-900"
       }`}
     >
+      <AIChatbot />
       <motion.div
         className={`p-6 max-h-[120vh] mt-20 rounded-2xl w-full max-w-6xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
           isDarkMode

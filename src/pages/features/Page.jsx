@@ -2,6 +2,8 @@ import React from "react";
 import { useCookies } from "react-cookie";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import AIChatbot from "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/src/components/SupportAI.jsx";
+
 
 export function FeatureCard({ icon, description, delay = 0 }) {
     const [cookies] = useCookies(["darkMode"]);
@@ -9,7 +11,7 @@ export function FeatureCard({ icon, description, delay = 0 }) {
 
     const bg = isDark
         ? "bg-gray-800/60 backdrop-blur-md"
-        : "bg-white/80 backdrop-blur-md";
+        : "bg-gradient-to-br from-green-50 via-stone-50 to-emerald-50/80 backdrop-blur-md";
     const text = isDark ? "text-white" : "text-gray-800";
 
     const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -54,10 +56,11 @@ export default function FeaturesPage() {
 
     return (
         <main className={`${isDark ? "bg-gray-900" : "bg-gray-50"} w-full min-h-screen py-16`}>
+            <AIChatbot />
             <div className="max-w-6xl mx-auto px-4 mt-10">
                 <h1
                     className={`text-4xl sm:text-5xl font-bold text-center mb-16 
-                        bg-clip-text text-transparent 
+                        bg-clip-text text-transparent p-8
                         ${isDark 
                             ? "bg-gradient-to-r from-blue-400 via-sky-500 to-indigo-500" 
                         : "bg-gradient-to-r from-green-500 via-emerald-600 to-teal-500"}`}

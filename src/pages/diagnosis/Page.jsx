@@ -6,6 +6,7 @@ import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch, faLeaf, faChevronRight, faArrowDown} from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
+import AIChatbot from "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/src/components/SupportAI.jsx";
 
 
 
@@ -212,6 +213,7 @@ export default function DiagnosisPage() {
 
     return (
         <div className={`${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-r from-white via-gray-100 to-white text-black"} min-h-screen pb-20`}>
+            <AIChatbot />
             {/* Header */}
             <div className="w-full py-20 px-4 mt-10 text-center">
                 <motion.div
