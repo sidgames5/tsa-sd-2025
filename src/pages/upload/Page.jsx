@@ -39,6 +39,8 @@ export default function UploadPage() {
   // Check if user is logged in
   const isLoggedIn = !!cookies.user;
 
+  const constraintsRef = useRef(null);
+
   useEffect(() => {
     return () => {
       if (intervalId) clearInterval(intervalId);
@@ -791,7 +793,9 @@ export default function UploadPage() {
 
       {/* Modal for Results */}
       {result && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50"
+            ref={constraintsRef}
+        >
           <motion.div
             className={`w-full max-w-lg p-6 rounded-2xl shadow-xl ring-1 ring-offset-2 ${
               result.status === "success"
@@ -805,6 +809,8 @@ export default function UploadPage() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
+            drag
+            dragConstraints={constraintsRef}
           >
             <div className="flex justify-between items-center mb-4">
               <h2

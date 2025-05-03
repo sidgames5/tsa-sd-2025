@@ -27,13 +27,25 @@ export default function App() {
         "https://cdn-icons-png.flaticon.com/512/921/921071.png",
         "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
         "https://cdn-icons-png.flaticon.com/128/2202/2202112.png",
-        "https://cdn-icons-png.flaticon.com/128/1256/1256650.png"
+        "https://cdn-icons-png.flaticon.com/128/1256/1256650.png",
+        "https://cdn-icons-png.flaticon.com/128/15537/15537905.png",
+        "https://cdn-icons-png.flaticon.com/128/11498/11498793.png",
+        "https://cdn-icons-png.flaticon.com/128/16683/16683419.png",
+        "https://cdn-icons-png.flaticon.com/128/3641/3641988.png",
+        "https://cdn-icons-png.flaticon.com/128/2920/2920072.png",
+        "https://cdn-icons-png.flaticon.com/128/3135/3135823.png",
+        "https://cdn-icons-png.flaticon.com/128/4015/4015967.png",
+        "https://cdn-icons-png.flaticon.com/128/4015/4015994.png",
+        "https://cdn-icons-png.flaticon.com/128/484/484945.png",
+        "https://cdn-icons-png.flaticon.com/128/15375/15375450.png",
+        "https://cdn-icons-png.flaticon.com/128/6705/6705530.png"
       ];
     const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
     const constraintsRef = useRef(null);
     const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
     const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
     const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
     const handleAdminLogin = () => {
         if (
             adminCredentials.username === "admin" &&
@@ -45,28 +57,31 @@ export default function App() {
             // Clear reviews immediately upon login
             console.log("Admin logged in, clearing reviews...");
             setReviews([]); // Clear reviews in the frontend state
+            localStorage.removeItem("reviews");  // Clear reviews in localStorage
             alert("All reviews have been cleared.");
         } else {
             alert("Invalid credentials.");
         }
     };
-    
+
     const clearReviews = async () => {
         if (!isAdminAuthenticated) {
             setIsAdminModalOpen(true);  // Open the admin modal if not authenticated
             return;
         }
-    
+
         // Proceed with clearing the reviews if admin is authenticated
         if (!window.confirm("Are you sure you want to clear all reviews?")) return;
-    
+
         try {
             const response = await fetch("/api/admin/reviews", {
                 method: "DELETE",
             });
-    
+
             if (response.ok) {
                 setReviews([]); // Clear the reviews in the state
+                localStorage.setItem("reviewsCleared", "true"); // Set the cleared flag
+                localStorage.removeItem("reviews"); // Remove reviews from localStorage
                 alert("All testimonials cleared.");
             } else {
                 alert("Failed to clear testimonials.");
@@ -76,38 +91,114 @@ export default function App() {
             alert("Error clearing testimonials.");
         }
     };
-    
+
     useEffect(() => {
-        fetch("/api/get-reviews")
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.reviews && data.reviews.length > 0) {
-                    setReviews(data.reviews);
-                } else {
-                    console.log("No reviews found or reviews were cleared.");
-                    setReviews([]); // Ensure reviews are cleared if no reviews are fetched
-                }
-            });
+        // Check if reviewsCleared flag exists in localStorage
+        const reviewsClearedFlag = localStorage.getItem("reviewsCleared");
+        if (reviewsClearedFlag === "true") {
+            setReviews([]); // Clear reviews if the flag is set
+            return;
+        }
+
+        const storedReviews = localStorage.getItem("reviews");
+        if (storedReviews) {
+            setReviews(JSON.parse(storedReviews)); // Load reviews from localStorage if available
+        } else {
+            // Fetch reviews from backend if not found in localStorage
+            fetch("/api/get-reviews")
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.reviews && data.reviews.length > 0) {
+                        setReviews(data.reviews);
+                        localStorage.setItem("reviews", JSON.stringify(data.reviews)); // Save reviews to localStorage
+                    } else {
+                        console.log("No reviews found or reviews were cleared.");
+                        setReviews([]); // Ensure reviews are cleared if no reviews are fetched
+                    }
+                });
+        }
     }, []);
-    
+
     const resetReviews = () => {
         // Remove the "reviewsCleared" flag to allow fetching from backend
         localStorage.removeItem("reviewsCleared");
         // Optionally, you can also trigger the backend fetch to get reviews
         fetch("/api/get-reviews")
             .then((res) => res.json())
-            .then((data) => setReviews(data.reviews || []))
+            .then((data) => {
+                setReviews(data.reviews || []);
+                localStorage.setItem("reviews", JSON.stringify(data.reviews || [])); // Save reviews to localStorage
+            })
             .catch((error) => {
                 console.error("Error fetching reviews after reset:", error);
             });
     };
-    
-    
 
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!formData.message.trim()) {
+          alert("Please write a testimonial.");
+          return;
+        }
+
+        const form = new FormData();
+        form.append("name", formData.name.trim());
+        form.append("message", formData.message.trim());
+
+        if (formData.profileImage) {
+          form.append("profileImage", formData.profileImage);
+        } else if (formData.photo) {
+          form.append("photo", formData.photo); // Avatar URL
+        }
+
+        try {
+          const res = await fetch("/api/submit-review", {
+            method: "POST",
+            body: form,
+          });
+
+          const result = await res.json();
+
+          if (result.success) {
+            setReviews((prev) => [result.review, ...prev]);
+            localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews])); // Save new review to localStorage
+          } else {
+            alert(result.error || "Submission failed.");
+          }
+        } catch (err) {
+          console.error("Error submitting review:", err);
+          alert("An error occurred during submission.");
+        }
+
+        // Reset form and close modal AFTER submission
+        setFormData({ name: "", message: "", photo: null, profileImage: null });
+        closeModal();
+      };
+
+    const [showScrollIcon, setShowScrollIcon] = useState(true);
+    const [cookies] = useCookies(["darkMode"]);
+    const missionRef = useRef(null);
+    const isDarkMode = cookies.darkMode === true;
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > (window.innerHeight / 4)) {
+                setShowScrollIcon(false);
+            } else {
+                setShowScrollIcon(true);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+    
     const handleImageError = (e) => {
         // Fallback to default human avatar if the image fails to load
         e.target.src = defaultAvatar;
@@ -153,52 +244,6 @@ export default function App() {
         }
       }, "image/jpeg");
     };
-    
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        if (!formData.message.trim()) {
-          alert("Please write a testimonial.");
-          return;
-        }
-      
-        const form = new FormData();
-        form.append("name", formData.name.trim());
-        form.append("message", formData.message.trim());
-      
-        if (formData.profileImage) {
-          form.append("profileImage", formData.profileImage);
-        } else if (formData.photo) {
-          form.append("photo", formData.photo); // Avatar URL
-        }
-      
-        try {
-          const res = await fetch("/api/submit-review", {
-            method: "POST",
-            body: form,
-          });
-      
-          const result = await res.json();
-      
-          if (result.success) {
-            setReviews((prev) => [result.review, ...prev]);
-          } else {
-            alert(result.error || "Submission failed.");
-          }
-        } catch (err) {
-          console.error("Error submitting review:", err);
-          alert("An error occurred during submission.");
-        }
-      
-        // Reset form and close modal AFTER submission
-        setFormData({ name: "", message: "", photo: null, profileImage: null });
-        closeModal();
-      };
-    
-    const [showScrollIcon, setShowScrollIcon] = useState(true);
-    const [cookies] = useCookies(["darkMode"]);
-    const missionRef = useRef(null);
-    const isDarkMode = cookies.darkMode === true;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -359,7 +404,7 @@ export default function App() {
 
             </motion.div>
 
-            <div className={`h-[120vh] w-full ${cookies.darkMode ? "bg-black" : "bg-gradient-to-r from-green-100 via-stone-50 to-blue-100"} `} >
+            <div className={`h-[100vh] w-full ${cookies.darkMode ? "bg-gradient-to-r from-blue-950 via-stone-900 to-sky-950" : "bg-gradient-to-r from-green-100 via-stone-50 to-blue-100"} `} >
                 <div className="max-w-6xl mx-auto">
                     <div className="mt-20"></div>
                     {/*
@@ -371,12 +416,12 @@ export default function App() {
                      */}
                     <h2 className={`text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent 
                         ${isDarkMode
-                            ? "bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500" 
+                            ? "bg-gradient-to-r from-blue-200 via-blue-200 to-indigo-200" 
                             : "bg-gradient-to-r from-emerald-400 via-green-500 to-lime-400"}`}>
-                        Testimonials
+                        What do our users say?
                     </h2>
                     {/* Add Review */}
-                    <div className="text-center mb-12">
+                    <div className="mb-12 flex justify-center items-center gap-10">
                         <motion.button
                             onClick={openModal}
                             className={`${cookies.darkMode ? "bg-blue-600 hover:bg-blue-700": "bg-green-600 hover:bg-green-700"} text-white font-medium py-2.5 px-6 rounded-full text-lg`}
@@ -385,6 +430,12 @@ export default function App() {
                         >
                             Add a Review
                         </motion.button>
+                        <button
+                            onClick={clearReviews}  // This will trigger the process including the modal if needed
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full"
+                        >
+                            Clear Testimonial History
+                        </button>
                     </div>
                     {/* Modal */}
                     {/* Made it avatars rather than images */}
@@ -392,7 +443,7 @@ export default function App() {
                         <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 bg-opacity-60 z-50"
                             ref={constraintsRef}
                         >
-                            <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-lg"
+                            <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl h-fit max-h-[85vh] overflow-y-auto"
                                         initial={{ scale: 0.9, opacity: 0 }}
                                         animate={{ scale: 1, opacity: 1 }}
                                         exit={{ scale:0.9, opacity: 0 }}
@@ -424,7 +475,7 @@ export default function App() {
                                         {/* Avatar Selector */}
                                         <div className="col-span-4">
                                         <label className="block mb-2 text-sm font-medium text-gray-700">Choose an Avatar</label>
-                                        <div className="flex gap-4 mb-4">
+                                        <div className="grid grid-cols-7 gap-4 mb-4">
                                             {avatarList.map((avatar, index) => (
                                             <button
                                                 key={index}
@@ -534,48 +585,42 @@ export default function App() {
 
                     {/* All comments */}
                     <div className="max-h-[500px] overflow-y-auto px-4">
-                    {reviews.length === 0 ? (
-                        <p className="text-center text-gray-500">No reviews yet.</p>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center">
-                        {reviews.map((review, index) => (
-                            <motion.div
-                            key={index}
-                            className={`bg-white shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 ${
-                                index % 3 === 0
-                                ? "border-green-400"
-                                : index % 3 === 1
-                                ? "border-blue-400"
-                                : "border-yellow-400"
-                            }`}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: index * 0.1 }}
-                            >
-                            <div className="flex items-center gap-4 mb-4">
-                                <img
-                                src={review.image || defaultAvatar}
-                                alt="User avatar"
-                                className="w-14 h-14 rounded-full object-cover border border-gray-300"
-                                />
-                                <h3 className="text-lg font-semibold text-gray-800">
-                                {review.name || "Anonymous"}
-                                </h3>
-                            </div>
-                            <p className="text-gray-700 text-base break-words whitespace-pre-wrap">{review.message}</p>
-                            </motion.div>
-                        ))}
+                        {reviews.length === 0 ? (
+                            <p className={`${cookies.darkMode ? "text-white" : "text-gray-500"} text-center`}>No reviews yet.</p>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mt-2">
+                            {reviews.map((review, index) => (
+                                <motion.div
+                                    key={index}
+                                    className={`${cookies.darkMode ? "bg-gradient-to-br from-black via-stone-950 to-black text-white" : "bg-stone-100 text-black"} shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 ${
+                                        index % 3 === 0
+                                        ? "border-green-400"
+                                        : index % 3 === 1
+                                        ? "border-blue-400"
+                                        : "border-yellow-400"
+                                    }`}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                                    whileHover={{ scale: 1.04 }}
+                                >
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <img
+                                            src={review.image || defaultAvatar}
+                                            alt="User avatar"
+                                            className="w-14 h-14 rounded-full object-cover border border-gray-300"
+                                        />
+                                        <h3 className={`${cookies.darkMode ? "text-white" : "text-gray-800"} text-lg font-semibold`}>
+                                            {review.name || "Anonymous"}
+                                        </h3>
+                                    </div>
+                                    <p className={`${cookies.darkMode ? "text-white" : "text-gray-700"} text-base break-words whitespace-pre-wrap`}>{review.message}</p>
+                                </motion.div>
+                            ))}
                         </div>
                     )}
-                    <div className="flex justify-center mt-8">
-                        <button
-                            onClick={clearReviews}  // This will trigger the process including the modal if needed
-                            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full"
-                        >
-                            Clear Testimonial History
-                        </button>
-                    </div>
+                    
 
                 </div>
             </div>

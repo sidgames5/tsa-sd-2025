@@ -432,7 +432,7 @@ def submit_review():
         app.logger.error(f"Review submission error: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-@app.route('/testimonials', methods=['GET'])
+@app.route('/get-reviews', methods=['GET'])
 def get_reviews():
     try:
         # Load the reviews from the file every time the endpoint is hit
