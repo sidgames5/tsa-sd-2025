@@ -235,7 +235,8 @@ export default function DiagnosisPage() {
         {
             name: "Yellow Curl Virus",
             description: "DNA viruses that affect plants like tomatoes, pepper, and beans (Solanaceae family). They are transmitted by whiteflies and cause yield loss due to stunted growth of fruit.",
-            appearance: "Upward curling of leaves\nYellowing of leaves\nReduced branching\nStuted growth\nMalformatoin of flowers and fruit"
+            appearance: "Upward curling of leaves\nYellowing of leaves\nReduced branching\nStuted growth\nMalformation of flowers and fruit",
+            fix: "None"
         }
     ];
 

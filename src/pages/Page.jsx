@@ -250,14 +250,15 @@ export default function App() {
         <AnimatePresence>
           {!animationComplete && (
             <motion.div
-              className="fixed inset-0 z-50 bg-pink-400 flex justify-center items-center"
+              className="fixed inset-0 z-50 bg-cyan-400 flex justify-center items-center"
               initial={{ opacity: 1 }}
-              animate={{ opacity: lineExpand ? 0 : 1 }}
-              exit={{ opacity: 0 }}
+              animate={{ opacity: 1 }} // Keep fully opaque until removal
+              exit={{ opacity: 0 }} // Still keep exit animation for safety
               transition={{ duration: 0.6 }}
               key="pink-overlay"
-              onAnimationComplete={(definition) => {
-                if (definition === true && lineExpand) {
+              onAnimationComplete={() => {
+                // Remove immediately when lineExpand is true
+                if (lineExpand) {
                   setAnimationComplete(true);
                 }
               }}
@@ -283,7 +284,11 @@ export default function App() {
                   transition={{ 
                     duration: 1, 
                     ease: "easeInOut",
-                    onComplete: () => setLineExpand(true)
+                    onComplete: () => {
+                      setLineExpand(true);
+                      // Remove overlay immediately after expansion completes
+                      setAnimationComplete(true);
+                    }
                   }}
                 />
               )}
