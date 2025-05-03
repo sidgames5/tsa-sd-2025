@@ -130,10 +130,9 @@ export default function AIChatbot() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.8, y: 50 }}
                         transition={{ dration: 0.3 }}
-                        className={`absolute flex flex-col bottom-16 right-0 w-96 max-h-[60vh] shadow-2xl rounded-2xl p-4 gap-4 overflow-hidden border-2 ${cookies.darkMode ? "bg-gradient-to-br from-indigo-950 via-sky-700 to-indigo-950 border-white" : "border-black bg-white"}`}
-                        drag
+                        className={`absolute flex flex-col bottom-16 right-0 w-96 max-h-[60vh] shadow-2xl rounded-2xl p-4 gap-4 overflow-hidden border-2 ${cookies.darkMode ? "bg-gradient-to-br from-indigo-950 via-sky-800 to-indigo-950 border-white" : "border-black bg-white"}`}
                     >
-                        <h1 className={`${cookies.darkMode ? "text-white" : "text-black"} mt-3 text-2xl font-bold text-center`}>Support Assistant</h1>
+                        <h1 className={`${cookies.darkMode ? "text-white" : "text-black"} mt-3 text-2xl font-bold text-center`}>LeafLogic AI</h1>
 
                         <div className={`h-[1px] w-full ${cookies.darkMode ? "bg-white" : "bg-black"}`}></div>
 
@@ -149,7 +148,7 @@ export default function AIChatbot() {
                                     {msg.sender === "bot" ? formatBotText(msg.text) : msg.text}
                                 </motion.div>
                             ))}
-                            {loading && <div className="text-sm text-center text-gray-500">Typing...</div>}
+                            {loading && <div className={`${cookies.darkMode ? "text-gray-200" : "text-gray-500"} text-sm text-center`}>Typing...</div>}
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -158,7 +157,7 @@ export default function AIChatbot() {
                                 placeholder="Ask a question..."
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
-                                className={`flex-grow px-4 py-2 rounded-xl border ${cookies.darkMode ? "bg-black text-white border-white" : "bg-white text-black border-black"}`}
+                                className={`flex-grow px-4 py-2 rounded-xl border ${cookies.darkMode ? "bg-gray-600 text-white border-white" : "bg-white text-black border-black"}`}
                                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                             />
                             <button
