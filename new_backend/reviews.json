@@ -355,5 +355,35 @@
         "message": "Simple, effective, and it does exactly what it promises. I\u2019ve recommended it to a bunch of friends already. Keep up the good work!",
         "image": "https://cdn-icons-png.flaticon.com/128/484/484945.png",
         "timestamp": 1746234501.916856
+    },
+    {
+        "name": "Kanisk Prakash",
+        "message": "test",
+        "image": "https://cdn-icons-png.flaticon.com/128/16683/16683419.png",
+        "timestamp": 1746305046.529753
+    },
+    {
+        "name": "Alex Ramirez",
+        "message": "I\u2019ve been using this site for a few months now, and I\u2019m honestly impressed. Everything is super intuitive, and the support team actually responds fast. Definitely a go-to for me.",
+        "image": "https://cdn-icons-png.flaticon.com/512/4140/4140048.png",
+        "timestamp": 1746309600.692835
+    },
+    {
+        "name": "Jasmine Lee",
+        "message": "Clean layout, easy navigation, and everything loads quickly. I found what I needed in minutes. It\u2019s rare to see such a smooth user experience these days.",
+        "image": "https://cdn-icons-png.flaticon.com/128/15537/15537905.png",
+        "timestamp": 1746309623.020631
+    },
+    {
+        "name": "Mark D.",
+        "message": "Wasn\u2019t expecting much at first, but this site completely changed my mind. Reliable, organized, and no annoying pop-ups. Respect.",
+        "image": "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
+        "timestamp": 1746309779.4090571
+    },
+    {
+        "name": "Tanya Gupta",
+        "message": "Simple, effective, and it does exactly what it promises. I\u2019ve recommended it to a bunch of friends already. Keep up the good work!",
+        "image": "https://cdn-icons-png.flaticon.com/128/484/484945.png",
+        "timestamp": 1746309791.449054
     }
 ]

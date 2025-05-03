@@ -201,6 +201,41 @@ export default function DiagnosisPage() {
             description: "Leaf yellowing is a condition where leaves turn yellow due to nutrient deficiencies, environmental stress, or diseases. It can affect plant health and yield.",
             appearance: "Yellowing leaves, starting with older leaves\nLeaves may appear dry and shriveled.",
             fix: "Adjust watering practices based on soil moisture\nImprove soil drainage to prevent waterlogging\nEnsure plants receive sufficient sunlight\nUse a balanced fertilizer with iron, nitrogen, and magnesium."
+        },
+        {
+            name: "Esca",
+            description: "Grapevine fungal disease (also known as black measles) that affect the woody parts of vines with black spots. It can reduce yields and even kill the vine",
+            appearance: "Dark spotting\nStriped patterns on leaves\nDieback of shoots",
+            fix: "Pruning affected areas\nLime sulfar sprays\nApplying fungicide"
+        },
+        {
+            name: "Haunglongbing (HLB)",
+            description: "Bacterial disease (also known as citrus greening) that affects all citrus plants. It can lead to significantly reduced yields and the death of the infected tree.",
+            appearance: "Asymmetrical leaf blotching\nSmall, bitter fruit that remain green when ripe\nShoots with pale green/yellow growth\nStunted tree growth\nDieback of branches\nOff-season flowering",
+            fix: "None"
+        },
+        {
+            name: "Leaf Mold",
+            description: "Fungal disease that affects plants in humid environments It creates a layer of mold on leaves that hinder photosynthesis and plant health. Severe infections can weaken the plant.",
+            appearance: "White/grayich growth on leaves\nYellowing/browning of leaves\nStudnted growth in severe cases\nMay start as small spots",
+            fix: "Improve air circulation around the plant\nAvoid overhead watering and keep leaves dry\nDispose of affected leaves\nApply a fungicide in severe cases"
+        },
+        {
+            name: "Target Spot",
+            description: "Fungal disease that affects vegetables and ornamentals. It is characterized by lesions on leaves that resemble a target/bullseye.",
+            appearance: "Brown/tan bullseye rings\nCenter of the spot may fall out\nSpots can expand\nReduced fruit/flower production\nLeaf yellowing",
+            fix: "Keep foliage dry\nRemove infected leaves\nApply fungicide"
+        },
+        {
+            name: "Mosaic Virus",
+            description: "A group of plant viruses that cause mottle patterns on leaves that resemble a mosaic. It affects vegetables, fruits, and ornamentals. They are transmitted by insects or contaminated tools.",
+            appearance: "Irregular patterns of colors on leaves\nDistorted, stunted, or wrinkled leaves\nStunted flower/fruit growth\nColor breaks on fruit/flowers",
+            fix: "None"
+        },
+        {
+            name: "Yellow Curl Virus",
+            description: "DNA viruses that affect plants like tomatoes, pepper, and beans (Solanaceae family). They are transmitted by whiteflies and cause yield loss due to stunted growth of fruit.",
+            appearance: "Upward curling of leaves\nYellowing of leaves\nReduced branching\nStuted growth\nMalformatoin of flowers and fruit"
         }
     ];
 
