@@ -283,7 +283,7 @@ export default function UploadPage() {
       } finally {
         setLoading(false);
       }
-};
+  };
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -406,9 +406,15 @@ export default function UploadPage() {
       setShowAuthModal(true);
       return;
     }
-
+  
+    // Reset current image and preview
+    setImage(null);
+    setPreview(null);
+    setResult(null);
+    
+    // Trigger file input click
     if (fileInputRef.current) {
-      fileInputRef.current.value = null;
+      fileInputRef.current.value = null; // Clear any previous selection
       fileInputRef.current.click();
     }
   };
@@ -927,16 +933,11 @@ export default function UploadPage() {
                   Email
                 </label>
                 <input
-                  id="authEmail"
-                  type="email"
-                  value={authEmail}
-                  onChange={(e) => setAuthEmail(e.target.value)}
-                  className={`w-full p-2 rounded border ${
-                    isDarkMode
-                      ? "bg-gray-700 border-gray-600"
-                      : "bg-white border-gray-300"
-                  }`}
-                  required
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*,.heic,.heif,.png,.jpeg,.jpg"
+                  onChange={handleImageChange}
+                  className="hidden"
                 />
               </div>
 
