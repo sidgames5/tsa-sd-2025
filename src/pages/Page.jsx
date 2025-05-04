@@ -331,7 +331,7 @@ export default function App() {
          className="w-full flex flex-col items-center"
          initial={{ opacity: 0 }}
          animate={{ opacity: 1 }}
-         transition={{ delay: 0, duration: 0.6 }}
+         transition={{ delay: 1.2, duration: 1.2 }}
        >
          <ImageSlider />
         
@@ -597,7 +597,7 @@ export default function App() {
                        initial={{ opacity: 0, y: 20 }}
                        whileInView={{ opacity: 1, y: 0 }}
                        viewport={{ once: true }}
-                       transition={{ duration: 0.4, delay: index * 0.1 }}
+                       transition={{ duration: 1.2, delay: index * 0.1 }}
                        whileHover={{ scale: 1.04 }}
                      >
                        <div className="flex items-center gap-4 mb-4">
