@@ -63,8 +63,8 @@ export default function ImageSlider() {
                     transition={{ type: "spring", damping: 10, stiffness: 15 }}
                 >
                     <p>Unsure if your plant is healthy? LeafLogic makes it easy—just upload a</p> 
-                    <p>photo, and our AI, trained on top crops like bell peppers, tomatoes,</p>
-                    <p>and potatoes, gives you clear results. Boost your yields today!</p>
+                    <p>photo, and our AI, trained on top crops - bell peppers, tomatoes,</p>
+                    <p>and potatoes - gives you clear results. Boost your yields today!</p>
                 </motion.h1>
 
                 <motion.div className="flex flex-col items-center justify-between gap-2"

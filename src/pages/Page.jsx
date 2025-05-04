@@ -246,60 +246,58 @@ export default function App() {
     };
 
     return (
-      <div className="relative flex flex-col justify-center items-center overflow-hidden">
+      <div className={`relative flex flex-col justify-center items-center overflow-hidden ${cookies.darkMode ? "bg-black" : "bg-white"}`}>
         <AnimatePresence>
-          {!animationComplete && (
-            <motion.div
-              className="fixed inset-0 z-50 bg-cyan-400 flex justify-center items-center"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }} // Keep fully opaque until removal
-              exit={{ opacity: 0 }} // Still keep exit animation for safety
-              transition={{ duration: 0.6 }}
-              key="pink-overlay"
-              onAnimationComplete={() => {
-                // Remove immediately when lineExpand is true
-                if (lineExpand) {
-                  setAnimationComplete(true);
-                }
-              }}
-            >
-              {!lineGrow && (
-                <motion.div
-                  className="bg-black w-[2px]"
-                  initial={{ height: 0 }}
-                  animate={{ height: "100vh" }}
-                  transition={{ 
-                    duration: 1.1, 
-                    ease: "easeInOut",
-                    onComplete: () => setTimeout(() => setLineGrow(true), 200)
-                  }}
-                />
-              )}
+        {!animationComplete && (
+          <motion.div
+            className={`fixed inset-0 z-50 ${cookies.darkMode ? "bg-cyan-400" : "bg-white"} flex justify-center items-center`}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            key="initial-overlay"
+            onAnimationComplete={() => {
+              if (lineExpand) {
+                setAnimationComplete(true);
+              }
+            }}
+          >
+            {!lineGrow && (
+              <motion.div
+                className={`${cookies.darkMode ? "bg-black" : "bg-gray-800"} w-[2px]`}
+                initial={{ height: 0 }}
+                animate={{ height: "100vh" }}
+                transition={{ 
+                  duration: 1.1, 
+                  ease: "easeInOut",
+                  onComplete: () => setTimeout(() => setLineGrow(true), 200)
+                }}
+              />
+            )}
 
-              {lineGrow && !lineExpand && (
-                <motion.div
-                  className="absolute top-0 left-1/2 h-full bg-black"
-                  initial={{ width: "2px", x: "-1px" }}
-                  animate={{ width: "200vw", x: "-100vw" }}
-                  transition={{ 
-                    duration: 1, 
-                    ease: "easeInOut",
-                    onComplete: () => {
-                      setLineExpand(true);
-                      // Remove overlay immediately after expansion completes
-                      setAnimationComplete(true);
-                    }
-                  }}
-                />
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+            {lineGrow && !lineExpand && (
+              <motion.div
+                className={`absolute top-0 left-1/2 h-full ${cookies.darkMode ? "bg-black" : "bg-gray-800"}`}
+                initial={{ width: "2px", x: "-1px" }}
+                animate={{ width: "200vw", x: "-100vw" }}
+                transition={{ 
+                  duration: 1, 
+                  ease: "easeInOut",
+                  onComplete: () => {
+                    setLineExpand(true);
+                    setAnimationComplete(true);
+                  }
+                }}
+              />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     
         <AIChatbot />
         <motion.div
-          className="w-full flex flex-col items-center"
+          className={`w-full flex flex-col items-center ${cookies.darkMode ? "bg-black" : "bg-white"}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.6 }}
@@ -552,7 +550,7 @@ export default function App() {
               
               <div className="max-h-[500px] overflow-y-auto px-4">
                 {reviews.length === 0 ? (
-                  <p className={`${cookies.darkMode ? "text-white" : "text-gray-500"} text-center`}>No reviews yet.</p>
+                  <p className={`${cookies.darkMode ? "text-white" : "text-gray-500"} text-center`}>No reviews yet</p>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mt-2">
                     {reviews.map((review, index) => (
