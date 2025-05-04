@@ -1,22 +1,23 @@
 "use client"
 
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faLeaf, faMoon } from "@fortawesome/free-solid-svg-icons"
+import { faLeaf, faMoon, faComment } from "@fortawesome/free-solid-svg-icons"
 import { useCookies } from "react-cookie"
 import { useState, useEffect } from "react"
 import { AnimatePresence } from "motion/react"
 import * as motion from "motion/react-client"
 
 const tabs = [
-    { path: "/upload", label: "Upload" },
-    { path: "/diagnosis", label: "Diagnosis" },
+    { path: "/upload", label: "Detect" },
+    { path: "/diagnosis", label: "Plant Disease Guide" },
     { path: "/results", label: "AI Chart" },
     { path: "/features", label: "Features" }
 ]
 
 export default function Navbar() {
     const location = useLocation()
+    const navigate = useNavigate()
     const [cookies, setCookies] = useCookies(["darkMode"])
     const [selectedTab, setSelectedTab] = useState(
         tabs.find((tab) => tab.path === location.pathname) || tabs[0]
@@ -32,6 +33,26 @@ export default function Navbar() {
     }, [location.pathname]);
 
     const isDark = cookies.darkMode
+
+    const handleTestimonialsClick = () => {
+        if (location.pathname === "/") {
+            // If already on home page, scroll to testimonials
+            const testimonialsSection = document.getElementById("testimonials");
+            if (testimonialsSection) {
+                testimonialsSection.scrollIntoView({ behavior: "smooth" });
+            }
+        } else {
+            // If not on home page, navigate to home with hash
+            navigate("/#testimonials");
+            // Then scroll after the page loads
+            setTimeout(() => {
+                const testimonialsSection = document.getElementById("testimonials");
+                if (testimonialsSection) {
+                    testimonialsSection.scrollIntoView({ behavior: "smooth" });
+                }
+            }, 100);
+        }
+    }
 
     return (
         <div className="w-full">
@@ -54,9 +75,8 @@ export default function Navbar() {
 
                 <div className="flex-grow flex justify-center gap-4">
                     {tabs.map((item) => (
-                        <Link to={item.path}>
+                        <Link to={item.path} key={item.label}>
                             <motion.button
-                                key={item.label}
                                 onClick={() => setSelectedTab(item)}
                                 className={`relative px-8 py-4 rounded-md transition-colors duration-300 font-medium ${isDark
                                     ? "hover:bg-gray-700 hover: text-sky-500"
@@ -73,6 +93,24 @@ export default function Navbar() {
                             </motion.button>
                         </Link>
                     ))}
+                    
+                    {/* Testimonials Button */}
+                    <motion.button
+                        onClick={handleTestimonialsClick}
+                        className={`relative px-8 py-4 rounded-md transition-colors duration-300 font-medium flex items-center gap-2 ${isDark
+                            ? "hover:bg-gray-700 hover:text-sky-500"
+                            : "hover:bg-green-100 text-black hover:text-green-700"
+                            }`}
+                    >
+                        <FontAwesomeIcon icon={faComment} />
+                        <p>Testimonials</p>
+                        {location.pathname === "/" && (
+                            <motion.div
+                                layoutId="underline"
+                                className={`${cookies.darkMode ? "bg-blue-500" : "bg-green-500"} absolute bottom-0 left-0 right-0 h-0.5 rounded-full`}
+                            />
+                        )}
+                    </motion.button>
                 </div>
 
                 <div className="flex-shrink-0 mr-4">

@@ -355,6 +355,7 @@ export default function App() {
             initial={{ backgroundColor: cookies.darkMode ? "#ffffff" : "#000000" }}
             whileInView={{ backgroundColor: cookies.darkMode ? "#000000" : "#ffffff" }}
             transition={{ type: "tween", duration: 0.7 }}
+            id="missionStatement"
           >
             <div className="w-max" ref={missionRef}>
               <motion.div
@@ -409,7 +410,7 @@ export default function App() {
             </div>
           </motion.div>
           
-          <div className={`h-[100vh] w-full ${cookies.darkMode ? "bg-gradient-to-r from-blue-950 via-stone-900 to-sky-950" : "bg-gradient-to-r from-green-100 via-stone-50 to-blue-100"}`}>
+          <div className={`h-[100vh] w-full ${cookies.darkMode ? "bg-gradient-to-r from-blue-950 via-stone-900 to-sky-950" : "bg-gradient-to-r from-green-100 via-stone-50 to-blue-100"}`} id="testimonials">
             <div className="max-w-6xl mx-auto">
               <div className="mt-20" />
               <motion.h2 className={`text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent 

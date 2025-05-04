@@ -67,7 +67,7 @@ export default function LoginPage() {
       if (password === storedPassword) {
         setMessage('Login successful!');
         setCookie('user', email, { path: '/', maxAge: 60 * 60 * 24 });
-        navigate('/support');
+        navigate('/');
       } else {
         setMessage('Incorrect password.');
       }
