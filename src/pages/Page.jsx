@@ -331,7 +331,7 @@ export default function App() {
           className={`w-full flex flex-col items-center ${cookies.darkMode ? "bg-black" : "bg-white"}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
         >
           <ImageSlider />
           
