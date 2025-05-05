@@ -237,7 +237,227 @@ def predict():
             return jsonify({"success": False, "error": str(e)}), 500
     return jsonify({"success": False, "error": "Invalid file type"}), 400
 
-# ... (keep all other routes the same as in your original file)
+@app.route("/accuracy/chart", methods=["GET"])
+def get_chart_data():
+    return jsonify({
+        "success": True,
+        "data": {
+            "accuracies": history["accuracies"],
+            "losses": history["losses"]
+        }
+    })
+
+@app.route("/send-results", methods=['POST'])
+def send_results():
+    data = request.get_json()
+    email = data.get('email')
+    results = data.get('results', [])
+    good_results = [{
+        "name": r["name"],
+        "confidence": r["confidence"],
+        "prediction": r["status"]
+    } for r in results]
+
+    message = data.get('message', f"""<html><body><h1>Your LeafLogic report is ready!</h1><table><tr><th>Name</th><th>Confidence</th><th>Status</th></tr>{''.join(f"<tr><td>{res['name']}</td><td>{res['confidence']}</td><td>{res['prediction']}</td></tr>" for res in good_results)}</table><p>Thank you for using LeafLogic!</p><p>Best regards,<br>LeafLogic Team</p></body></html>""")
+
+    if not email:
+        return jsonify({"success": False, "error": "Email is required"}), 400
+
+    success = send_email(email, message)
+    return jsonify({"success": success, "error": None if success else "Failed to send email"}), 500 if not success else 200
+
+@app.route('/ollama-support', methods=['POST'])
+def ollama_support():
+    data = request.get_json()
+    prompt = data.get("prompt", "").strip().lower()
+
+    # Static responses for certain steps like uploading images or feature-related questions
+    feature_keywords = [
+        "features", "what can you do", "capabilities", "app features",
+        "how can you help", "what's good", "functions", "tools",
+        "what is leaflogic", "tell me about leaflogic", "leaflogic features"
+    ]
+    
+    upload_keywords = [
+        "upload", "how to upload", "upload an image", "how do I upload"
+    ]
+    
+    # Fixed feature list response
+    hardcoded_feature_reply = """
+Sure! Here are the features of LeafLogic: \n
+
+- 📸 **Plant Disease Detection**: Upload a photo of a plant to detect diseases using advanced AI. \n
+- 🧠 **Dual Models**: Uses both HuggingFace and a custom-trained CNN model for accurate results. \n
+- 📊 **Model Performance Dashboard**: Shows accuracy and loss metrics for each model. \n
+- 📬 **Email Results**: Get your plant analysis emailed to you for easy access later. \n
+- 🔍 **Searchable Diagnosis Page**: Quickly search through plant disease records and results. \n
+- 🗂 **Grouped History**: View all your plant analyses grouped by individual plants. \n
+- 🌱 **Plant Care Tips**: Get tips on how to treat or manage specific diseases. \n
+- 🤖 **AI Support Chat**: Ask questions like this anytime — LeafLogic Assistant is here to help! \n
+""".strip()
+    
+    # Static step-by-step guide for uploading an image
+    hardcoded_upload_reply = """
+To upload an image of your plant for disease detection, follow these steps:
+1. Go to the **Diagnosis Page** on your LeafLogic app.
+2. Look for the **'Upload Image'** button and click it.
+3. Select an image of your plant that you'd like to analyze.
+4. Wait for the system to process the image and display the disease analysis results.
+5. Optionally, you can email the results to yourself by entering your email after the analysis.
+"""
+    
+    # If the prompt asks about features
+    if any(keyword in prompt for keyword in feature_keywords):
+        return jsonify({"reply": hardcoded_feature_reply})
+    
+    # If the prompt asks about uploading an image
+    elif any(keyword in prompt for keyword in upload_keywords):
+        return jsonify({"reply": hardcoded_upload_reply})
+
+    # Using deepseek for all other questions
+    try:
+        response = ollama.chat(
+            model="deepseek-r1:1.5b",  
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are the AI assistant for *LeafLogic*, a web app that helps farmers identify plant diseases from images. "
+                        "The app includes features like image-based disease detection, dual-model predictions, email reporting, search tools, disease history tracking, and farming support. "
+                        "You are NOT related to any ERP software or cannabis industry product. "
+                        "If the user asks about the app's features, respond with a bulleted list of them as clearly and helpfully as possible. "
+                        "Always stay in the farming context. Remove the thinking from your response. Give short answers"
+                    )
+                },
+                {"role": "user", "content": prompt}
+            ]
+        )
+        
+        # Remove <think> sections from the response
+        cleaned_response = re.sub(r'<think>.*?</think>', '', response["message"]["content"], flags=re.DOTALL)
+        
+        return jsonify({"reply": cleaned_response})
+    
+    except Exception as e:
+        app.logger.error(f"Ollama support error: {e}")
+        return jsonify({"reply": "Sorry, something went wrong while trying to help."}), 500
+
+def save_review_to_file(review):
+    try:
+        if not os.path.exists(REVIEW_FILE):
+            with open(REVIEW_FILE, "w") as f:
+                json.dump([], f)  # Initialize an empty list if the file doesn't exist
+
+        # Load existing reviews and add the new review
+        with open(REVIEW_FILE, "r") as f:
+            reviews = json.load(f)
+
+        reviews.append(review)
+
+        # Save the updated list of reviews back to the file
+        with open(REVIEW_FILE, "w") as f:
+            json.dump(reviews, f, indent=4)
+
+        return True
+    except Exception as e:
+        app.logger.error(f"Failed to save review: {str(e)}")
+        return False
+
+
+        return True
+    except Exception as e:
+        app.logger.error(f"Failed to save review: {str(e)}")
+        return False
+
+@app.route('/submit-review', methods=['POST'])
+def submit_review():
+    try:
+        name = request.form.get('name', 'Anonymous')
+        message = request.form.get('message', '')
+        image_file = request.files.get('profileImage')
+        photo_url = request.form.get('photo')  # <-- this was missing before
+
+        if not message:
+            return jsonify({"success": False, "error": "Review message is required"}), 400
+
+        # Determine which image to use: uploaded file or avatar URL
+        if image_file and allowed_file(image_file.filename):
+            filename = secure_filename(f"{int(time.time())}_{image_file.filename}")
+            filepath = os.path.join('static/reviews', filename)
+            try:
+                image_file.save(filepath)
+                image_url = f"/static/reviews/{filename}"
+            except Exception as e:
+                app.logger.error(f"Failed to save image: {str(e)}")
+                image_url = "/static/reviews/default_user.png"
+        else:
+            image_url = photo_url or "/static/reviews/default_user.png"
+
+        review_data = {
+            "name": name,
+            "message": message,
+            "image": image_url,
+            "timestamp": time.time()
+        }
+
+        if save_review_to_file(review_data):
+            return jsonify({"success": True, "review": review_data}), 200
+        else:
+            return jsonify({"success": False, "error": "Failed to save review"}), 500
+
+    except Exception as e:
+        app.logger.error(f"Review submission error: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/get-reviews', methods=['GET'])
+def get_reviews():
+    try:
+        # Load the reviews from the file every time the endpoint is hit
+        with open(REVIEW_FILE, "r") as f:
+            reviews = json.load(f)
+        return jsonify(reviews)
+    except Exception as e:
+        app.logger.error(f"Failed to load reviews: {str(e)}")
+        return jsonify([]), 500
+
+# Admin login decorator
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not (auth.username == ADMIN_CREDENTIALS["username"] and auth.password == ADMIN_CREDENTIALS["password"]):
+            return jsonify({"success": False, "error": "Authentication required"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/admin/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({"success": False, "error": "Username and password required"}), 400
+    
+    if data['username'] == ADMIN_CREDENTIALS["username"] and data['password'] == ADMIN_CREDENTIALS["password"]:
+        return jsonify({"success": True, "message": "Login successful"})
+    else:
+        return jsonify({"success": False, "error": "Invalid credentials"}), 401
+
+@app.route('/testimonials', methods=['DELETE'])
+@admin_required
+def delete_all_reviews():
+    try:
+        with open(REVIEW_FILE, "w") as f:
+            json.dump([], f)
+        app.logger.info("All reviews successfully deleted.")
+
+        # Confirm deletion
+        with open(REVIEW_FILE, "r") as f:
+            reviews = json.load(f)
+            app.logger.info(f"File contents after deletion: {reviews}")
+
+        return jsonify({"success": True, "message": "All reviews deleted"})
+    except Exception as e:
+        app.logger.error(f"Failed to delete reviews: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == "__main__":
     try:
