@@ -37,6 +37,10 @@ $ npm start
 ```
 
 ```
+Make sure you are using python 3.10
+```
+
+```
 $ python -m new_backend.main
 $ if there is an error for installing pillow-heif, open a new terminal and run brew install libheif
 ```
