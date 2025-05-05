@@ -17,7 +17,7 @@ import re
 import json
 from functools import wraps
 from dotenv import load_dotenv
-
+from new_backend.email import send_email
 # Initialize environment
 load_dotenv()
 REVIEW_FILE = "new_backend/reviews.json"
