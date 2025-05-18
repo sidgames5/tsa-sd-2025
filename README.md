@@ -1,6 +1,6 @@
 # TSA Software Development - 2025
 
-Pennsylvania TSA team 2013-901 submission for the software development event for states 2025.
+Pennsylvania TSA team 2013-901 submission for the software development event for nationals 2025.
 
 ## Run the program
 
@@ -13,7 +13,7 @@ Arch-based:
 
 Debian-based:
 ```
-# apt install python nodejs npm
+# sudo apt install python3 nodejs npm
 ```
 
 Create virtual environment
@@ -21,6 +21,7 @@ Create virtual environment
 ```
 $ python -m venv .venv
 $ source .venv/bin/activate
+# On Windows: .venv\Scripts\activate
 ```
 
 Install dependencies:

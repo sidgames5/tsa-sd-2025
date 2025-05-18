@@ -57,13 +57,18 @@ export default function UploadPage() {
     const checkApiStatus = async () => {
       try {
         const response = await fetch("/api/health");
-        setApiStatus(response.ok ? "connected" : "error");
+        const data = await response.json();
+        setApiStatus(data.status === "healthy" ? "connected" : "error");
       } catch (error) {
         setApiStatus("error");
         console.error("Backend connection error:", error);
       }
     };
     checkApiStatus();
+    
+    
+    const interval = setInterval(checkApiStatus, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   // Camera functions
@@ -315,85 +320,82 @@ export default function UploadPage() {
 
   const handleUpload = async () => {
     if (plantType === "Select a Plant") {
-      alert("Please select a valid plant option before uploading.");
+      setErrorMessage("Please select a valid plant option before uploading.");
       return;
     }
+  
     if (!isLoggedIn) {
       setShowAuthModal(true);
       return;
     }
-
-    if (!image || loading) return;
-
-    if (!plantType) {
-      alert("Please select a plant type!");
+  
+    if (!image) {
+      setErrorMessage("Please select an image first!");
       return;
     }
-
+  
     try {
       setLoading(true);
       setTimer(0);
       setProgress(0);
       if (intervalId) clearInterval(intervalId);
-
+  
       const newIntervalId = setInterval(() => {
         setTimer((prev) => prev + 1);
         setProgress((prev) => Math.min(prev + 10, 90));
       }, 1000);
       setIntervalId(newIntervalId);
-
+  
       const formData = new FormData();
       formData.append("image", image);
       formData.append("plantType", plantType);
-
+  
       const response = await fetch("/predict", {
         method: "POST",
         body: formData,
       });
-
+  
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Server error");
       }
-
+  
       const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || "Prediction failed");
+      }
+  
       setProgress(100);
       const now = new Date();
       const newResult = {
-        status: data.success ? "success" : "error",
-        prediction: data.prediction || data.error,
+        status: "success",
+        prediction: data.prediction,
         confidence: data.confidence,
         timestamp: now.toLocaleString(),
         image: preview,
         date: now.toISOString().split("T")[0],
         id: Date.now(),
       };
-
+  
       setResult(newResult);
-
-      if (isLoggedIn && cookies.user?.email && data.success) {
+      setErrorMessage(null);
+  
+      // Save to local storage if logged in
+      if (isLoggedIn && cookies.user?.email) {
         const userEmail = cookies.user.email;
-
-        const userResults =
-          JSON.parse(localStorage.getItem(`plantResults_${userEmail}`)) || [];
+        const userResults = JSON.parse(localStorage.getItem(`plantResults_${userEmail}`)) || [];
         userResults.unshift(newResult);
-        localStorage.setItem(
-          `plantResults_${userEmail}`,
-          JSON.stringify(userResults)
-        );
-
-        const accuracy = data.confidence / 100; // Convert to 0-1 range
-        const loss = 1 - accuracy;
-        updateUserChartData(userEmail, accuracy, loss);
-
-        const updatedChartData = getUserChartData(userEmail);
+        localStorage.setItem(`plantResults_${userEmail}`, JSON.stringify(userResults));
+        updateUserChartData(userEmail, data.confidence / 100, 1 - (data.confidence / 100));
       }
+  
     } catch (error) {
       console.error("Upload error:", error);
+      setErrorMessage(error.message || "Analysis failed. Please try again.");
       setResult({
         status: "error",
-        prediction: error.message.includes("Failed to fetch")
-          ? "Backend connection failed. Please try again later."
-          : error.message,
+        prediction: error.message,
       });
     } finally {
       if (intervalId) clearInterval(intervalId);
@@ -553,10 +555,19 @@ export default function UploadPage() {
           </div>
         )}
         {errorMessage && (
-            <ErrorPopup 
-                message={errorMessage}
-                onClose={() => setErrorMessage(null)}
-            />
+          <div className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+            isDarkMode ? "bg-red-800 text-white" : "bg-red-100 text-red-800"
+          }`}>
+            <div className="flex justify-between items-center">
+              <span>{errorMessage}</span>
+              <button 
+                onClick={() => setErrorMessage(null)}
+                className="ml-4 p-1 rounded-full hover:bg-black/10"
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            </div>
+          </div>
         )}
         {!isLoggedIn && (
           <div
@@ -697,7 +708,7 @@ export default function UploadPage() {
               <option value="Potato" className="text-center">
                 Potato
               </option>
-              <option value="Potato" className="text-center">
+              <option value="Pepper Bell" className="text-center">
                 Pepper Bell
               </option>
               <option value="Raspberry" className="text-center">
@@ -928,18 +939,22 @@ export default function UploadPage() {
             )}
 
             <form onSubmit={handleAuthSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="authEmail" className="block mb-1">
-                  Email
-                </label>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept="image/*,.heic,.heif,.png,.jpeg,.jpg"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </div>
+            <div>
+              <label htmlFor="authEmail" className="block mb-1">
+                Email
+              </label>
+              <input
+                id="authEmail"
+                type="email"
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                className={`w-full p-2 rounded border ${
+                  isDarkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"
+                }`}
+                required
+              />
+            </div>
+
 
               <div>
                 <label htmlFor="authPassword" className="block mb-1">

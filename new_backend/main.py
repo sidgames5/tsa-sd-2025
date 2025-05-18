@@ -3,14 +3,13 @@ import io
 import time
 import torch
 import logging
-from PIL import Image
+from PIL import Image, ImageDraw
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from logging.handlers import RotatingFileHandler
-from transformers import AutoConfig, AutoImageProcessor, AutoModelForImageClassification
+from transformers import AutoImageProcessor, AutoModelForImageClassification
 from torchvision import transforms
 from werkzeug.utils import secure_filename
-from new_backend.model2_train import SimpleCNN
 import pillow_heif
 import ollama
 import re
@@ -18,6 +17,7 @@ import json
 from functools import wraps
 from dotenv import load_dotenv
 from new_backend.email import send_email
+from werkzeug.middleware.proxy_fix import ProxyFix
 # Initialize environment
 load_dotenv()
 REVIEW_FILE = "new_backend/reviews.json"
@@ -31,11 +31,16 @@ CORS(app)
 app.config.update({
     'MAX_CONTENT_LENGTH': 10 * 1024 * 1024,
     'ALLOWED_EXTENSIONS': {'png', 'jpg', 'jpeg', 'gif', 'heic', 'heif'},
-    'MODEL_NAME': "linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification",
     'MODEL_CACHE': "./model_cache",
-    'THROTTLE_LIMIT': 5,
-    'DATASET_DIR': "new_backend/PlantVillage"
+    'THROTTLE_LIMIT': 5
 })
+
+# Model configuration
+MODEL_CONFIG = {
+    'general_model': "google/vit-base-patch16-224",
+    'specialized_model': "DunnBC22/vit-base-Plantsv1-Disease-Classification",  # Verified plant disease model
+    'fallback_model': "linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
+}
 
 # Admin credentials
 ADMIN_CREDENTIALS = {
@@ -57,74 +62,161 @@ handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
 
-# Initialize history
-history = {"accuracies": [], "losses": []}
-
 class PlantDiseaseClassifier:
     def __init__(self):
-        self.model_hf = None
-        self.model_cnn = None
-        self.processor_hf = None
-        self.labels_hf = None
-        self.labels_cnn = None
+        self.models = {}
+        self.processors = {}
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model_config = {
+            'general': "google/vit-base-patch16-224",
+            'specialized': "DunnBC22/vit-base-Plantsv1-Disease-Classification",
+            'fallback': "linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
+        }
         app.logger.info(f"Using device: {self.device}")
 
     def load_model(self):
-        if self.model_hf is not None and self.model_cnn is not None:
+        if self.models:
             return
 
         try:
             start_time = time.time()
             app.logger.info("Loading models...")
 
-            # Load HuggingFace model
-            config = AutoConfig.from_pretrained(
-                app.config['MODEL_NAME'],
-                trust_remote_code=True,
-                cache_dir=app.config['MODEL_CACHE']
-            )
-            self.processor_hf = AutoImageProcessor.from_pretrained(
-                app.config['MODEL_NAME'],
-                trust_remote_code=True,
-                cache_dir=app.config['MODEL_CACHE']
-            )
-            self.model_hf = AutoModelForImageClassification.from_pretrained(
-                app.config['MODEL_NAME'],
-                config=config,
-                trust_remote_code=True,
-                cache_dir=app.config['MODEL_CACHE']
-            ).to(self.device)
-            self.labels_hf = self.model_hf.config.id2label
-            app.logger.info("HuggingFace model loaded.")
-
-            # Load CNN model
-            dataset_folder = app.config['DATASET_DIR']
-            if not os.path.exists(dataset_folder):
-                raise FileNotFoundError(f"Dataset folder not found: {dataset_folder}")
-
-            class_names = [d for d in os.listdir(dataset_folder) 
-                         if os.path.isdir(os.path.join(dataset_folder, d))]
-            num_classes = len(class_names)
-            
-            self.model_cnn = SimpleCNN(num_classes=num_classes).to(self.device)
-            if os.path.exists("plant_disease_model.pth"):
-                self.model_cnn.load_state_dict(
-                    torch.load("plant_disease_model.pth", map_location=self.device)
+            # Try loading specialized model first
+            try:
+                self.processors['specialized'] = AutoImageProcessor.from_pretrained(
+                    self.model_config['specialized'],
+                    cache_dir=app.config['MODEL_CACHE']
                 )
-                self.model_cnn.eval()
-                app.logger.info("SimpleCNN model loaded.")
-            else:
-                raise FileNotFoundError("CNN model file not found.")
+                self.models['specialized'] = AutoModelForImageClassification.from_pretrained(
+                    self.model_config['specialized'],
+                    cache_dir=app.config['MODEL_CACHE']
+                ).to(self.device).eval()
+                app.logger.info("Specialized plant disease model loaded")
+            except Exception as e:
+                app.logger.warning(f"Failed to load specialized model: {str(e)}")
+                self.models['specialized'] = None
 
-            self.labels_cnn = {idx: name for idx, name in enumerate(class_names)}
-            app.logger.info(f"Loaded {num_classes} classes for CNN model")
+            # Load general vision model
+            self.processors['general'] = AutoImageProcessor.from_pretrained(
+                self.model_config['general'],
+                cache_dir=app.config['MODEL_CACHE']
+            )
+            self.models['general'] = AutoModelForImageClassification.from_pretrained(
+                self.model_config['general'],
+                cache_dir=app.config['MODEL_CACHE']
+            ).to(self.device).eval()
+            app.logger.info("General vision model loaded")
+
+            # Load fallback model
+            try:
+                self.processors['fallback'] = AutoImageProcessor.from_pretrained(
+                    self.model_config['fallback'],
+                    cache_dir=app.config['MODEL_CACHE']
+                )
+                self.models['fallback'] = AutoModelForImageClassification.from_pretrained(
+                    self.model_config['fallback'],
+                    cache_dir=app.config['MODEL_CACHE']
+                ).to(self.device).eval()
+                app.logger.info("Fallback plant disease model loaded")
+            except Exception as e:
+                app.logger.warning(f"Failed to load fallback model: {str(e)}")
+                self.models['fallback'] = None
+
+            if not any(model for model in self.models.values()):
+                raise RuntimeError("All model loading attempts failed")
 
             app.logger.info(f"Models loaded in {time.time()-start_time:.2f}s")
 
         except Exception as e:
             app.logger.error(f"Model loading failed: {str(e)}")
+            raise RuntimeError(f"Could not load any models: {str(e)}")
+
+    def preprocess_image(self, image_bytes):
+        try:
+            image = Image.open(io.BytesIO(image_bytes))
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+            return image
+        except Exception as e:
+            app.logger.error(f"Image processing failed: {str(e)}")
+            raise ValueError("Invalid or unsupported image file")
+
+    def _predict_with_model(self, image, model_key):
+        try:
+            processor = self.processors[model_key]
+            model = self.models[model_key]
+            
+            inputs = processor(images=image, return_tensors="pt").to(self.device)
+            with torch.no_grad():
+                outputs = model(**inputs)
+                probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+                pred_idx = outputs.logits.argmax(-1).item()
+                confidence = float(probs[0][pred_idx].item())
+                label = model.config.id2label[pred_idx]
+            
+            return {
+                "prediction": label,
+                "confidence": confidence,
+                "model_key": model_key
+            }
+        except Exception as e:
+            app.logger.error(f"Prediction with {model_key} model failed: {str(e)}")
             raise
+
+    def predict(self, image_bytes, plant_type=None):
+        try:
+            self.load_model()
+            image = self.preprocess_image(image_bytes)
+            
+            plant_type = plant_type.strip().lower() if plant_type else ""
+            use_specialized = plant_type in ['pepper bell', 'tomato', 'potato']
+            
+            # Try specialized model first if applicable
+            if use_specialized and self.models.get('specialized'):
+                try:
+                    result = self._predict_with_model(image, 'specialized')
+                    result["model_used"] = "Specialized Plant Model"
+                    return {
+                        "success": True,
+                        **result,
+                        "confidence": int(result["confidence"] * 100)
+                    }
+                except Exception:
+                    app.logger.warning("Falling back to general model")
+
+            # Try general model
+            if self.models.get('general'):
+                try:
+                    result = self._predict_with_model(image, 'general')
+                    result["model_used"] = "General Vision Model"
+                    return {
+                        "success": True,
+                        **result,
+                        "confidence": int(result["confidence"] * 100)
+                    }
+                except Exception:
+                    app.logger.warning("Falling back to mobile model")
+
+            # Final fallback
+            if self.models.get('fallback'):
+                result = self._predict_with_model(image, 'fallback')
+                result["model_used"] = "Fallback Mobile Model"
+                return {
+                    "success": True,
+                    **result,
+                    "confidence": int(result["confidence"] * 100)
+                }
+
+            raise RuntimeError("All prediction attempts failed")
+
+        except Exception as e:
+            app.logger.error(f"Prediction error: {str(e)}")
+            return {
+                "success": False,
+                "error": str(e),
+                "message": "Could not process image"
+            }
 
     def preprocess_image(self, image_bytes):
         try:
@@ -138,54 +230,65 @@ class PlantDiseaseClassifier:
         try:
             self.load_model()
             image = self.preprocess_image(image_bytes)
-
-            use_cnn_only = plant_type.strip().lower() in ['pepper bell', 'potato', 'tomato']
-            results = []
-
-            if not use_cnn_only:
-                try:
-                    inputs = self.processor_hf(images=image, return_tensors="pt").to(self.device)
-                    with torch.no_grad():
-                        outputs = self.model_hf(**inputs)
-                        probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-                        pred_idx = outputs.logits.argmax(-1).item()
-                        confidence = int(probs[0][pred_idx].item() * 100)
-                        label = self.labels_hf.get(pred_idx, "Unknown")
-                        results.append(("HuggingFace", label, confidence))
-                except Exception as e:
-                    app.logger.warning(f"HF prediction failed: {e}")
-
-            if use_cnn_only or not results:
-                try:
-                    transform = transforms.Compose([
-                        transforms.Resize((224, 224)),
-                        transforms.ToTensor()
-                    ])
-                    img_tensor = transform(image).unsqueeze(0).to(self.device)
-                    with torch.no_grad():
-                        outputs = self.model_cnn(img_tensor)
-                        probs = torch.nn.functional.softmax(outputs, dim=-1)
-                        pred_idx = outputs.argmax(-1).item()
-                        confidence = int(probs[0][pred_idx].item() * 100)
-                        label = self.labels_cnn.get(pred_idx, "Unknown")
-                        results.append(("SimpleCNN", label, confidence))
-                except Exception as e:
-                    app.logger.warning(f"CNN prediction failed: {e}")
-
-            if not results:
-                raise ValueError("No model produced a prediction")
-
-            model_used, prediction, confidence = results[-1]
+            
+            plant_type = plant_type.strip().lower()
+            
+            # Determine which model to use
+            use_specialized = plant_type in ['pepper bell', 'tomato', 'potato']
+            model_key = 'specialized' if use_specialized else 'general'
+            
+            processor = self.processors[model_key]
+            model = self.models[model_key]
+            
+            inputs = processor(images=image, return_tensors="pt").to(self.device)
+            with torch.no_grad():
+                outputs = model(**inputs)
+                probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+                pred_idx = outputs.logits.argmax(-1).item()
+                confidence = float(probs[0][pred_idx].item())
+                label = model.config.id2label[pred_idx]
+            
+            # Post-process label for consistency
+            if use_specialized and '___' in label:
+                label = label.replace('___', '__')  # Standardize separator
+            
             return {
                 "success": True,
-                "model_used": model_used,
-                "prediction": prediction,
-                "confidence": confidence
+                "model_used": "Specialized" if use_specialized else "General",
+                "prediction": label,
+                "confidence": int(confidence * 100)
             }
 
         except Exception as e:
-            app.logger.error(f"Prediction error: {str(e)}")
-            return {"success": False, "error": str(e)}
+            # Fallback to simpler model if available
+            try:
+                if 'fallback' not in self.models:
+                    self.processors['fallback'] = AutoImageProcessor.from_pretrained(
+                        MODEL_CONFIG['fallback_model'],
+                        cache_dir=app.config['MODEL_CACHE']
+                    )
+                    self.models['fallback'] = AutoModelForImageClassification.from_pretrained(
+                        MODEL_CONFIG['fallback_model'],
+                        cache_dir=app.config['MODEL_CACHE']
+                    ).to(self.device).eval()
+                
+                inputs = self.processors['fallback'](images=image, return_tensors="pt").to(self.device)
+                with torch.no_grad():
+                    outputs = self.models['fallback'](**inputs)
+                    probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+                    pred_idx = outputs.logits.argmax(-1).item()
+                    confidence = float(probs[0][pred_idx].item())
+                    label = self.models['fallback'].config.id2label[pred_idx]
+                
+                return {
+                    "success": True,
+                    "model_used": "Fallback",
+                    "prediction": label,
+                    "confidence": int(confidence * 100)
+                }
+            except Exception as fallback_error:
+                app.logger.error(f"Prediction error: {str(e)} | Fallback failed: {str(fallback_error)}")
+                return {"success": False, "error": f"Prediction failed: {str(e)}"}
 
 # Initialize classifier
 classifier = PlantDiseaseClassifier()
@@ -216,10 +319,14 @@ def health_check():
         classifier.load_model()
         return jsonify({
             "status": "healthy",
-            "models_loaded": classifier.model_hf is not None and classifier.model_cnn is not None
-        })
+            "models_loaded": bool(classifier.models)  # Check if any models are loaded
+        }), 200
     except Exception as e:
-        return jsonify({"status": "unhealthy", "error": str(e)}), 500
+        return jsonify({
+            "status": "unhealthy",
+            "error": str(e),
+            "models_loaded": False
+        }), 500
 
 @app.route("/predict", methods=["POST"])
 def predict():

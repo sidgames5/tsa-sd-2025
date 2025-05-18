@@ -6,9 +6,9 @@ numpy
 opencv-python-headless
 keras
 datasets
-torch==2.6.0
+torch>=2.0
 pillow
-torchvision==0.21.0
+torchvision>=0.15
 kagglehub
 Image
 transforms
@@ -20,6 +20,7 @@ tdqm
 tqdm
 #shutil
 flask-cors
-transformers
-pillow-heif
+transformers>=4.30
+pillow-heif>=0.7
 ollama
+scikit-learn
