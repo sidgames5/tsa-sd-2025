@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload, faSpinner, faCheck, faTimes, faUser, faCamera, faTimesCircle, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { updateUserChartData, getUserChartData } from "../results/chartStuff";
 import heic2any from 'heic2any';
+import AIChatbot from "../../components/AIChatbot";
 
 
 export default function UploadPage() {

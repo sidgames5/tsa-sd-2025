@@ -6,6 +6,7 @@ import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch, faLeaf, faChevronRight, faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
+import AIChatbot from "../../components/AIChatbot";
 
 
 
@@ -374,8 +375,8 @@ export default function DiagnosisPage() {
                             transition={{ duration: 0.3, ease: "easeOut" }}
                             onClick={(e) => e.stopPropagation()}
                             className={`w-full max-w-2xl rounded-2xl shadow-2xl border ${cookies.darkMode
-                                    ? "bg-gradient-to-br from-gray-900 via-sky-950 to-teal-900 border-gray-700"
-                                    : "bg-gradient-to-br from-sky-100 via-stone-200 to-blue-100 border-gray-300"
+                                ? "bg-gradient-to-br from-gray-900 via-sky-950 to-teal-900 border-gray-700"
+                                : "bg-gradient-to-br from-sky-100 via-stone-200 to-blue-100 border-gray-300"
                                 }`}
                         >
                             {/* Modal Header */}
@@ -398,8 +399,8 @@ export default function DiagnosisPage() {
                                         <button
                                             onClick={() => toggleSection('identify')}
                                             className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${cookies.darkMode
-                                                    ? "bg-gray-700 text-white hover:bg-gray-600"
-                                                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                                ? "bg-gray-700 text-white hover:bg-gray-600"
+                                                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                                                 }`}
                                         >
                                             How to Identify
@@ -432,8 +433,8 @@ export default function DiagnosisPage() {
                                         <button
                                             onClick={() => toggleSection('fix')}
                                             className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${cookies.darkMode
-                                                    ? "bg-gray-700 text-white hover:bg-gray-600"
-                                                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                                ? "bg-gray-700 text-white hover:bg-gray-600"
+                                                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                                                 }`}
                                         >
                                             How to Fix
@@ -468,8 +469,8 @@ export default function DiagnosisPage() {
                                 <button
                                     onClick={() => setIsModalOpen(false)}
                                     className={`px-6 py-2 text-lg font-semibold rounded-xl transition ${cookies.darkMode
-                                            ? "bg-sky-700 hover:bg-sky-600 text-white"
-                                            : "bg-sky-400 hover:bg-sky-500 text-white"
+                                        ? "bg-sky-700 hover:bg-sky-600 text-white"
+                                        : "bg-sky-400 hover:bg-sky-500 text-white"
                                         }`}
                                 >
                                     Close

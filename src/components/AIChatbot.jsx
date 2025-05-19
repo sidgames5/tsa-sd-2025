@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { Send, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faTimes, faSpinner} from "@fortawesome/free-solid-svg-icons"
+import { faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons"
+
 export default function AIChatbot() {
     const [cookies, setCookies] = useCookies(["darkMode", "user"]);
     const [query, setQuery] = useState("");
@@ -127,7 +128,7 @@ export default function AIChatbot() {
                     >
                         <MessageSquare size={24} />
                     </motion.button>
-                    
+
                     <AnimatePresence>
                         {showModal && (
                             <motion.div
@@ -135,17 +136,16 @@ export default function AIChatbot() {
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.8, y: 50 }}
                                 transition={{ duration: 0.3 }}
-                                className={`absolute flex flex-col bottom-16 right-0 w-96 max-h-[60vh] shadow-2xl rounded-2xl p-4 gap-4 overflow-hidden border-2 ${
-                                    isDark 
-                                        ? "bg-gradient-to-br from-indigo-950 via-sky-800 to-indigo-950 border-white" 
-                                        : "border-black bg-white"
-                                }`}
+                                className={`absolute flex flex-col bottom-16 right-0 w-96 max-h-[60vh] shadow-2xl rounded-2xl p-4 gap-4 overflow-hidden border-2 ${isDark
+                                    ? "bg-gradient-to-br from-indigo-950 via-sky-800 to-indigo-950 border-white"
+                                    : "border-black bg-white"
+                                    }`}
                             >
                                 <div className="flex justify-between items-center">
                                     <h1 className={`${isDark ? "text-white" : "text-black"} text-xl font-bold`}>
                                         LeafLogic AI
                                     </h1>
-                                    <button 
+                                    <button
                                         onClick={() => setShowModal(false)}
                                         className={`p-1 rounded-full ${isDark ? "hover:bg-gray-700" : "hover:bg-gray-200"}`}
                                     >
@@ -162,13 +162,12 @@ export default function AIChatbot() {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.3 }}
-                                            className={`rounded-xl px-4 py-2 w-fit max-w-[85%] whitespace-pre-wrap mt-2 ${
-                                                msg.sender === "user" 
-                                                    ? "ml-auto bg-blue-500 text-white" 
-                                                    : isDark 
-                                                        ? "bg-gray-700 text-white" 
-                                                        : "bg-gray-200 text-black"
-                                            }`}
+                                            className={`rounded-xl px-4 py-2 w-fit max-w-[85%] whitespace-pre-wrap mt-2 ${msg.sender === "user"
+                                                ? "ml-auto bg-blue-500 text-white"
+                                                : isDark
+                                                    ? "bg-gray-700 text-white"
+                                                    : "bg-gray-200 text-black"
+                                                }`}
                                         >
                                             {msg.sender === "bot" ? formatBotText(msg.text) : msg.text}
                                         </motion.div>
@@ -187,21 +186,19 @@ export default function AIChatbot() {
                                         placeholder="Ask a question..."
                                         value={query}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        className={`flex-grow px-4 py-2 rounded-xl border ${
-                                            isDark 
-                                                ? "bg-gray-700 text-white border-gray-600" 
-                                                : "bg-white text-black border-gray-300"
-                                        }`}
+                                        className={`flex-grow px-4 py-2 rounded-xl border ${isDark
+                                            ? "bg-gray-700 text-white border-gray-600"
+                                            : "bg-white text-black border-gray-300"
+                                            }`}
                                         onKeyDown={(e) => e.key === "Enter" && handleSend()}
                                     />
                                     <button
                                         onClick={handleSend}
                                         disabled={loading}
-                                        className={`p-2 rounded-xl ${
-                                            loading
-                                                ? "bg-gray-500 cursor-not-allowed"
-                                                : "bg-blue-600 hover:bg-blue-700"
-                                        } text-white`}
+                                        className={`p-2 rounded-xl ${loading
+                                            ? "bg-gray-500 cursor-not-allowed"
+                                            : "bg-blue-600 hover:bg-blue-700"
+                                            } text-white`}
                                     >
                                         <Send size={20} />
                                     </button>

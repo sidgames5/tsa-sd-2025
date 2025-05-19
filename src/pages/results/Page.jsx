@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCookies } from "react-cookie";
 import Chart from "./Chart";
 import { getUserChartData, clearUserChartData } from "./chartStuff";
+import AIChatbot from "../../components/AIChatbot";
 
 export default function ResultsPage() {
     const [cookies] = useCookies(["darkMode", "user"]);
@@ -220,8 +221,8 @@ export default function ResultsPage() {
                                     type="submit"
                                     disabled={isSending}
                                     className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${emailSent
-                                            ? "bg-green-500 cursor-default"
-                                            : "bg-blue-600 hover:bg-blue-700"
+                                        ? "bg-green-500 cursor-default"
+                                        : "bg-blue-600 hover:bg-blue-700"
                                         }`}
                                 >
                                     {emailSent ? "Email Sent!" : isSending ? "Sending..." : "Send Email"}
@@ -270,8 +271,8 @@ export default function ResultsPage() {
                                             <motion.div
                                                 key={plant.id}
                                                 className={`p-4 rounded-lg border transition ${isDark
-                                                        ? "border-gray-400 hover:bg-gray-800"
-                                                        : "border-gray-400 hover:bg-gray-100"
+                                                    ? "border-gray-400 hover:bg-gray-800"
+                                                    : "border-gray-400 hover:bg-gray-100"
                                                     }`}
                                                 whileHover={{ scale: 1.01 }}
                                             >

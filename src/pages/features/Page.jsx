@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import AIChatbot from "../../components/AIChatbot";
 
 
 export default function FeaturesPage() {
@@ -241,8 +242,8 @@ export default function FeaturesPage() {
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleDemoClick}
                                 className={`px-8 py-4 rounded-full font-bold text-lg ${isDark
-                                        ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white"
-                                        : "bg-gradient-to-r from-emerald-400 to-teal-500 text-white"
+                                    ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white"
+                                    : "bg-gradient-to-r from-emerald-400 to-teal-500 text-white"
                                     } shadow-lg hover:shadow-xl transition-all relative overflow-hidden group`}
                             >
                                 <span className="relative z-10">Try Live Demo</span>
@@ -439,8 +440,8 @@ export default function FeaturesPage() {
                                                         key={i}
                                                         onClick={() => setCurrentDemoStep(i)}
                                                         className={`w-3 h-3 rounded-full ${currentDemoStep === i
-                                                                ? isDark ? "bg-emerald-400" : "bg-emerald-500"
-                                                                : isDark ? "bg-gray-700" : "bg-gray-300"
+                                                            ? isDark ? "bg-emerald-400" : "bg-emerald-500"
+                                                            : isDark ? "bg-gray-700" : "bg-gray-300"
                                                             }`}
                                                     />
                                                 ))}
