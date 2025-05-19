@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCookies } from "react-cookie";
 import Chart from "./Chart";
 import { getUserChartData, clearUserChartData } from "./chartStuff";
-import AIChatbot from "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/src/components/SupportAI.jsx";
 
 export default function ResultsPage() {
     const [cookies] = useCookies(["darkMode", "user"]);
@@ -220,11 +219,10 @@ export default function ResultsPage() {
                                 <button
                                     type="submit"
                                     disabled={isSending}
-                                    className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${
-                                        emailSent
+                                    className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${emailSent
                                             ? "bg-green-500 cursor-default"
                                             : "bg-blue-600 hover:bg-blue-700"
-                                    }`}
+                                        }`}
                                 >
                                     {emailSent ? "Email Sent!" : isSending ? "Sending..." : "Send Email"}
                                 </button>
@@ -251,19 +249,19 @@ export default function ResultsPage() {
                             variants={containerVariants}
                         >
                             <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-2xl font-bold">Your Plant Analysis History</h2>
-                                    {userEmail && (
-                                        <button
-                                            onClick={clearHistory}
-                                            className={`text-sm px-4 py-2 rounded-lg font-semibold transition-colors ${cookies.darkMode
-                                                ? "bg-red-600 hover:bg-red-500 text-white"
-                                                : "bg-red-100 hover:bg-red-200 text-red-700"
-                                                }`}
-                                        >
-                                            Clear History
-                                        </button>
-                                    )}
-                                </div>
+                                <h2 className="text-2xl font-bold">Your Plant Analysis History</h2>
+                                {userEmail && (
+                                    <button
+                                        onClick={clearHistory}
+                                        className={`text-sm px-4 py-2 rounded-lg font-semibold transition-colors ${cookies.darkMode
+                                            ? "bg-red-600 hover:bg-red-500 text-white"
+                                            : "bg-red-100 hover:bg-red-200 text-red-700"
+                                            }`}
+                                    >
+                                        Clear History
+                                    </button>
+                                )}
+                            </div>
 
                             {userEmail ? (
                                 plantGroups.length > 0 ? (
@@ -271,11 +269,10 @@ export default function ResultsPage() {
                                         {plantGroups.map((plant) => (
                                             <motion.div
                                                 key={plant.id}
-                                                className={`p-4 rounded-lg border transition ${
-                                                    isDark
+                                                className={`p-4 rounded-lg border transition ${isDark
                                                         ? "border-gray-400 hover:bg-gray-800"
                                                         : "border-gray-400 hover:bg-gray-100"
-                                                }`}
+                                                    }`}
                                                 whileHover={{ scale: 1.01 }}
                                             >
                                                 <div className="flex items-start gap-4">

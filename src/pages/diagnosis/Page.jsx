@@ -1,12 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform} from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faSearch, faLeaf, faChevronRight, faArrowDown, faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import { faClose, faSearch, faLeaf, faChevronRight, faArrowDown, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence } from "framer-motion";
-import AIChatbot from "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/src/components/SupportAI.jsx";
 
 
 
@@ -18,9 +17,9 @@ export default function DiagnosisPage() {
     const containerRef = useRef(null);
     const [openSection, setOpenSection] = useState(null);
     const toggleSection = (section) => {
-    setOpenSection(openSection === section ? null : section);
+        setOpenSection(openSection === section ? null : section);
     };
-    const {scrollYProgress} = useScroll({target: containerRef});
+    const { scrollYProgress } = useScroll({ target: containerRef });
     const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
     const constraintsRef = useRef(null);
     const diseases = [
@@ -267,7 +266,7 @@ export default function DiagnosisPage() {
                     </p>
                 </motion.div>
             </div>
-    
+
             {/* Search Bar */}
             <div className="max-w-[90vw] mx-auto px-4 mb-8">
                 <motion.div
@@ -291,7 +290,7 @@ export default function DiagnosisPage() {
                     </div>
                 </motion.div>
             </div>
-    
+
             {/* Disease Cards */}
             <div className="max-w-[90vw] mx-auto px-4">
                 {filteredDiseases.length > 0 ? (
@@ -356,7 +355,7 @@ export default function DiagnosisPage() {
                     </motion.div>
                 )}
             </div>
-    
+
             {/* Disease Modal */}
             {isModalOpen && selectedDisease && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
@@ -374,11 +373,10 @@ export default function DiagnosisPage() {
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.3, ease: "easeOut" }}
                             onClick={(e) => e.stopPropagation()}
-                            className={`w-full max-w-2xl rounded-2xl shadow-2xl border ${
-                                cookies.darkMode
+                            className={`w-full max-w-2xl rounded-2xl shadow-2xl border ${cookies.darkMode
                                     ? "bg-gradient-to-br from-gray-900 via-sky-950 to-teal-900 border-gray-700"
                                     : "bg-gradient-to-br from-sky-100 via-stone-200 to-blue-100 border-gray-300"
-                            }`}
+                                }`}
                         >
                             {/* Modal Header */}
                             <div className="flex items-start justify-between p-6 border-b border-opacity-20">
@@ -386,28 +384,27 @@ export default function DiagnosisPage() {
                                     {selectedDisease.name}
                                 </h3>
                             </div>
-    
+
                             {/* Modal Content */}
                             <div className="px-6 py-6 space-y-6 text-center">
                                 <p className={`text-lg leading-relaxed ${cookies.darkMode ? "text-gray-300" : "text-gray-700"}`}>
                                     {selectedDisease.description}
                                 </p>
-    
+
                                 {/* Expandable Sections */}
                                 <div className="space-y-4">
                                     {/* How to Identify Section */}
                                     <div className="rounded-xl overflow-hidden shadow-md">
                                         <button
                                             onClick={() => toggleSection('identify')}
-                                            className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${
-                                                cookies.darkMode
+                                            className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${cookies.darkMode
                                                     ? "bg-gray-700 text-white hover:bg-gray-600"
                                                     : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                                            }`}
+                                                }`}
                                         >
                                             How to Identify
-                                            <FontAwesomeIcon 
-                                                icon={faChevronDown} 
+                                            <FontAwesomeIcon
+                                                icon={faChevronDown}
                                                 className={`transition-transform ${openSection === 'identify' ? 'rotate-180' : ''}`}
                                             />
                                         </button>
@@ -417,9 +414,8 @@ export default function DiagnosisPage() {
                                                     initial={{ height: 0, opacity: 0 }}
                                                     animate={{ height: "auto", opacity: 1 }}
                                                     exit={{ height: 0, opacity: 0 }}
-                                                    className={`px-6 py-4 ${
-                                                        cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                                    }`}
+                                                    className={`px-6 py-4 ${cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
+                                                        }`}
                                                 >
                                                     {selectedDisease.appearance.split("\n").map((line, idx) => (
                                                         <p key={idx} className="flex justify-center items-center gap-2 mb-2">
@@ -430,20 +426,19 @@ export default function DiagnosisPage() {
                                             )}
                                         </AnimatePresence>
                                     </div>
-    
+
                                     {/* How to Fix Section */}
                                     <div className="rounded-xl overflow-hidden shadow-md">
                                         <button
                                             onClick={() => toggleSection('fix')}
-                                            className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${
-                                                cookies.darkMode
+                                            className={`w-full px-6 py-4 text-xl font-semibold flex items-center justify-between ${cookies.darkMode
                                                     ? "bg-gray-700 text-white hover:bg-gray-600"
                                                     : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                                            }`}
+                                                }`}
                                         >
                                             How to Fix
-                                            <FontAwesomeIcon 
-                                                icon={faChevronDown} 
+                                            <FontAwesomeIcon
+                                                icon={faChevronDown}
                                                 className={`transition-transform ${openSection === 'fix' ? 'rotate-180' : ''}`}
                                             />
                                         </button>
@@ -453,9 +448,8 @@ export default function DiagnosisPage() {
                                                     initial={{ height: 0, opacity: 0 }}
                                                     animate={{ height: "auto", opacity: 1 }}
                                                     exit={{ height: 0, opacity: 0 }}
-                                                    className={`px-6 py-4 ${
-                                                        cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
-                                                    }`}
+                                                    className={`px-6 py-4 ${cookies.darkMode ? "bg-gray-800 text-indigo-300" : "bg-white text-gray-700"
+                                                        }`}
                                                 >
                                                     {selectedDisease.fix.split("\n").map((line, idx) => (
                                                         <p key={idx} className="flex justify-center items-center gap-2 mb-2">
@@ -468,16 +462,15 @@ export default function DiagnosisPage() {
                                     </div>
                                 </div>
                             </div>
-    
+
                             {/* Modal Footer */}
                             <div className="px-6 py-4 border-t border-opacity-20 text-center">
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className={`px-6 py-2 text-lg font-semibold rounded-xl transition ${
-                                        cookies.darkMode
+                                    className={`px-6 py-2 text-lg font-semibold rounded-xl transition ${cookies.darkMode
                                             ? "bg-sky-700 hover:bg-sky-600 text-white"
                                             : "bg-sky-400 hover:bg-sky-500 text-white"
-                                    }`}
+                                        }`}
                                 >
                                     Close
                                 </button>
