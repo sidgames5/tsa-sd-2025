@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useCookies } from "react-cookie";
 import Chart from "./Chart";
 import { getUserChartData, clearUserChartData } from "./chartStuff";
 import AIChatbot from "/Users/kaniskprakash/Documents/GitHub/tsa-sd-2025/src/components/SupportAI.jsx";
 
-
 export default function ResultsPage() {
     const [cookies] = useCookies(["darkMode", "user"]);
     const userEmail = cookies?.user?.email || "";
+    const isDark = cookies.darkMode;
     const [userResults, setUserResults] = useState([]);
     const [loading, setLoading] = useState(true);
     const [tips] = useState([
@@ -32,7 +32,6 @@ export default function ResultsPage() {
                 date: result.date || new Date(result.id || Date.now()).toISOString().split('T')[0]
             }));
             setUserResults(formattedResults);
-
             const initialChart = getUserChartData(userEmail);
             setChartData(initialChart);
         }
@@ -44,12 +43,10 @@ export default function ResultsPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
-
         if (!validateEmail(email)) {
             setError("Please enter a valid email address");
             return;
         }
-
         try {
             setIsSending(true);
             const response = await fetch("/api/send-results", {
@@ -60,9 +57,7 @@ export default function ResultsPage() {
                     results: groupResultsByPlant(),
                 }),
             });
-
             if (!response.ok) throw new Error("Failed to send email");
-
             setEmailSent(true);
             setTimeout(() => setEmailSent(false), 3000);
         } catch (err) {
@@ -80,7 +75,6 @@ export default function ResultsPage() {
                 const plantName = result.prediction.includes('Healthy')
                     ? result.prediction.replace('Healthy', '').trim()
                     : result.prediction.split(' ')[0];
-
                 if (!plantsMap[plantName]) {
                     plantsMap[plantName] = {
                         name: plantName,
@@ -118,102 +112,145 @@ export default function ResultsPage() {
 
     if (loading) {
         return (
-            <div className={`flex items-center justify-center min-h-screen ${cookies.darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
+            <div className={`flex items-center justify-center min-h-screen ${isDark ? "bg-gray-950" : "bg-gray-100"}`}>
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
         );
     }
+
     const containerVariants = {
         hidden: { opacity: 0, y: 20 },
         show: {
             opacity: 1,
             y: 0,
             transition: {
-                staggerChildren: 0.1,
+                staggerChildren: 0.08,
                 delayChildren: 0.2,
             },
         },
     };
-    
+
     const itemVariants = {
-        hidden: { opacity: 0, y: 10 },
+        hidden: { opacity: 0, y: 15 },
         show: { opacity: 1, y: 0 },
     };
 
     return (
-        <main className={`w-full min-h-screen ${cookies.darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-            <AIChatbot />
-            <div className="flex flex-col items-center w-full py-12 px-4">
-                <h1 className="text-4xl font-bold mt-8 p-12">AI Plant Health Results</h1>
+        <main className={`relative min-h-screen w-full overflow-hidden ${isDark ? "bg-gray-950 text-white" : "bg-gradient-to-b from-gray-50 to-gray-100 text-gray-900"}`}>
+            {/* Floating background lights */}
+            <motion.div className="fixed inset-0 pointer-events-none z-0 ">
+                <motion.div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-400/10 blur-3xl rounded-full" />
+                <motion.div className="absolute top-[60%] right-1/4 w-96 h-96 bg-teal-400/10 blur-3xl rounded-full" />
+                <motion.div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-blue-500/10 blur-3xl rounded-full" />
+            </motion.div>
 
-                <div className="flex flex-row w-full max-w-[80vw] gap-8">
-                    <div className="flex-col flex w-full gap-8">
-                        <div className={`flex flex-col items-center p-6 rounded-xl min-w-[60%] ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg`}>
-                            <h2 className="text-2xl font-bold mb-4">Model Performance Metrics</h2>
-                            <div className="h-80 min-w-full">
-                                <Chart darkMode={cookies.darkMode} data={chartData} />
-                            </div>
-                            <p className="text-sm mt-2 text-center opacity-70 w-full">
-                                Shows confidence and loss metrics from recent predictions
-                            </p>
-                            <p className="mt-3 text-center w-full">
-                                Confidence indicates how well the model is identifying plant health correctly over time. Model's error is the loss.
-                                <br /><br />
-                                A lower loss typically means better performance. This graph helps track trends, improvements, or dips in the AI's reliability, especially as you upload more images.
-                            </p>
-                        </div>
+            <div className="relative z-10 container mx-auto px-4 py-16 max-w-7xl mt-20">
+                <motion.h1
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="text-4xl md:text-5xl font-bold mb-12 text-center"
+                >
+                    Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">AI Plant Results</span>
+                </motion.h1>
 
-                        <div className={`p-6 rounded-xl ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg w-full flex flex-col items-center justify-center`}>
-                            <h2 className="text-2xl font-bold mb-4">Plant Care Tips</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    {/* Chart + Tips */}
+                    <div className="flex flex-col gap-10">
+                        {/* Chart */}
+                        <motion.div
+                            initial="hidden"
+                            animate="show"
+                            variants={containerVariants}
+                            className={`rounded-xl p-6 shadow-lg border ${isDark ? "bg-gradient-to-r from-blue-900/50 to-blue-700/50 border-gray-800" : "bg-gradient-to-r from-blue-100 to-blue-200 border-gray-200"}`}
+                        >
+                            <motion.h2 variants={itemVariants} className="text-2xl font-bold mb-4">Model Performance</motion.h2>
+                            <motion.div variants={itemVariants} className="h-80 w-full">
+                                <Chart darkMode={isDark} data={chartData} />
+                            </motion.div>
+                            <motion.p variants={itemVariants} className="text-sm mt-4 opacity-70">
+                                Confidence and loss metrics from your recent scans. Lower loss = better accuracy. Use this to track model consistency over time.
+                            </motion.p>
+                        </motion.div>
 
-                            <motion.div
-                                className="grid grid-cols-1 xl:grid-cols-2 min-w-full items-center justify-center align-middle"
-                                variants={containerVariants}
-                                initial="hidden"
-                                animate="show"
-                            >
-                                {tips.map((tip, index) => (
+                        {/* Tips */}
+                        <motion.div
+                            initial="hidden"
+                            animate="show"
+                            variants={containerVariants}
+                            className={`rounded-xl p-6 shadow-lg border ${isDark ? "bg-gradient-to-br from-emerald-900/50 to-emerald-700/50 border-gray-800" : "bg-gradient-to-r from-emerald-100 to-emerald-200 border-gray-200"}`}
+                        >
+                            <motion.h2 variants={itemVariants} className="text-2xl font-bold mb-4">Plant Care Tips</motion.h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {tips.map((tip, i) => (
                                     <motion.div
-                                        key={index}
-                                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-opacity-10 hover:bg-gray-500"
+                                        key={i}
+                                        className="flex items-start gap-2"
                                         variants={itemVariants}
                                         whileHover={{ x: 5 }}
-                                        transition={{ type: "spring", stiffness: 300 }}
                                     >
-                                        <span className={`mt-1 flex-shrink-0 ${cookies.darkMode ? "text-green-400" : "text-green-600"}`}>•</span>
+                                        <span className="text-green-500 font-bold mt-1">•</span>
                                         <span>{tip}</span>
                                     </motion.div>
                                 ))}
-                            </motion.div>
-                        </div>
+                            </div>
+                        </motion.div>
                     </div>
 
-                    <div className="flex-col flex w-full min-h-full">
-                        <div className="flex-col flex gap-8 w-full min-h-full">
-                            <div className={`p-6 rounded-xl ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg flex flex-col items-center justify-center *:w-full`}>
-                                <h2 className="text-2xl font-bold mb-4 w-full text-center">Send Results Via Email</h2>
-                                <div className="space-y-3">
-                                    <input
-                                        type="email"
-                                        placeholder="Enter your email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className={`w-full px-4 py-2 rounded-lg border ${cookies.darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                    />
-                                    <button
-                                        onClick={handleSubmit}
-                                        disabled={isSending}
-                                        className={`w-full py-2 px-4 rounded-lg font-medium text-white transition ${emailSent ? "bg-green-500 cursor-default" : "bg-blue-600 hover:bg-blue-700"}`}
-                                    >
-                                        {emailSent ? "Email Sent!" : "Send Email"}
-                                    </button>
-                                    {isSending && <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500 mt-2"></div>}
-                                    {error && <p className="text-sm text-red-500">{error}</p>}
-                                </div>
-                            </div>
+                    {/* Email + History */}
+                    <div className="flex flex-col gap-10">
+                        {/* Email Form */}
+                        <motion.div
+                            className={`rounded-xl p-6 shadow-lg border ${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.7 }}
+                        >
+                            <h2 className="text-2xl font-bold mb-4 text-center">Send Results via Email</h2>
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="you@example.com"
+                                    className={`w-full px-4 py-2 rounded-lg border ${isDark
+                                        ? "bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+                                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"} focus:outline-none focus:ring-2 focus:ring-emerald-400`}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={isSending}
+                                    className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${
+                                        emailSent
+                                            ? "bg-green-500 cursor-default"
+                                            : "bg-blue-600 hover:bg-blue-700"
+                                    }`}
+                                >
+                                    {emailSent ? "Email Sent!" : isSending ? "Sending..." : "Send Email"}
+                                </button>
+                                <AnimatePresence>
+                                    {error && (
+                                        <motion.p
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="text-sm text-red-500"
+                                        >
+                                            {error}
+                                        </motion.p>
+                                    )}
+                                </AnimatePresence>
+                            </form>
+                        </motion.div>
 
-                            <div className={`p-6 rounded-xl h-full ${cookies.darkMode ? "bg-gray-800" : "bg-white"} shadow-lg`}>
-                                <div className="flex justify-between items-center mb-6">
+                        {/* History */}
+                        <motion.div
+                            className={`rounded-xl p-6 shadow-lg h-full border ${isDark ? "bg-gradient-to-r from-cyan-900/50 to-cyan-700/50 border-gray-800" : "bg-gradient-to-r from-cyan-100 to-cyan-200/70 border-gray-200"}`}
+                            initial="hidden"
+                            animate="show"
+                            variants={containerVariants}
+                        >
+                            <div className="flex justify-between items-center mb-6">
                                     <h2 className="text-2xl font-bold">Your Plant Analysis History</h2>
                                     {userEmail && (
                                         <button
@@ -228,22 +265,18 @@ export default function ResultsPage() {
                                     )}
                                 </div>
 
-                                {userEmail && (
-                                    <p className="text-sm mb-4 opacity-70">Logged in as: <span className="font-medium">{userEmail}</span></p>
-                                )}
-
-                                {!userEmail ? (
-                                    <div className={`p-8 text-center rounded-lg ${cookies.darkMode ? "bg-gray-700/50" : "bg-gray-100"}`}>
-                                        <p className="text-lg">Please log in to view your plant analysis history</p>
-                                    </div>
-                                ) : plantGroups.length > 0 ? (
+                            {userEmail ? (
+                                plantGroups.length > 0 ? (
                                     <div className="space-y-4">
                                         {plantGroups.map((plant) => (
                                             <motion.div
                                                 key={plant.id}
-                                                className={`p-4 rounded-lg border ${cookies.darkMode ? "border-gray-700 hover:bg-gray-700/50" : "border-gray-200 hover:bg-gray-50"} transition-all`}
+                                                className={`p-4 rounded-lg border transition ${
+                                                    isDark
+                                                        ? "border-gray-400 hover:bg-gray-800"
+                                                        : "border-gray-400 hover:bg-gray-100"
+                                                }`}
                                                 whileHover={{ scale: 1.01 }}
-                                                transition={{ type: "spring", stiffness: 300 }}
                                             >
                                                 <div className="flex items-start gap-4">
                                                     {plant.latestImage && (
@@ -263,13 +296,9 @@ export default function ResultsPage() {
                                                         <p className={`text-sm ${plant.status.includes('Healthy') ? 'text-green-500' : 'text-red-500'}`}>
                                                             {plant.status}
                                                         </p>
-                                                        <div className="flex justify-between mt-1">
-                                                            <p className="text-xs opacity-70">
-                                                                Scans: {plant.count}
-                                                            </p>
-                                                            <p className="text-xs opacity-70">
-                                                                Last: {plant.latestDate}
-                                                            </p>
+                                                        <div className="flex justify-between mt-1 text-xs opacity-70">
+                                                            <span>Scans: {plant.count}</span>
+                                                            <span>Last: {plant.latestDate}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -277,16 +306,17 @@ export default function ResultsPage() {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className={`p-8 text-center rounded-lg ${cookies.darkMode ? "bg-gray-700/50" : "bg-gray-100"}`}>
-                                        <p className="text-lg">No plant analysis results found</p>
-                                        <p className="text-sm mt-2 opacity-70">Upload plant images to see your analysis history here</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                                    <p className="text-center text-sm opacity-70">No plant analysis results found. Upload images to get started.</p>
+                                )
+                            ) : (
+                                <p className="text-center text-sm opacity-70">Please log in to view your history.</p>
+                            )}
+                        </motion.div>
                     </div>
                 </div>
             </div>
+
+            <AIChatbot />
         </main>
     );
 }
