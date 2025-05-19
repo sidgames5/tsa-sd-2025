@@ -485,18 +485,18 @@ export default function UploadPage() {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center min-h-screen w-full p-4 ${
+      className={`flex flex-col items-center justify-center min-h-screen w-full p-6 transition-all overflow-x-hidden overflow-y-auto scroll-smooth ${
         isDarkMode
-          ? "bg-gradient-to-b from-gray-950 via-black to-gray-900 text-white"
-          : "bg-gradient-to-b from-slate-50 via-white to-slate-200 text-gray-900"
+          ? "bg-gradient-to-br from-gray-950 via-black to-slate-900 text-white"
+          : "bg-gradient-to-br from-emerald-50 via-white to-lime-100 text-gray-900"
       }`}
     >
       <AIChatbot />
       <motion.div
-        className={`p-6 max-h-[120vh] mt-20 rounded-2xl w-full max-w-6xl flex flex-col justify-center items-center border-[2px] shadow-xl ring-1 ring-offset-2 ${
+        className={`p-10 max-h-[120vh] mt-20 rounded-[2.5rem] w-full max-w-6xl flex flex-col justify-center items-center border-[2px] shadow-2xl ring-1 ring-offset-2 ${
           isDarkMode
-            ? "bg-gradient-to-br from-neutral-950 via-sky-950 to-black border-indigo-800 shadow-indigo-900/40 ring-indigo-500/20"
-            : "bg-gradient-to-br from-emerald-200 via-neutral-200 to-green-200 border-green-600 shadow-green-600/40 ring-green-600/20"
+            ? "bg-gradient-to-br from-neutral-950 via-sky-950 to-black border-indigo-800 shadow-indigo-900/40 ring-indigo-500/20 backdrop-blur-xl"
+            : "bg-gradient-to-br from-emerald-200 via-neutral-200 to-green-200 border-green-600 shadow-green-600/40 ring-green-600/20 backdrop-blur-md"
         }`}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -504,19 +504,19 @@ export default function UploadPage() {
       >
         <div className="flex justify-between w-full mt-2 text-center">
           <h1
-            className={`text-3xl text-center font-bold mb-6 ${
-              isDarkMode ? "text-white" : "text-neutral-600"
+            className={`text-5xl font-extrabold tracking-tight mb-6 drop-shadow-xl ${
+              isDarkMode ? "bg-gradient-to-r from-blue-200 via-teal-50 to-sky-300 text-transparent bg-clip-text" : "text-green-900"
             }`}
           >
-            Plant Disease Detection 🌱
+            Plant Disease Detection 🌿
           </h1>
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-[1.2rem] text-sm hover:scale-105 ${
                 isDarkMode
                   ? "bg-gray-700 hover:bg-gray-600 duration-300 text-white"
-                  : "bg-gray-200 hover:bg-gray-300 duration-300 text-gray-800"
+                  : "bg-gray-300 hover:bg-gray-400 duration-300 text-gray-800"
               }`}
             >
               <FontAwesomeIcon icon={faUser} />
@@ -525,7 +525,7 @@ export default function UploadPage() {
           ) : (
             <button
               onClick={() => setShowAuthModal(true)}
-              className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm ${
                 isDarkMode
                   ? "bg-blue-700 hover:bg-blue-600 duration-300 text-white"
                   : "bg-blue-600 hover:bg-blue-500 duration-300 text-white"
@@ -539,18 +539,18 @@ export default function UploadPage() {
 
         {apiStatus && (
           <div
-            className={`text-sm mb-6 p-2 rounded ${
+            className={`text-sm mb-6 p-2 rounded-[1rem] ${
               apiStatus === "connected"
-                ? "bg-green-100 text-green-800"
+                ? "bg-green-300 text-green-800"
                 : apiStatus === "error"
                 ? "bg-red-100 text-red-800"
                 : "bg-yellow-100 text-yellow-800"
             }`}
           >
             {apiStatus === "connected"
-              ? "Backend connected"
+              ? "AI Model Connected"
               : apiStatus === "error"
-              ? "Backend unavailable - Analysis won't work"
+              ? "AI Model Unavailiable - Analysis won't work"
               : "Checking backend connection..."}
           </div>
         )}
@@ -601,11 +601,13 @@ export default function UploadPage() {
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={triggerFileInput}
-              className={`w-full p-8 border-2 border-dashed rounded-lg text-center cursor-pointer transition-all duration-300 ${
+              className={`w-full p-6 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-2xl ring-1 ring-offset-1 ${
                 isDarkMode
-                  ? "border-gray-700 hover:border-indigo-500 hover:shadow-md hover:shadow-indigo-700/30 bg-gray-900 text-gray-300"
-                  : "border-gray-300 hover:border-blue-500 hover:shadow-md hover:shadow-blue-300/50 bg-white"
+                  ? "bg-gray-800 hover:bg-gray-700 text-white border border-gray-600"
+                  : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"
               }`}
+              
+              
             >
               <input
                 type="file"
@@ -630,11 +632,13 @@ export default function UploadPage() {
 
             <button
               onClick={startCamera}
-              className={`w-full p-4 rounded-lg flex flex-col items-center justify-center gap-2 ${
+              className={`w-full p-6 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-2xl ring-1 ring-offset-1 ${
                 isDarkMode
-                  ? "bg-gray-800 hover:bg-gray-700 text-white border border-gray-700"
+                  ? "bg-gray-800 hover:bg-gray-700 text-white border border-gray-600"
                   : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"
               }`}
+              
+              
             >
               <FontAwesomeIcon icon={faCamera} className="text-3xl text-blue-500" />
               <span className="text-lg">Take a Photo</span>
@@ -653,12 +657,12 @@ export default function UploadPage() {
               <img
                 src={preview}
                 alt="Preview"
-                className="w-full max-h-64 object-contain rounded-lg shadow-md mx-auto h-[160px]"
+                className="w-full max-h-64 object-contain rounded-lg mx-auto h-[160px]"
                 onError={() => setPreview(null)}
               />
               {loading && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+                    <div className={`text-white p-4 rounded-lg shadow-lg ${cookies.darkMode? "bg-blue-800" : "bg-gray-700"}`}>
                         <FontAwesomeIcon icon={faSpinner} className="animate-spin mr-2" />
                         Processing image...
                     </div>
@@ -675,7 +679,7 @@ export default function UploadPage() {
             <select
               value={plantType}
               onChange={(e) => setPlantType(e.target.value)}
-              className={`w-full p-2 rounded border text-center ${
+              className={`w-full p-2 border text-center rounded-xl transition ${
                 isDarkMode
                   ? "bg-gray-700 border-white text-white"
                   : "bg-white border-gray-300"
@@ -814,92 +818,59 @@ export default function UploadPage() {
 
       {/* Modal for Results */}
       {result && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50"
-            ref={constraintsRef}
+        <div
+          className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-sm"
+          ref={constraintsRef}
         >
           <motion.div
-            className={`w-full max-w-lg p-6 rounded-2xl shadow-xl ring-1 ring-offset-2 ${
-              result.status === "success"
-                ? isDarkMode
-                  ? "bg-gradient-to-br from-slate-700 via-stone-600 to-emerald-500 text-green-100 shadow-lg ring-green-500/50"
-                  : "bg-gradient-to-br from-teal-600 via-sky-500 to-emerald-500 text-white shadow-lg ring-emerald-200/50"
-                : isDarkMode
-                ? "bg-gradient-to-br from-red-700 via-stone-600 to-red-900 text-red-100 shadow-lg ring-red-500/30"
-                : "bg-gradient-to-br from-red-600 via-amber-500 to-orange-500 text-white shadow-lg ring-red-300/20"
-            }`}
-            initial={{ scale: 0.8, opacity: 0 }}
+            className={`w-full max-w-lg p-6 rounded-2xl shadow-2xl ring-1 ring-offset-2 transition-all duration-300 border-2
+              ${
+                result.status === "success"
+                  ? isDarkMode
+                    ? "bg-gradient-to-br from-emerald-800 via-slate-800 to-emerald-600 text-emerald-100 ring-emerald-500/40"
+                    : "bg-white text-emerald-900 ring-emerald-300/60"
+                  : isDarkMode
+                  ? "bg-gradient-to-br from-red-900 via-slate-800 to-rose-700 text-red-100 ring-red-400/40"
+                  : "bg-white text-red-900 ring-red-300/60"
+              }
+            `}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
             drag
             dragConstraints={constraintsRef}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2
-                className={`text-xl font-bold ${
-                  isDarkMode
-                    ? "text-white"
-                    : result.status === "success"
-                    ? "bg-gradient-to-r from-sky-300 to-blue-500 bg-clip-text text-transparent drop-shadow-md"
-                    : "text-amber-50 drop-shadow-md"
-                }`}
-              >
-                Prediction Result
+              <h2 className={`text-xl font-semibold tracking-tight ${cookies.darkMode? "text-green-50" : "text-green-700"}`}>
+                {result.status === "success" ? "Prediction Success" : "Prediction Failed"}
               </h2>
               <button
                 onClick={() => setResult(null)}
-                className={`p-2 rounded-full transition ${
-                  isDarkMode
-                    ? "text-gray-300 hover:bg-gray-700 hover:text-white"
-                    : result.status === "success"
-                    ? "text-amber-100 hover:bg-emerald-700/80 hover:text-white"
-                    : "text-amber-100 hover:bg-amber-700/80 hover:text-white"
-                }`}
+                className={`p-2 rounded-full transition ${cookies.darkMode? "hover:bg-white/10" : "hover:bg-black/10"}`}
               >
-                <FontAwesomeIcon className="p-2 pb-1" icon={faTimes} />
+                <FontAwesomeIcon className="text-xl" icon={faTimes} />
               </button>
             </div>
-            <div className="text-center">
-              {result.status === "success" ? (
+
+            <div className="text-center space-y-2">
+              <p className="text-2xl font-bold tracking-tight">
+                {result.prediction}
+              </p>
+              {result.status === "success" && (
                 <>
-                  <p
-                    className={`text-2xl font-bold mb-3 ${
-                      isDarkMode
-                        ? "text-amber-300 drop-shadow-md"
-                        : "text-amber-300 drop-shadow-md"
-                    }`}
-                  >
-                    {result.prediction}
+                  <p className={`"text-sm font-medium ${cookies.darkMode? "text-gray-200" : "text-gray-700"}`}>
+                    Confidence: <span className="font-semibold">{result.confidence}%</span>
                   </p>
-                  <p
-                    className={`${
-                      cookies.darkMode ? "text-emerald-200" : "text-emerald-250"
-                    } text-sm`}
-                  >
-                    Confidence: {result.confidence}%
-                  </p>
-                  <p
-                    className={`${
-                      cookies.darkMode ? "text-gray-400" : "text-gray-200"
-                    } text-sm`}
-                  >
+                  <p className={`text-xs ${cookies.darkMode? "text-gray-200" : "text-gray-700"}`}>
                     Timestamp: {result.timestamp}
                   </p>
                 </>
-              ) : (
-                <p
-                  className={`text-lg font-semibold ${
-                    isDarkMode
-                      ? "text-amber-200"
-                      : "text-amber-500 drop-shadow-md"
-                  }`}
-                >
-                  {result.prediction}
-                </p>
               )}
             </div>
           </motion.div>
         </div>
       )}
+
 
       {/* Auth Modal */}
       {showAuthModal && (
@@ -1035,128 +1006,122 @@ export default function UploadPage() {
 
       {/* Camera Modal */}
       {showCameraModal && (
-        <div className="fixed inset-50 z-50 flex justify-center items-center bg-black bg-opacity-90 border-2 rounded-2xl w-2/5 h-3/5">
-            <motion.div
-            className="w-full max-w-md p-8"
-            initial={{ scale: 0.9, opacity: 0 }}
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/80 backdrop-blur-sm px-4">
+          <motion.div
+            className={`${cookies.darkMode? "bg-black/30" : "bg-white/10"} relative w-full max-w-2xl border border-white/20 backdrop-blur-xl rounded-3xl p-8 shadow-2xl flex flex-col items-center gap-6`}
+            initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+          >
+            {/* Switch Camera Button */}
+            <button
+              onClick={switchCamera}
+              className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-md transition-all"
+              title="Switch camera"
             >
-                <div className="text-white/80 text-sm mb-2">
-                    Using: {stream?.getVideoTracks()[0]?.getSettings().facingMode === "environment" 
-                        ? "Rear camera" 
-                        : "Front camera"}
-                    </div>
-                    <button
-                        onClick={switchCamera}
-                        className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/70"
-                        title="Switch camera"
-                        >
-                        <FontAwesomeIcon icon={faSyncAlt} />
-                    </button>
+              <FontAwesomeIcon icon={faSyncAlt} />
+            </button>
+
+            {/* Camera Info */}
+            <div className="text-white/70 text-sm">
+              Using: <span className="font-medium">{stream?.getVideoTracks()[0]?.getSettings().facingMode === "environment" ? "Rear" : "Front"} Camera</span>
+            </div>
+
+            {/* Error State */}
             {cameraError ? (
-                <div className={`p-6 rounded-lg text-center ${
-                isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
-                }`}>
-                <FontAwesomeIcon 
-                    icon={faTimesCircle} 
-                    className="text-red-500 text-4xl mb-3 mx-auto" 
-                />
-                <h3 className="text-xl font-bold mb-2">Camera Error</h3>
+              <div className="w-full text-center p-6 rounded-xl border border-red-500/30 bg-red-500/10 text-white/90">
+                <FontAwesomeIcon icon={faTimesCircle} className="text-red-400 text-5xl mb-4" />
+                <h3 className="text-2xl font-semibold mb-2">Camera Error</h3>
                 <p className="mb-4">{cameraError}</p>
-                <div className="flex justify-center gap-3">
-                    <button
+                <div className="flex justify-center gap-4">
+                  <button
                     onClick={() => {
-                        setCameraError(null);
-                        startCamera(); // Retry camera access
+                      setCameraError(null);
+                      startCamera();
                     }}
-                    className={`px-4 py-2 rounded-lg ${
-                        isDarkMode 
-                        ? 'bg-blue-600 hover:bg-blue-500 text-white' 
-                        : 'bg-blue-500 hover:bg-blue-600 text-white'
-                    }`}
-                    >
+                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow transition-all"
+                  >
                     Try Again
-                    </button>
-                    <button
+                  </button>
+                  <button
                     onClick={() => {
-                        stopCamera();
-                        setShowCameraModal(false);
+                      stopCamera();
+                      setShowCameraModal(false);
                     }}
-                    className={`px-4 py-2 rounded-lg ${
-                        isDarkMode 
-                        ? 'bg-gray-700 hover:bg-gray-600 text-white' 
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
-                    }`}
-                    >
+                    className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                  >
                     Close
-                    </button>
+                  </button>
                 </div>
-                </div>
+              </div>
             ) : (
-                <>
-                <div className="relative">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      muted
-                      className="w-full h-auto rounded-lg"
-                    />
-                    <canvas ref={canvasRef} className="hidden" />
-                    
-                    {/* Capture guidance overlay */}
-                    <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                    <div className="border-2 border-white/50 rounded-lg w-3/4 h-3/4 flex items-center justify-center">
-                        <div className="text-white/70 text-sm bg-black/50 px-2 py-1 rounded">
+              <>
+                {/* Camera Feed */}
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/10 shadow-md">
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="w-full h-full object-cover"
+                  />
+                  <canvas ref={canvasRef} className="hidden" />
+
+                  {/* Overlay UI */}
+                  <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+                    <div className="w-3/4 h-3/4 border-2 border-white/30 rounded-xl flex justify-center items-center">
+                      <span className="text-white/80 text-xs bg-black/50 px-3 py-1 rounded-full">
                         Align plant here
-                        </div>
+                      </span>
                     </div>
-                    </div>
+                  </div>
                 </div>
 
-                <div className="flex justify-center gap-4 mt-4">
-                    <button
+                {/* Action Buttons */}
+                <div className="flex justify-center gap-4 mt-6">
+                  <button
                     onClick={capturePhoto}
                     disabled={loading}
-                    className={`px-6 py-3 rounded-full shadow-lg transition flex items-center ${
-                        loading
-                        ? 'bg-gray-500 cursor-not-allowed'
-                        : 'bg-green-600 hover:bg-green-700 text-white'
+                    className={`px-6 py-3 rounded-full font-medium flex items-center justify-center gap-2 transition shadow-lg ${
+                      loading
+                        ? "bg-gray-600 cursor-not-allowed text-white"
+                        : "bg-emerald-600 hover:bg-emerald-700 text-white"
                     }`}
-                    >
+                  >
                     {loading ? (
-                        <>
-                        <FontAwesomeIcon icon={faSpinner} className="animate-spin mr-2" />
+                      <>
+                        <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
                         Processing...
-                        </>
+                      </>
                     ) : (
-                        <>
-                        <FontAwesomeIcon icon={faCamera} className="mr-2" />
+                      <>
+                        <FontAwesomeIcon icon={faCamera} />
                         Capture
-                        </>
+                      </>
                     )}
-                    </button>
-                    <button
+                  </button>
+                  <button
                     onClick={() => {
-                        stopCamera();
-                        setShowCameraModal(false);
+                      stopCamera();
+                      setShowCameraModal(false);
                     }}
-                    className="px-6 py-3 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition"
-                    >
+                    className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition"
+                  >
                     Cancel
-                    </button>
+                  </button>
                 </div>
 
-                <div className="mt-4 text-center text-white/80 text-sm">
-                    <p>Position the plant clearly within the frame</p>
-                    <p className="mt-1">Ensure good lighting for best results</p>
+                {/* Tips */}
+                <div className="mt-4 text-white/70 text-sm text-center">
+                  <p>Make sure the plant is clearly visible within the frame.</p>
+                  <p className="mt-1">Use good lighting for the best diagnosis accuracy.</p>
                 </div>
-                </>
+              </>
             )}
-            </motion.div>
+          </motion.div>
         </div>
-        )}
+      )}
+
     </div>
   );
 }
