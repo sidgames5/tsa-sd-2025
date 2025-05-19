@@ -391,5 +391,35 @@
         "message": "test2tvdv2uv",
         "image": "https://cdn-icons-png.flaticon.com/128/1256/1256650.png",
         "timestamp": 1746381680.8500679
+    },
+    {
+        "name": "Robert Anderson",
+        "message": "This is a very amazing platform to use. My dad's a farmer, and he used this to help some of his plants, and he appreciates how very easy it is to use and how simple it is to understand. The AI chart's line graph is also very useful for him. Thank you to the creators of LeafLogic for an amazing application!",
+        "image": "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
+        "timestamp": 1747624475.971194
+    },
+    {
+        "name": "Caroline Franco",
+        "message": "Used this for assistance in my projects as an Agriculture Scientist Major, and it's been a real lifesaver. Would recommend people use.",
+        "image": "https://cdn-icons-png.flaticon.com/128/2920/2920072.png",
+        "timestamp": 1747624553.099537
+    },
+    {
+        "name": "Jasmine Lee",
+        "message": "Clean layout, easy navigation, and everything loads quickly. I found what I needed in minutes. It's so rare to see such a smooth user experience these days.",
+        "image": "https://cdn-icons-png.flaticon.com/128/3135/3135823.png",
+        "timestamp": 1747624668.097402
+    },
+    {
+        "name": "Mark Debron",
+        "message": "Wasn't expecting much at first, but this completely shattered my expectations. Reliable, organized, and no annoying pop-ups. Respect.",
+        "image": "https://cdn-icons-png.flaticon.com/128/2202/2202112.png",
+        "timestamp": 1747624737.8325498
+    },
+    {
+        "name": "Tanya Gupta",
+        "message": "Simple, effective, and does it exactly what it promises. I've recommended it to a bunch of friends already. Keep up the good work LeafLogic, and I can't wait to see what they add in the future.",
+        "image": "https://cdn-icons-png.flaticon.com/128/11498/11498793.png",
+        "timestamp": 1747624818.5807538
     }
 ]
