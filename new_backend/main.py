@@ -434,6 +434,7 @@ To upload an image of your plant for disease detection, follow these steps:
                         "You are NOT related to any ERP software or cannabis industry product. "
                         "If the user asks about the app's features, respond with a bulleted list of them as clearly and helpfully as possible. "
                         "Always stay in the farming context. Remove the thinking from your response. Give short answers"
+                        "If the user asks about how to help in terms of fixing a problem with their plant, then give them an answer on how to fix it"
                     )
                 },
                 {"role": "user", "content": prompt}
