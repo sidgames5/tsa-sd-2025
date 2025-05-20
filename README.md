@@ -21,7 +21,6 @@ Create virtual environment
 ```
 $ python -m venv .venv
 $ source .venv/bin/activate
-# On Windows: .venv\Scripts\activate
 ```
 
 Install dependencies:
@@ -34,18 +33,13 @@ $ pip install -r requirements.txt
 Open two terminals and run the following commands simultaneously:
 
 ```
-$ npm start
-```
-
-```
-Make sure you are using python 3.10
+$ npm run dev
 ```
 
 ```
 $ python -m new_backend.main
-$ if there is an error for installing pillow-heif, open a new terminal and run brew install libheif
 ```
 
 Allowed Extensions are png, jpg, jpeg, gif, heic, hevc
 
-A new browser window should automatically open. If not, open to [http://localhost:3000](http://localhost:3000)
+A new browser window should automatically open. If not, open to [http://localhost:5173](http://localhost:5173)
