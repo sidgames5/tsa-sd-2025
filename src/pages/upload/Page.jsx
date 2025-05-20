@@ -347,7 +347,7 @@ export default function UploadPage() {
             formData.append("image", image);
             formData.append("plantType", plantType);
 
-            const response = await fetch("/predict", {
+            const response = await fetch("/api/predict", {
                 method: "POST",
                 body: formData,
             });

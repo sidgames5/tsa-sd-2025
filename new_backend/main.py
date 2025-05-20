@@ -345,7 +345,7 @@ ensure_reviews_file()
 
 
 # Routes
-@app.route("/health", methods=["GET"])
+@app.route("/api/health", methods=["GET"])
 def health_check():
     try:
         classifier.load_model()
@@ -367,7 +367,7 @@ def health_check():
         )
 
 
-@app.route("/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST"])
 def predict():
     if "image" not in request.files or "plantType" not in request.form:
         return jsonify({"success": False, "error": "Missing image or plantType"}), 400
@@ -384,7 +384,7 @@ def predict():
     return jsonify({"success": False, "error": "Invalid file type"}), 400
 
 
-@app.route("/accuracy/chart", methods=["GET"])
+@app.route("/api/accuracy/chart", methods=["GET"])
 def get_chart_data():
     return jsonify(
         {
@@ -394,7 +394,7 @@ def get_chart_data():
     )
 
 
-@app.route("/send-results", methods=["POST"])
+@app.route("/api/send-results", methods=["POST"])
 def send_results():
     data = request.get_json()
     email = data.get("email")
@@ -418,7 +418,7 @@ def send_results():
     ), (500 if not success else 200)
 
 
-@app.route("/ollama-support", methods=["POST"])
+@app.route("/api/ollama-support", methods=["POST"])
 def ollama_support():
     data = request.get_json()
     prompt = data.get("prompt", "").strip().lower()
@@ -534,7 +534,7 @@ def save_review_to_file(review):
         return False
 
 
-@app.route("/submit-review", methods=["POST"])
+@app.route("/api/submit-review", methods=["POST"])
 def submit_review():
     try:
         name = request.form.get("name", "Anonymous")
@@ -578,7 +578,7 @@ def submit_review():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-@app.route("/get-reviews", methods=["GET"])
+@app.route("/api/get-reviews", methods=["GET"])
 def get_reviews():
     try:
         # Load the reviews from the file every time the endpoint is hit
@@ -605,7 +605,7 @@ def admin_required(f):
     return decorated_function
 
 
-@app.route("/admin/login", methods=["POST"])
+@app.route("/api/admin/login", methods=["POST"])
 def admin_login():
     data = request.get_json()
     if not data or "username" not in data or "password" not in data:
@@ -623,7 +623,7 @@ def admin_login():
         return jsonify({"success": False, "error": "Invalid credentials"}), 401
 
 
-@app.route("/testimonials", methods=["DELETE"])
+@app.route("/api/testimonials", methods=["DELETE"])
 @admin_required
 def delete_all_reviews():
     try:
