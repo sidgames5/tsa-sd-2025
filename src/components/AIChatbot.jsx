@@ -26,7 +26,7 @@ export default function AIChatbot() {
         setLoading(true);
 
         try {
-            const response = await fetch("api/ollama-support", {
+            const response = await fetch("/api/ollama-support", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ prompt: query }),
