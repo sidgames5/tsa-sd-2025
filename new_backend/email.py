@@ -3,8 +3,8 @@ from email.mime.text import MIMEText
 
 smtp_server = "smtp.gmail.com"
 smtp_port = 465
-smtp_email = "sid2.srinivasan@gmail.com"
-smtp_password = "jfew mhdc orwi cgds"
+smtp_email = "Rubisco412@gmail.com"
+smtp_password = "lnou ivkb zcuc hixt"
 
 def send_email(target,content="Scan Results from LeafLogic"):
     message = MIMEText(content, "html")
